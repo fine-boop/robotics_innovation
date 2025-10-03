@@ -15,7 +15,7 @@ def upload_file():
     file = request.files['file']
     file.save(os.path.join(UPLOAD_FOLDER, file.filename))
     print("Trying to unzip files")
-    os.system("cd uploads && ls && unzip photos.zip && cd ..")
+    os.system("cd uploads && ls && unzip photos.zip && rm photos.zip && cd ..")
     return 'File uploaded successfully   ', 200
 
 if __name__ == '__main__':
