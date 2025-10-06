@@ -53,7 +53,5 @@ and a person to design the frontend.
 -Im not bothered to write more cuz its just gonna be me
 
 
-<<<<<<< HEAD
-=======
 
 >>>>>>> b4d2a5f (Update files)
