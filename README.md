@@ -13,6 +13,7 @@ This will then be sent back to the Pi.
 We will have 2 seperate devices that will be running diffrent code. One will be the server and one the pi, as described earlier and are represented as local, remote. In remote we have the server subdirectory, and the main application that will be constantly running is app.py.
 
 ### Remote
+---
 This is going to 
   - Receive zip files full of images from the pi
   - Store them in /uploads/ for temporary holding
@@ -21,6 +22,11 @@ This is going to
   - We will have a /downloads enpoint open on the webserver that the pi can wget with correct authentication key.
 
 ---
+
+### Local
+---
+This is going to
+  - 
 ## Roles and To-Do
 
 So, there’s a lot of work to be done.  
