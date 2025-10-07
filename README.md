@@ -57,6 +57,3 @@ This is going to
 -Good at programming understand concepts, languages
 -Im not bothered to write more cuz its just gonna be me
 
-
-
->>>>>>> b4d2a5f (Update files)
