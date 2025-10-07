@@ -45,6 +45,19 @@ Possibly if we have time we
 
 ## Hardware person
 
+
+
+
+
+
+
+
+
+
+
+
+
+
 **Capabilites**
 - Good with raspberry pis/attachments.
 - Good with linux (i know that im the only person here that knows linux but maybe you can learn)
