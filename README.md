@@ -24,6 +24,12 @@ This is going to
 ---
 
 
+### Local
+---
+This will be our client, it will run a local webserver in which the whole system - remote and local can be accessed. It will provide instructions to users on how to use the system
+and will control the motor, the camera and the scales. It will need to format this data and express in on the local webpage. 
+Possibly if we have time we 
+
 ## Frontend dev - Ryan
 
 **Capabilities**
@@ -31,6 +37,14 @@ This is going to
 - JS basics
 
 ---
+
+
+## Hardware person
+
+**Capabilites**
+- Good with raspberry pis/attachments.
+- Good with linux (i know that im the only person here that knows linux but maybe you can learn)
+- Willing to read instruction manuals and be pissed off with nothing working.
 
 ## Photogrammetry Person - Julian
 
