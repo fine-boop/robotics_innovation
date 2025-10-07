@@ -23,18 +23,6 @@ This is going to
 
 ---
 
-### Local
----
-This is going to
-  - 
-## Roles and To-Do
-
-So, there’s a lot of work to be done.  
-We’re gonna need a person to figure out the photogrammetry software,  
-a person to work with databases (user auth + categorizing artefacts),  
-and a person to design the frontend.
-
----
 
 ## Frontend dev - Ryan
 
