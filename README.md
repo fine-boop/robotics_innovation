@@ -30,6 +30,10 @@ This will be our client, it will run a local webserver in which the whole system
 and will control the motor, the camera and the scales. It will need to format this data and express in on the local webpage. 
 Possibly if we have time we 
 
+
+
+# Roles & Responsibilities
+
 ## Frontend dev - Ryan
 
 **Capabilities**
