@@ -19,7 +19,7 @@ and a person to design the frontend.
 
 ---
 
-## Frontend dev
+## Frontend dev - Ryan
 
 **Capabilities**
 - Good at HTML and CSS  
@@ -27,7 +27,7 @@ and a person to design the frontend.
 
 ---
 
-## Photogrammetry Person
+## Photogrammetry Person - Julian
 
 **Capabilities**
 - Good understanding of computer systems  
@@ -36,7 +36,7 @@ and a person to design the frontend.
 
 ---
 
-## Backend Dev
+## Backend Dev - Joyce
 
 **Capabilities**
 - Good understanding of computer systems  
