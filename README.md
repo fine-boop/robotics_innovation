@@ -9,7 +9,18 @@ This will then be sent back to the Pi.
 
 ![diagram](diagram.png)
 ---
+## Directory structure + tech stack
+We will have 2 seperate devices that will be running diffrent code. One will be the server and one the pi, as described earlier and are represented as local, remote. In remote we have the server subdirectory, and the main application that will be constantly running is app.py.
 
+### Remote
+This is going to 
+  - Receive zip files full of images from the pi
+  - Store them in /uploads/ for temporary holding
+  - Move them into a directory called /photogrammetry/
+  - Call the photogrammetry script/function, that takes its input files from /photogrammety/ and outputs a 3d model to the folder /downloads/
+  - We will have a /downloads enpoint open on the webserver that the pi can wget with correct authentication key.
+
+---
 ## Roles and To-Do
 
 So, there’s a lot of work to be done.  
