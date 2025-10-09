@@ -4,7 +4,7 @@
 
 The idea is to create a box in which archaeologists can put smaller artefacts and have them automatically categorised, weighted and 3D scanned.  
 For the 3D scanning, we will be using a single camera and capturing the artefact from all angles.  
-The photos will be sent to a more capable server which will use a third-party software to convert those images into a single 3D model.  
+The photos will be sent to a more capable server which will use a third-party software (and a process called photogrammetry) to convert those images into a single 3D model.  
 This will then be sent back to the Pi.
 
 ![diagram](diagram.png)
