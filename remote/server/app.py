@@ -1,44 +1,43 @@
-from flask import Flask, request, send_from_directory
+from flask import Flask, request, send_from_directory, abort
 import os
+from datetime import datetime
 
 app = Flask(__name__)
 
-UPLOAD_FOLDER = 'uploads/'
+KEY = os.environ.get('KEY', 'onfewio4fu3i4gberiuvb4rievbeiruf3eiuferiugferi')
+UPLOAD_FOLDER = 'uploads'
+DOWNLOAD_FOLDER = 'downloads'
+
+os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+os.makedirs(DOWNLOAD_FOLDER, exist_ok=True)
 
 
-
-def convert_to_3d_model(input_folder):
-    pass
-
-
-
-def download_folder():
-    os.makedirs('downloads', exist_ok=True)
-    DOWNLOAD_FOLDER = download_folder()
-    return 'downloads/'
+def check_key():
+    provided = request.args.get('key') or request.headers.get('X-API-Key')
+    return provided == KEY
 
 
-def new_uploads_folder():
-    os.system("rm -rf uploads/*")
-    os.makedirs(UPLOAD_FOLDER, exist_ok=True)
-    
-
-
-    
 @app.route('/uploads/', methods=['POST'])
 def upload_file():
-    new_uploads_folder()
-    file = request.files['file']
-    file.save(os.path.join(UPLOAD_FOLDER, file.filename))
-    print("Trying to unzip files")
-    os.system("cd uploads && ls && unzip photos.zip && rm photos.zip && cd ..")
-    return 'File uploaded successfully   ', 200
+    if not check_key():
+        abort(403)
+
+    if 'file' not in request.files:
+        abort(400)
+
+    f = request.files['file']
+    filename = f"photos_{datetime.now().strftime('%Y%m%d_%H%M%S')}.zip"
+    dest = os.path.join(UPLOAD_FOLDER, filename)
+    f.save(dest)
+    return 'File uploaded', 200
+
 
 @app.route('/download/<path:filename>', methods=['GET'])
 def download_file(filename):
+    if not check_key():
+        abort(403)
     return send_from_directory(DOWNLOAD_FOLDER, filename, as_attachment=True)
 
 
-
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=80)
+    app.run(host='0.0.0.0', port=int(os.environ.get('PORT', 1337)), debug=(os.environ.get('DEBUG') == '1'))
