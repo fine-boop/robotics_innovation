@@ -48,8 +48,8 @@ Possibly, if we have time, we...
 - Good at HTML and CSS  
 - JS basics
 
-TOOD - 
-in `/local/webserver/` create and style login.html and signup.html
+##TOOD - 
+- in `/local/webserver/` create and style login.html and signup.html
 ---
 
 ## Hardware Person
