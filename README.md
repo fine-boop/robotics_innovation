@@ -1,7 +1,7 @@
 # Our FLL 2026 Innovation Project
 ## TODO LIST 
 - Design our login, signup and index html files [here](local/localsite/templates/)
-- Add user auth, database logic [here](local/localsite/)
+- Add user auth, database logic in the app.py [here](local/localsite/)
 - 
 
 
