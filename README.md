@@ -2,7 +2,7 @@
 ## TODO LIST 
 - Design our login, signup and index html files [here](local/localsite/templates/)
 - Add user auth, database logic in the app.py [here](local/localsite/)
-- 
+- Work out photogrammetry software. Your inputs will be a lot of photos in remote/server/photogrammetry, and your code should output a 3d model to remote/server/photogrammetry/
 
 
 
