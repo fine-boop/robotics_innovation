@@ -1,5 +1,5 @@
 # Our FLL 2026 Innovation Project
-## TODO LIST 
+## TODO LIST **EVERYTHING HERE DUE BY NEXT FRIDAY THE 25th OCTOBER**
 - Design our login, signup and index html files [here](local/localsite/templates/). Use HTML CSS and JS. Do both the login pages first, then move onto the home. When your about to move onto home TALK TO JULIAN PLEASE
   
 - Add user auth, database logic in the app.py [here](local/localsite/) - For now Joyce please just create a simple seperate project that the user can enter their username, email, password and they will be added to a database. We will make this work on the real system later.
@@ -7,7 +7,7 @@
 - Work out photogrammetry software. Your inputs will be a lot of photos in remote/server/photogrammetry, and your code should output a 3d model to remote/server/photogrammetry/
 
 - Hardware - Sophia learn basic linux commands -eg cat, nano, touch, cd, mkdir and apt. Get hugo to share the spreadsheet with you on the hardware side of things, and think about how everythings gonna go together.
-- 
+  
 
 ## The Idea
 
