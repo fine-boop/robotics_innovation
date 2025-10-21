@@ -11,7 +11,8 @@ I will add these are for YOUR benefit to learn to code.
 Less important - 
 - Work out photogrammetry software. Your inputs will be a lot of photos in remote/server/photogrammetry, and your code should output a 3d model to remote/server/photogrammetry/
 
-- Hardware - Sophia learn basic linux commands -eg cat, nano, touch, cd, mkdir and apt. Get hugo to share the spreadsheet with you on the hardware side of things, and think about how everythings gonna go together.
+- (SOPHIA) Hardware - Take the pi home. Plug the Ethernet or LAN cable into your home network. On your laptop install bettercap (software i was using) In linux run `sudo apt install bettercap` then `bettercap` then `net.probe on` then `net.show` and look for the one with the raspberry pi name. 
+
   
 
 ## The Idea
