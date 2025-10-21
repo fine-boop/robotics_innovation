@@ -15,7 +15,7 @@ Less important -
 - Work out photogrammetry software. Your inputs will be a lot of photos in remote/server/photogrammetry, and your code should output a 3d model to remote/server/photogrammetry/
 
 - (SOPHIA) Hardware - https://chatgpt.com/share/68f7b2c0-1990-8003-9e8b-6c22503c150a 
-If you need help ask me or chatgpt. You will need a micro sd card port in one of your devices. Follow the instructions, I think you can download the raspberry pi imager (here)[https://downloads.raspberrypi.com/imager/imager_latest.exe]. Btw the SD card on the pi is on the bottom
+If you need help ask me or chatgpt. You will need a micro sd card port in one of your devices. Follow the instructions, I think you can download the raspberry pi imager (here)[https://downloads.raspberrypi.com/imager/imager_latest.exe]. Btw the SD card on the pi is on the bottom. Also regardless of weather you did the task you need to bring the pi back on friday
 
   
 
