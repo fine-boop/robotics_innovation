@@ -6,7 +6,10 @@ I will add these are for YOUR benefit to learn to code.
 
 - (RYAN) Design our login, signup and index html files [here](local/localsite/templates/). Use HTML CSS and JS. Do both the login pages first, then move onto the home. When your about to move onto home TALK TO JULIAN PLEASE
   
-- (JOYCE) Add user auth, database logic in the app.py [here](local/localsite/) - For now Joyce please just create a simple seperate project that the user can enter their username, email, password and they will be added to a database. We will make this work on the real system later.
+- (JOYCE) Create a Flask + SQL app [here](local/localsite/). Also write the login + signup pages in the templates directory. DONT WORRY ABOUT STYLING. Just make it so I can sign up and login in, then be redirected to the home page (/) - index.html. For now just welcome the user with like Hello <username> if logged in and if theyre not logged in just You're not logged in, sign up here. OK? 
+
+
+
 
 Less important - 
 - Work out photogrammetry software. Your inputs will be a lot of photos in remote/server/photogrammetry, and your code should output a 3d model to remote/server/photogrammetry/
