@@ -14,7 +14,8 @@ I will add these are for YOUR benefit to learn to code.
 Less important - 
 - Work out photogrammetry software. Your inputs will be a lot of photos in remote/server/photogrammetry, and your code should output a 3d model to remote/server/photogrammetry/
 
-- (SOPHIA) Hardware - Take the pi home. Plug the Ethernet or LAN cable into your home network. On your laptop install bettercap (software i was using) In linux run `sudo apt install bettercap` then `bettercap` then `net.probe on` then `net.show` and look for the one with the raspberry pi name. 
+- (SOPHIA) Hardware - https://chatgpt.com/share/68f7b2c0-1990-8003-9e8b-6c22503c150a 
+If you need help ask me or chatgpt. You will need a micro sd card port in one of your devices. Follow the instructions, I think you can download the raspberry pi imager (here)[https://downloads.raspberrypi.com/imager/imager_latest.exe]. Btw the SD card on the pi is on the bottom
 
   
 
