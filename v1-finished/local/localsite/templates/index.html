@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+    crossorigin=""/>
+    <link rel="stylesheet" href="/static/css/styles.css"/>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+    integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+    crossorigin=""></script>
+</head>
+<body>
+    <a href="/admin_login"><button type="button">Admin panel</button></a><br>
+    
+    
+    {% if session['email'] and session['username'] %}
+        <form method="post" action="/postit"><button name="logout">Logout</button></form>
+        <a href="/add_site"><button>Add a site</button></a> <br>
+        <form name="show_form" method="post" action="/">
+            <button type="submit" name="show_form">Begin item logging proccess</button><br><br>
+        </form>
+        <h1>You are logged in as {{ session['username'] }}!</h1>
+        <h1>Your email is {{ session['email'] }}</h1>
+        {% if show_form %}
+            <form method="post" action="/">
+                <div id="page2-0"><input type="text" placeholder="Item name" name="item_name" required><br><br>
+                
+                
+                <select name="site_found" id="site_found" required>
+                <option value="" disabled selected hidden>Select an archaeology site</option>
+                    {% for site in sites %}
+                        <option value="{{ site }}">{{ site }}</option>
+                    {% endfor %}
+                </select>
+                <br><br></div>
+                <h1>Please log the precise co-ordinates of where the artefact was found.</h2><div id="map"><style>#map { width: 400px; height: 400px; }</style><br><br>
+                <input name="latlng" id="latlng3" type="text" placeholder="Select from map" required><br><br>
+                </div>
+
+                <button type="submit" name="artefact_info">Continue</button>
+            </form>
+            {% if item_exists %}
+                <h2>Item name already exists!</h2>
+            {% endif %}
+            {% if log_artefact_pt1_success %}
+            <div id="page3-0">
+                <h1>Details logged succesfully!</h1>
+                <button>Continue to 3d scan</button>
+            </div>
+            {% endif %}
+        {% endif %}
+    {% else %}
+        <div id="para4-0"><h1>You're not curretly logged in!</h1>
+        <a href="/signup"><h2>Signup here</h2></a>
+        <a href="/login"><h2>Login here</h2></a></div>
+    {% endif %}
+        <script>
+    var map = L.map('map').setView([53.3498, -6.2603], 10);
+    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+        attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+    }).addTo(map);
+
+    // the pop up thing for the map :)
+    var popup = L.popup();
+    function onMapClick(e) {
+        popup
+            .setLatLng(e.latlng) 
+            .setContent("You have selected " + e.latlng.toString().slice(7, -1))
+            .openOn(map);
+    }
+    map.on('click', onMapClick);
+
+    // inputting the latlng into the input field
+    function userInput2(e){
+        document.getElementById('latlng3').value = e.latlng.toString().slice(7, -1);
+    }
+    map.on('click', userInput2);
+    </script>
+</body>
+</html>
+
+

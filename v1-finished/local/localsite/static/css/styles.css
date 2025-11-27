@@ -1,0 +1,79 @@
+* {
+    font-family:  Garamond, serif;
+    justify-content: space-evenly;
+}
+
+body {
+    background-image: url(soillayers1.png);
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-color: rgb(132, 102, 69);
+    margin: 0;
+}
+
+h1 {
+    font-size: 2rem;
+    display: inline-block;
+    margin-left: 20px;
+    flex: middle;
+    color: white;
+}
+
+
+
+
+
+
+
+
+button {
+    font-size: 1rem;
+    background-color:rgb(211, 164, 111);
+    border-color: rgb(211, 164, 111);
+    padding: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    color: white;
+    margin-left: 20px;
+}
+
+#page1-0 {
+    display: flex;
+    justify-content: space-evenly;
+}
+
+#page1-1{
+    display: flex;
+    justify-content: space-evenly;
+}
+
+#page2-0 {
+
+}
+
+a {
+    color:rgb(158, 211, 111);
+}
+
+form {
+    margin-left: 20px;
+}
+
+#map {
+    border-radius: 10px;
+    border-color: rgb(211, 164, 111)
+}
+
+#page3-0 {
+    display: flex;
+    justify-content: center;
+    color: white;
+    font-size: 2rem;
+    font-weight: bold;
+}
+
+
+#page4-0 {
+    display: flex;
+    justify-content: center;
+}
