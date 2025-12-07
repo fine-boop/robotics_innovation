@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" href="/static/css/styles.css"/>
+</head>
+<body>
+    <div class="login1">
+    <h1>Login</h1>
+
+    <form action="/login" method="post">
+        <input name="email" placeholder="Email"><br><br>
+        <input name="password" placeholder="Password"><br><br>
+        <button type="submit" id="login2">log in</button>
+    </form>
+    <div id="login5"><a href="/signup"><h2>Create an account</h2></a></div></div>
+    {% if invalid_creds %}
+    <script>    
+    alert("Invalid creds!");
+    </script>
+    {% endif %}
+</body>
+</html>

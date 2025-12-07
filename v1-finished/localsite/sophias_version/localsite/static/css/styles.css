@@ -1,0 +1,198 @@
+* {
+    font-family: Trebuchet MS (sans-serif);
+}
+
+body {
+    background-image: linear-gradient(to left, rgba(0, 0, 0, 0), rgb(208 221 215));
+    background-position: center center;
+    background-size: cover;
+    background-repeat: no-repeat;
+    height:80rem;
+    margin: 0;
+}
+
+h1 {
+    font-size: 2rem;
+    display: inline-block;
+    flex: middle;
+    color: white;
+}
+
+button {
+    font-size: 1rem;
+    background-color:#0c7c2287;
+    border-color: #0c7c22;
+    border-radius: 10px;
+    border-width: 2px;
+    padding: 4px;
+    padding-left: 20px;
+    padding-right: 20px;
+    cursor: pointer;
+    font-weight: bold;
+    color: white;
+}
+
+input {
+    background-color: rgba(231, 231, 231, 0.507);
+    border-width: 2px;
+    border-color: rgb(231, 231, 231);
+    border-radius: 10px;
+    padding: 4px;
+    padding-left: 20px;
+    padding-right: 20px;
+    gap: 10px;
+    text-align: center;
+}
+
+#page1-0 {
+    display: flex;
+    justify-content: space-evenly;
+}
+
+#page1-1{
+    display: flex;
+    justify-content: space-evenly;
+}
+
+a {
+    color:rgb(158, 211, 111);
+}
+
+#map {
+    border-radius: 10px;
+    border-color: rgb(211, 164, 111)
+}
+
+#page3-0 {
+    display: flex;
+    justify-content: center;
+    color: white;
+    font-size: 2rem;
+    font-weight: bold;
+}
+
+
+#page4-0 {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: none ;
+    margin: 11rem;
+    margin-left: 30rem;
+    margin-right: 30rem;
+    padding: 20px;
+    border-radius: 10px;
+    padding: 10px;
+    background-color: rgba(150, 150, 150, 0.445);
+    padding: 1rem;
+    border: solid;
+    border-color: rgba(150, 150, 150, 0.605);
+    border-width: 2px;
+}
+
+.login1 {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: none ;
+    margin: 11rem;
+    margin-left: 30rem;
+    margin-right: 30rem;
+    padding: 20px;
+    border-radius: 10px;
+    padding: 10px;
+    background-color: rgba(150, 150, 150, 0.445);
+    padding: 1rem;
+    border: solid;
+    border-color: rgba(150, 150, 150, 0.605);
+    border-width: 2px;
+}
+
+#login2 {
+    margin-left: 55px;
+}
+
+#signup1 {
+    margin-left: 35px;
+}
+
+#signup5 {
+    margin-left: 20px;
+    display: flex;
+    text-align: center;
+}
+
+#signup4 {
+    margin-left: 90px;
+}
+
+#header_1 {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    margin-top: 5rem;
+}
+
+#header_2 {
+    gap: 100px;
+}
+
+#welcome {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin: 11rem;
+    margin-left: 15rem;
+    margin-right: 15rem;
+    padding: 20px;
+    border-radius: 10px;
+    padding: 10px;
+    background-color: #27415694;
+    padding: 1rem;
+    border: solid;
+    border-color: #274156d3;
+    border-width: 5px;
+}
+
+#para2-0 {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin: 11rem;
+    margin-left: 20rem;
+    margin-right: 20rem;
+    padding: 20px;
+    border-radius: 10px;
+    padding: 10px;
+    background-color: #27415694;
+    padding: 1rem;
+    border: solid;
+    border-color: #274156d3;
+    border-width: 5px;
+}
+
+#para2-1 {
+    margin-left: 8.5rem;
+}
+
+#para2-2 {
+    margin-left: 6rem;
+}
+
+#admin_button {
+    
+}
+
+#addsight1 {
+    margin-right: 20px;
+    display: flex;
+    text-align: center;
+}
+
+#sightbutton {
+    margin-left: 53px;
+}

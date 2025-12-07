@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="static/css/styles.css">
+    <title>Add a site</title>
+</head>
+<body>
+    {% if session['email'] %}
+        <a href="/"><button>Home</button></a>
+        <div class="login1">
+        <div id="signup1">
+        <h1 id="addsight1">Add a site to the list of sites</h1>
+        <form action="/add_site" method="post">
+            <input name="new_site_name"type="text" placeholder="Site name"><br><br>
+            <button type="submit" id="sightbutton">Submit</button>
+        </form>
+        </div>
+        </div>
+        {% if site_exists %}
+        <h1>Site already listed!</h1>
+        {% endif %}
+        {% if successful %}
+            <h1>Site added to list successfully!</h1>
+        {% else %}
+        {% endif %}
+    {% else %}
+    <h1>You must be signed in to access this!</h1>
+    {% endif %}
+</body>
+</html>

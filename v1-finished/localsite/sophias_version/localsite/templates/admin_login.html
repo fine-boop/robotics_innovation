@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login</title>
+    <link rel="stylesheet" href="/static/css/styles.css">
+</head>
+<body>
+    <div class="login1">
+    <h1>Admin login</h1>
+
+    <form action="/admin_login" method="post">
+        <input name="email" placeholder="Email"><br><br>
+        <input name="password" placeholder="Password"><br><br>
+        <button type="submit" id="sightbutton">Submit</button>
+    </form>
+    </div>
+    <a href="/"><h2>Home</h2></a>
+    {% if invalid_admin_creds %}
+        <h2>Invalid creds!</h2>
+        <img src="/static/images/hill.jpg">
+    {% endif %}
+</body>
+</html>

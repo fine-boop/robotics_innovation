@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Control Panel</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        h1 { color: #333; }
+        form { margin-bottom: 20px; }
+        button { margin-right: 10px; padding: 10px 15px; }
+        table { border-collapse: collapse; width: 100%; margin-top: 10px; }
+        th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
+        th { background-color: #f4f4f4; }
+        input[type="text"], select { padding: 5px; margin-right: 10px; }
+        .message { margin-bottom: 20px; color: green; }
+        .error { color: red; }
+        .top-bar { margin-bottom: 20px; }
+    </style>
+</head>
+<body>
+    {% if user_is_admin %}
+    <div class="top-bar">
+        <button onclick="window.location.href='/'">Home</button>
+    </div>
+
+    <h1>Admin Control Panel</h1>
+
+    <form action="/admin" method="post">
+        <button name="shred_db">Shred Database</button>
+        <button name="shred_users">Shred Users Table</button>
+        <button name="shred_artefacts">Shred Artefacts Table</button>
+        <button name="dump_users">Show All Users</button>
+        <button name="dump_artefacts">Show All Artefacts</button>
+    </form>
+
+    <!-- Messages -->
+    {% if shredded_db %}<div class="message">Database shredded successfully!</div>{% endif %}
+    {% if file_not_found %}<div class="error">Database file not found!</div>{% endif %}
+    {% if shredded_users %}<div class="message">Users table shredded successfully!</div>{% endif %}
+    {% if shredded_artefacts %}<div class="message">Artefacts table shredded successfully!</div>{% endif %}
+
+    <!-- Users Table -->
+    {% if user_info %}
+    <h2>All Users</h2>
+    <input type="text" id="userSearch" placeholder="Search Users..." onkeyup="filterTable('userTable', this.value)">
+    <table id="userTable">
+        <thead>
+            <tr>
+                {% for header in ['ID', 'Email', 'Username', 'Password'] %}
+                    <th>{{ header }}</th>
+                {% endfor %}
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in user_info %}
+            <tr>
+                {% for col in row %}
+                    <td>{{ col }}</td>
+                {% endfor %}
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% endif %}
+
+    <!-- Artefacts Table -->
+    {% if artefacts_info %}
+    <h2>All Artefacts</h2>
+    <input type="text" id="artefactSearch" placeholder="Search Artefacts..." onkeyup="filterTable('artefactTable', this.value)">
+    <table id="artefactTable">
+        <thead>
+            <tr>
+                {% for header in ['ID', 'Name', 'User That Logged', 'Weight', 'Dimensions', 'Photos Location', 'Model File Location', 'Date Modified', 'Site Found', 'Coords'] %}
+                    <th>{{ header }}</th>
+                {% endfor %}
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in artefacts_info %}
+            <tr>
+                {% for col in row %}
+                    <td>{{ col }}</td>
+                {% endfor %}
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% endif %}
+
+    <script>
+        function filterTable(tableId, query) {
+            const filter = query.toLowerCase();
+            const table = document.getElementById(tableId);
+            const rows = table.getElementsByTagName('tr');
+
+            for (let i = 1; i < rows.length; i++) { // skip header row
+                const cells = rows[i].getElementsByTagName('td');
+                let match = false;
+                for (let j = 0; j < cells.length; j++) {
+                    if (cells[j].textContent.toLowerCase().includes(filter)) {
+                        match = true;
+                        break;
+                    }
+                }
+                rows[i].style.display = match ? '' : 'none';
+            }
+        }
+    </script>
+
+    {% else %}
+    <h1>Access Denied</h1>
+    <p>You do not have admin privileges.</p>
+    {% endif %}
+</body>
+</html>
