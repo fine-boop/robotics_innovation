@@ -14,8 +14,6 @@
 </head>
 <body>
     <a href="/admin_login"><button type="button">Admin panel</button></a><br>
-    
-    
     {% if session['email'] and session['username'] %}
         <form method="post" action="/postit"><button name="logout">Logout</button></form>
         <a href="/add_site"><button>Add a site</button></a> <br>

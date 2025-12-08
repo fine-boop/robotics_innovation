@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+</head>
+<body>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #494949bd;
+        }
+        button{
+            background-color: gray;
+        }
+        .profile {
+            position: absolute;
+            right: 20px;
+            top: 0px;
+        }
+
+
+    </style>
+    {% if session['email']%}
+        <h1>Welcome back, {{ session['username'] }}!</h1>
+        <div class="profile">
+            <button class="profile-button">
+                <!-- <img src="/static/images/profile_icon.png" alt="Profile Icon" class="profile-icon"> -->
+                <span class="username">{{ session['username'] }}</span>
+            </button>
+            <div class=dropdown>
+                <a href="/profile">My Profile</a>
+                <a href="/my-sites">My Sites</a>
+                <form method="post" action="/postit"><button name="logout">Logout</button></form>
+            </div>
+        </div>
+    {% else %}
+        <div id="not_logged_in"><h1>You're not curretly logged in!</h1>
+            <a href="/signup"><h2>Signup here</h2></a>
+            <a href="/login"><h2>Login here</h2></a>
+        </div>
+    {% endif %}
+</body>
+</html>

@@ -90,13 +90,13 @@ def home():
             except sqlite3.IntegrityError:
                 item_exists = True
                 print(session['email'] + "tried to add a site that already exists!")
-                return render_template('index.html', item_exists = item_exists,  show_form = True, log_artefact_pt1_success = log_artefact_pt1_success)
+                return render_template('home.html', item_exists = item_exists,  show_form = True, log_artefact_pt1_success = log_artefact_pt1_success)
             finally:
                 print("Closing DB conn...")
                 conn.commit()
                 conn.close()
                 print("DB conn closed successfully")
-    return render_template('index.html', video_working = video_working, sites = sites, item_exists = item_exists, show_form = show_form, item_logged = item_logged, log_artefact_pt1_success = log_artefact_pt1_success)
+    return render_template('home.html', video_working = video_working, sites = sites, item_exists = item_exists, show_form = show_form, item_logged = item_logged, log_artefact_pt1_success = log_artefact_pt1_success)
 
 
 @app.route('/add_site', methods = ["GET", "POST"])
