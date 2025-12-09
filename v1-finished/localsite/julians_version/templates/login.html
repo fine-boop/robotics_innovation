@@ -12,12 +12,14 @@
     <form action="/login" method="post">
         <input name="email" placeholder="Email" required type="email"><br><br>
         <input name="password" placeholder="Password" required><br><br>
-        <button type="submit">Sign up</button>
+        <button type="submit" name="login">Log in</button>
     </form>
     <a href="/"><h2>Home</h2></a>
     <a href="/signup"><h2>Create an account</h2></a>
-    {% if invalid_creds %}
-        <h2>Invalid creds!</h2>
+    {% if get_flashed_messages() %}
+    <div>
+        {{ get_flashed_messages()[0]}}
+    </div>
     {% endif %}
 </body>
 </html>

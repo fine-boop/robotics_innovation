@@ -11,15 +11,18 @@
 <body>
     <h1>Signup</h1>
     <form action="/signup" method="post">
-        <input name="email" placeholder="Email"><br><br>
-        <input name="username" placeholder="Username"><br><br>
-        <input name="password" placeholder="Password"><br><br>
-        <button type="submit">Log in</button>
+        <input name="provided_email" placeholder="Email"><br><br>
+        <input name="provided_username" placeholder="Username"><br><br>
+        <input name="provided_password" placeholder="Password"><br><br>
+        <button type="submit" name="signup">Log in</button>
         <a href="/"><h2>Home</h2></a>
-        <a href="/login"><h2>Log in to an existing account</h2></a>
-        {% if email_or_uid_in_use %}
-            <h3>Email or username already in use! Try again</h3>
-        {% endif %}
+        <a href="/login"><h2>Log in</h2></a>
+
     </form>
+    {% if get_flashed_messages() %}
+    <div>
+        {{ get_flashed_messages()[0]}}
+    </div>
+    {% endif %}
 </body>
 </html>
