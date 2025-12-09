@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile</title>
+</head>
+<body>
+    {% if session['email'] %}
+        <h1>{{ session['username'] }}'s Profile</h1>
+        <h2>Email: {{ session['email'] }}</h2>
+        <a href="/home"><button>Back to Home</button></a>
+        <div class="sites">
+            <h2>Sites Joined:</h2>
+            <ul>
+                {% for site in joined_sites %}
+                    <li>{{ site }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+        <div class="artefacts">
+            <h2>Logged Artefacts:</h2>
+            <ul>
+                {% for artefact in logged_artefacts %}
+                    <li>{{ artefact }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+    {% else %}
+        <div id="not_logged_in"><h1>You're not currently logged in</h1>
+            <a href="/signup"><h2>Signup here</h2></a>
+            <a href="/login"><h2>Login here</h2></a>
+        </div>
+    {% endif %}
+</body>
+</html>
