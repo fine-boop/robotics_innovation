@@ -15,7 +15,6 @@ def init_db():
                    email TEXT UNIQUE NOT NULL,
                    username TEXT NOT NULL,
                    password TEXT NOT NULL)""")
-    
     cursor.execute("""CREATE TABLE IF NOT EXISTS sites(
                    id INTEGER PRIMARY KEY AUTOINCREMENT,
                    owner_id INTEGER NOT NULL,
@@ -26,7 +25,6 @@ def init_db():
                    PRIMARY KEY (site_id, user_id),
                    FOREIGN KEY (site_id) REFERENCES sites(id),
                    FOREIGN KEY (user_id) REFERENCES users(id))""")
-    
     cursor.execute("""CREATE TABLE IF NOT EXISTS artefacts(
                    id INTEGER PRIMARY KEY AUTOINCREMENT,
                    name TEXT UNIQUE,
@@ -38,7 +36,7 @@ def connect_db():
     conn = sqlite3.connect('database.db')
     cursor = conn.cursor()
     return conn, cursor
-
+    
 
 
 @app.route('/', methods = ["GET", "POST"])
