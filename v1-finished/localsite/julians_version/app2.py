@@ -87,8 +87,11 @@ def login():
         if row_exists:
             row = cursor.execute("SELECT password FROM users WHERE email = ?", (provided_email,)).fetchone()
             db_pass = row[-1]
-            print(db_pass)
-            exit() 
+            if provided_password == row[-1]:
+                session['email'] = provided_email
+                session['username'] = provided_username
+                flash('loginsucessful')
+                return redirect('home.html')
 
         else:
             pass
