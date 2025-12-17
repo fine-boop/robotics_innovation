@@ -90,11 +90,20 @@ def login():
             if provided_password == row[-1]:
                 session['email'] = provided_email
                 session['username'] = provided_username
+<<<<<<< HEAD
                 flash('loginsucessful')
                 return redirect('/')
 
+=======
+                return redirect('home.html')
+            else:
+                flash('Password is incorrect!')
+                return redirect('/login')
+>>>>>>> 957bb7423e583c6ed795b01c01ae556b7e3f435b
         else:
-            pass
+            flash('Account does not exist!')
+            return redirect('/login')
+
     return render_template('login.html')
 
 
