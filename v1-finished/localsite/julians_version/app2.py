@@ -91,7 +91,7 @@ def login():
                 session['email'] = provided_email
                 session['username'] = provided_username
                 flash('loginsucessful')
-                return redirect('home.html')
+                return redirect('/')
 
         else:
             pass

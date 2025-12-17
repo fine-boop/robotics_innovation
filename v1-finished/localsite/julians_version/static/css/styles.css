@@ -60,13 +60,6 @@ menu {
 
 }
 
-
-logo {
-    display: inline-block;
-    cursor: pointer;
-
-}
-
 .headerflex {
     display: flex;
     flex-direction: row;
@@ -184,4 +177,8 @@ logo {
     border: #ffffff solid 5px;
     padding: 10px;
     border-radius: 10px;
+}
+
+.profile {
+    color: #ffff;
 }
