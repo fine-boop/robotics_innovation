@@ -10,6 +10,7 @@
     <style>
         * {
             color: #ffff;
+            text-decoration: none;
         }
 
         body {
@@ -20,10 +21,10 @@
 
         button{
             display: flex;
-            background-color: #e20ebb;
+            background-color: #e20ebb80;
             border-color: #ae0a90;
             padding: 10px;
-            
+            border-radius: 10px;
         }
 
         .profile {
@@ -34,23 +35,56 @@
 
         .profile-button {
             color: #ffff;
-            
+            background-color: #e20ebb80;
             margin-left: 1rem;
+            margin-bottom: 10px;
+        }
+
+        .profile1 {
+            background-color: #e20ebb80;
+            border: 1px solid #a02389;
+            border-radius: 10px;
+            padding: 5px;
+            margin-bottom: 10px;
+            margin-top: 10px;
+        }
+
+        .profile2 {
+            margin-bottom: 10px;
+            margin-top: 10px;
+        }
+
+        #dropdown {
+        margin-left: 1rem;
         }
 
 
     </style>
+
+    <script>
+        function enterfunctionhere () {
+            var HELLO = document.getElementById("dropdown");
+            
+            if (HELLO.style.display === "none") {
+                HELLO.style.display = "block";
+            } else {
+                HELLO.style.display = "none";
+            }
+        }
+
+    </script>
+    
     {% if session['email']%}
         <h1>Welcome back, {{ session['username'] }}!</h1>
         <div class="profile">
-            <button class="profile-button">
+            <button class="profile-button" onClick="enterfunctionhere()">
                 <!-- <img src="/static/images/profile_icon.png" alt="Profile Icon" class="profile-icon"> -->
                 <span class="username">{{ session['username'] }}</span>
             </button>
-            <div class=dropdown>
-                <a href="/profile">My Profile</a>
-                <a href="/my-sites">My Sites</a>
-                <form method="post" action="/postit"><button name="logout">Logout</button></form>
+            <div id="dropdown">
+                <a href="/profile" class="profile1">My Profile</a><br><br>
+                <a href="/my-sites" class="profile1">My Sites</a>
+                <form method="post" action="/postit" class="profile2"><button name="logout">Logout</button></form>
             </div>
         </div>
         <a href="/join-site"><button>Join a site</button></a>
