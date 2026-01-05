@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+</head>
+<body>
+    <h1>Login</h1>
+    <form method="post" action="/login">
+        <input type="email" name="email" id="email" placeholder="Email" required><br><br>
+        <input type="password" name="password" id="password" placeholder="Password" required><br><br>
+        <button name="login" id="login">Submit</button>
+    </form>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        {% for category, message in messages %}
+        <h3>{{ message }}</h3>
+        {% endfor %}
+    {% endif %}
+    {% endwith %}
+<style>
+    body {
+        background-color: rgb(63, 63, 63);
+    }
+</style>
+</body>
+</html>

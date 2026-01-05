@@ -17,6 +17,7 @@ def init_db():
     #open a cursor to perform db operations
     cursor = conn.cursor()
     #create the tables
+    cursor.execute("PRAGMA foreign_keys = ON;")
     cursor.execute("""
     CREATE TABLE IF NOT EXISTS users(
                    id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -27,12 +28,14 @@ def init_db():
                    id INTEGER PRIMARY KEY AUTOINCREMENT,
                    owner_id INTEGER NOT NULL,
                    FOREIGN KEY (owner_id) REFERENCES users(id))""")
+    
     cursor.execute("""CREATE TABLE IF NOT EXISTS site_members(
                    site_id INTEGER NOT NULL,
                    user_id INTEGER NOT NULL,
                    PRIMARY KEY (site_id, user_id),
                    FOREIGN KEY (site_id) REFERENCES sites(id),
                    FOREIGN KEY (user_id) REFERENCES users(id))""")
+    
     cursor.execute("""CREATE TABLE IF NOT EXISTS artefacts(
                    id INTEGER PRIMARY KEY AUTOINCREMENT,
                    name TEXT UNIQUE,
@@ -99,11 +102,30 @@ def login():
         else:
             flash('Account does not exist!')
             return redirect('/login')
-
     return render_template('login.html')
 
 
+@app.route('/join-site')
+def join_site():
+    if request.method == "POST" and "join-site" in request.form:
+        pass
+    return render_template('join-site.html')
 
+@app.route('/sites')
+def sites():
+    pass
+
+@app.route('/log-artefact')
+def log_artefact():
+    if request.method == "POST" and 'log_artefact' in request.form:
+        pass
+    return render_template('log_artefact.html')
+
+@app.route('/create-site')
+def create_site():
+    if request.method == 'POST' and 'create_site' in request.form:
+        pass
+    return render_template('create-site.html')
 
 if __name__ == "__main__":
     init_db()
