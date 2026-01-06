@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+</head>
+{% if session['email'] %}
+
+<h1>Hello {{ session['email'] }}</h1>
+<a href="/my_sites"><h2>My sites</h2></a>
+<a href="/profile"><h2>My profile</h2></a>
+<a href="/logout"><h2>Logout</h2></a>
+{% else %}
+    <body>
+        <a href="/signup">Signup</a>
+        <a href="/login">Login</a>
+    </body>
+    </html>
+    
+{% endif %}
