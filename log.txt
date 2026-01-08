@@ -1,0 +1,4 @@
+2026-01-08T17:02:17.054381 [INFO] User Sophia has begun signup proccess
+2026-01-08T17:05:51.424186 [INFO] User sophiakidney@gmail.com has begun login proccess
+2026-01-08T17:05:51.425564 [SUCCESS] User sophiakidney@gmail.com sucessfully logged in
+2026-01-08T17:06:09.731952 [INFO] User sophiakidney@gmail.com has logged out
