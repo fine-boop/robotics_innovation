@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>My Sites</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+
+<h1>My Sites</h1>
+
+{% with messages = get_flashed_messages() %}
+    {% if messages %}
+        {% for msg in messages %}
+            <div class="flash">{{ msg }}</div>
+        {% endfor %}
+    {% endif %}
+{% endwith %}
+
+{% if no_sites %}
+    <p class="empty">You are not a member of any sites.</p>
+{% else %}
+    {% for site in sites %}
+        <div class="site">
+            <div class="site-info">
+                <strong>{{ site[1] }}</strong>
+                <span class="owner">Owner: {{ site[2] }}</span>
+            </div>
+
+            <form method="POST" action="/my_sites">
+                <input type="hidden" name="site_to_leave" value="{{ site[0] }}">
+                <button type="submit">Leave</button>
+            </form>
+        </div>
+    {% endfor %}
+{% endif %}
+
+</body>
+</html>

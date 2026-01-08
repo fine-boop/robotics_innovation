@@ -83,6 +83,7 @@ def console_log(arg, level):
 @app.route('/')
 def home():
     return render_template('home.html')
+
 @app.route('/signup', methods=["GET", "POST"])
 def signup():
     if request.method == "POST":
@@ -93,7 +94,6 @@ def signup():
         if not email or not name or not password:
             flash('Something went wrong.', 'red')
             exit()
-        print(console_log('User ' + name + ' has begun signup proccess', 'info'))
         try:
             cursor.execute('INSERT INTO users (email, name, password) VALUES (?, ?, ?)', (email, name, password))
             conn.commit()
@@ -115,7 +115,6 @@ def login():
         if not email or not password:
             flash('Something went wrong.', 'red')
             return redirect('/login')
-        print(console_log('User ' + email + ' has begun login proccess', 'info'))
         user_data = cursor.execute("SELECT * FROM users WHERE email = ?", (email,)).fetchall()
         if not user_data:
             print(console_log('User ' + email + ' tried to log into a nonexistent account', 'info'))
@@ -139,28 +138,57 @@ def logout():
         print(console_log('User ' + session['email'] +  ' has logged out', 'info'))
         session.clear()
         return redirect('/')
-
-@app.route('/my_sites')
+@app.route('/my_sites', methods = ['GET', 'POST'])
 def my_sites():
     if 'email' not in session:
         print(console_log('User with no account attempted to access /my_sites enpoint', 'warn'))
-        return redirect('/login')
-        
+        return redirect('/login') 
     conn , cursor = init_conn()
     sites = []
     uid = cursor.execute('SELECT id FROM users WHERE email = ?', (session['email'],)).fetchone()[0]
+    if request.method == 'POST':
+        site_to_leave = request.form['site_to_leave']
+        if not site_to_leave:
+            print(console_log('User ' + session['email'], 'warn'))
+            flash('Something went wrong 1')
+            return redirect('/my_sites')
+        print(site_to_leave)
+        if not site_to_leave.isdigit():
+            print(console_log('Unexpected error in my_sites (leaving site), user may be tampering with requests', 'warn'))
+            flash('Something went wrong 2')
+            return redirect('/my_sites')
+        site_to_leave = int(site_to_leave)
+        site_info = cursor.execute('SELECT id, name from SITES WHERE id = ?', (site_to_leave,)).fetchone()
+        if not site_info:
+            print(console_log('User ' + session['email'] + ' tried to leave a nonexistent site', 'error'))
+            flash('Something went wrong 3')
+            return redirect('/my_sites')
+        try:
+            cursor.execute('DELETE FROM site_members WHERE site_id = ? AND user_id = ?', (site_to_leave, uid))
+            conn.commit()
+            print(console_log(session['email'] + ' successfully left the site ' +  site_info[1], 'success'))
+            flash('Successfully left ' + site_info[1] + '!')
+            return redirect('/my_sites')
+        except sqlite3.Error as e:
+            flash('Something went wrong 4')
+            print(console_log(session['email'] + ' incountered error ' + e + ' when leaving a site', 'error'))
+            return redirect('/my_sites')
+        finally:
+            conn.close()
     sites_ids = cursor.execute('SELECT site_id FROM site_members WHERE user_id = ?', (uid,)).fetchall()
     if not sites_ids:
         conn.close()
         return render_template('my_sites.html', no_sites = True)
-    for id in sites_ids:
-        id = id[0]
-        site = cursor.execute('SELECT name, owner FROM sites WHERE id = ?', (id,)).fetchone()
-        if site:
-            sites.append(site)
-        else:
+    for site_id in sites_ids:
+        site_id = site_id[0]
+        site = cursor.execute('SELECT name, owner FROM sites WHERE id = ?', (site_id,)).fetchone()
+        if not site:
             print(console_log('Something went wrong line 157.', 'error'))
-    conn.close()
+            flash('Something went wrong')
+            return redirect('/my_sites')
+        owner_name = cursor.execute('SELECT name FROM users WHERE id = ?', (site[1],)).fetchone()[0]
+        site_name = site[0]
+        sites.append((site_id, site_name, owner_name))
     return render_template('my_sites.html', sites=sites)
 
 @app.route('/join_site', methods = ["GET", "POST"])
@@ -168,7 +196,6 @@ def join_site():
     if 'email' not in session:
         return redirect('/')
     conn, cursor = init_conn()
-
     if request.method == "POST":
         site_name = request.form['site_name']
         site_password = request.form['site_password']
@@ -204,8 +231,8 @@ def create_site():
         site_name = request.form['site_name']
         site_password = request.form['site_password']
         site_members = request.form['site_members']
-
         if not site_name or not site_password or not site_members:
+            print(console_log('Unexpected error in create_sites, user may be tampering with requests', 'warn'))
             flash('Error')
             return redirect('/create_site')
         creator_id = cursor.execute('SELECT id FROM users WHERE email = ?', (session['email'],)).fetchone()[0]
