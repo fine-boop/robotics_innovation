@@ -4,6 +4,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Home</title>
+
+    <style>
+        body {
+            background-color: white;
+        }
+        .idek {
+            font-size: 2vw;
+        }
+        .idek2 {
+            background-color: rgb(233, 176, 211);
+        }
+    </style>
 </head>
 {% if session['email'] %}
 
@@ -13,8 +25,11 @@
 <a href="/logout"><h2>Logout</h2></a>
 {% else %}
     <body>
+        <div class="idek">
+        <img class="idek2" height="700px" width="500px">
         <a href="/signup">Signup</a>
         <a href="/login">Login</a>
+        </div>
     </body>
     </html>
     
