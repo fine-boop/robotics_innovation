@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Create Site</title>
+    <style>
+        body {
+            font-family: system-ui, sans-serif;
+            max-width: 420px;
+            margin: 3rem auto;
+            padding: 0 1rem;
+        }
+
+        h1 {
+            margin-bottom: 1.5rem;
+        }
+
+        input, select, button {
+            width: 100%;
+            padding: 0.5rem;
+            margin-top: 0.25rem;
+        }
+
+        label {
+            display: block;
+            margin-top: 1rem;
+        }
+
+        select {
+            height: 140px;
+        }
+
+        button {
+            margin-top: 1.5rem;
+        }
+
+        .flash {
+            padding: 0.5rem;
+            margin-bottom: 1rem;
+            border: 1px solid #ccc;
+            background: #f5f5f5;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Create Site</h1>
+
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            {% for msg in messages %}
+                <div class="flash">{{ msg }}</div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    <form method="POST">
+        <label for="name">Site name</label>
+        <input type="text" name="name" id="name" required>
+
+        <label for="password">Site password</label>
+        <input type="text" name="password" id="password">
+
+        <label for="site_members">
+            Site members (Ctrl / Cmd to select multiple)
+        </label>
+        <select name="site_members" id="site_members" multiple>
+            {% for user in users_names %}
+                <option value="{{ user[0] }}">{{ user[1] }}</option>
+            {% endfor %}
+        </select>
+
+        <button type="submit">Create Site</button>
+    </form>
+
+</body>
+</html>

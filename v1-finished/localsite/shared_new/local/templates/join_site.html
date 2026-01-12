@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Join Site</title>
+</head>
+<body>
+
+<div class="container">
+    <h1>Join a Site</h1>
+
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            {% for msg in messages %}
+                <div class="flash">{{ msg }}</div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    <form method="POST">
+        <label for="name">Select Site</label>
+        <select name="name" id="name" required>
+            <option value="" disabled selected>Choose a site</option>
+            {% for site in sites_names %}
+                <option value="{{ site[0] }}">{{ site[0] }}</option>
+            {% endfor %}
+        </select>
+
+        <label for="password">Site Password</label>
+        <input type="password" name="password" id="password" required>
+
+        <button type="submit">Join Site</button>
+    </form>
+</div>
+
+</body>
+</html>
