@@ -12,12 +12,9 @@
         .idek {
             font-size: 2vw;
         }
-        .idek2 {
-        
-        }
     </style>
 </head>
-{% if session['email'] %}
+{% if session['name'] %}
 
 <h1>Hello {{ session['email'] }}</h1>
 <a href="/my_sites"><h2>My sites</h2></a>
@@ -31,7 +28,7 @@
 {% else %}
     <body>
         <div class="idek">
-        <img src="v1-finished/localsite/shared_new/static/css/images/homepage1.png" height="700px" width="500px">
+        <img src="/v1-finished/localsite/shared_new/static/css/images/homepage1.png" height="700px" width="500px">
         <a href="/signup">Signup</a>
         <a href="/login">Login</a>
         </div>
