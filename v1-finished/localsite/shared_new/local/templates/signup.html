@@ -4,8 +4,31 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Signup</title>
+    <style>
+        button{
+            border-radius: 0.2rem;
+            background-color: rgba(255, 153, 231, 0.53);
+            border: 0.15rem rgb(255, 153, 231) solid;
+        }
+        .signup1 {
+            width: 20rem;
+            height: 20rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: rgba(249, 215, 241, 0.422);
+
+            border-radius: 0.5rem;
+            border: 0.5rem rgb(255, 204, 243) double;
+        }
+        input {
+            font: pink;
+        }
+    </style>
 </head>
 <body>
+    <a href="/">Home</a>
+    <div class="signup1">
     <h1>Signup</h1>
     <form method="post" action="/signup">
         <input type="text" name="name" id="name" placeholder="Name" required><br><br>
@@ -13,8 +36,8 @@
         <input type="password" name="password" id="password" placeholder="Password" required><br><br>
         <button name="signup" id="signup">Sign Up</button>
     </form>
-    <p>already have an account with us? <a href="/login">Log in</a> here</p>
-    <a href="/">Home</a>
+    <p>already have an account with us? <a href="/login">Log in here</a></p>
+    </div>
     {% with messages = get_flashed_messages(with_categories=true) %}
     {% if messages %}
         {% for category, message in messages %}

@@ -6,6 +6,8 @@
     <title>Login</title>
 </head>
 <body>
+    <a href="/">Home</a>
+    <div class="login1">
     <h1>Login</h1>
     <form method="post" action="/login">
         <input type="email" name="email" id="email" placeholder="Email" required><br><br>
@@ -13,7 +15,7 @@
         <button name="login" id="login">Log In</button>
     </form>
     <p>Dont have an account with us? <a href="/signup">Sign up</a> here</p>
-    <a href="/">Home</a>
+    </div>
     {% with messages = get_flashed_messages(with_categories=true) %}
     {% if messages %}
         {% for category, message in messages %}
@@ -25,6 +27,20 @@
     body {
         background-color: rgb(255, 255, 255);  
     }
+
+    .login1 {
+            width: 20rem;
+            height: 20rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: rgba(249, 215, 241, 0.422);
+
+            border-radius: 0.5rem;
+            border-color:rgb(255, 204, 243);
+            border-width: 0.5rem;
+            border-style:double;
+        }
 </style>
 </body>
 </html>
