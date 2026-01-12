@@ -4,4 +4,23 @@
 2026-01-12T16:20:51.142165 [INFO] Starting server
 2026-01-12T16:21:07.782067 [SUCCESS] User jb@jb sucessfully logged in
 2026-01-12T16:21:49.024320 [INFO] Starting server
+<<<<<<< HEAD
 2026-01-12T17:17:12.814588 [INFO] Starting server
+=======
+2026-01-12T16:23:43.096349 [INFO] Starting server
+2026-01-12T16:23:52.942929 [SUCCESS] User jb@jb sucessfully logged in
+2026-01-12T16:24:15.668136 [SUCCESS] User jb@jb successfully created dublin and added 0 members!
+2026-01-12T17:18:50.299596 [INFO] Starting server
+2026-01-12T17:20:08.569693 [INFO] Starting server
+2026-01-12T17:21:02.752777 [INFO] Starting server
+2026-01-12T17:23:02.067378 [INFO] Starting server
+2026-01-12T17:23:44.284027 [INFO] Starting server
+2026-01-12T17:24:48.635296 [INFO] Starting server
+2026-01-12T17:26:35.490013 [INFO] Starting server
+2026-01-12T17:26:49.553864 [INFO] Starting server
+2026-01-12T17:31:22.598016 [INFO] Starting server
+2026-01-12T17:33:01.322034 [INFO] Starting server
+2026-01-12T17:33:04.944772 [INFO] Starting server
+2026-01-12T17:34:48.202572 [INFO] Starting server
+2026-01-12T17:35:30.352942 [INFO] Starting server
+>>>>>>> 261b40b0791ef2b747c11acf464c725173c367e7
