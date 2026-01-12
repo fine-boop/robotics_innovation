@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Browse Sites</title>
+
+    <style>
+        body {
+            font-family: system-ui, sans-serif;
+            max-width: 900px;
+            margin: 40px auto;
+            padding: 0 16px;
+        }
+
+        h1 {
+            margin-bottom: 12px;
+        }
+
+        .controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+
+        input, select, button {
+            padding: 6px 8px;
+            font-size: 14px;
+        }
+
+        button {
+            cursor: pointer;
+        }
+
+        label {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 14px;
+        }
+
+        .count {
+            font-size: 13px;
+            color: #666;
+            margin-bottom: 12px;
+        }
+
+        .site {
+            padding: 10px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .site strong {
+            font-weight: 600;
+        }
+
+        .meta {
+            font-size: 13px;
+            color: #666;
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Browse Sites</h1>
+
+<!-- Controls -->
+<div class="controls">
+    <input type="text" id="nameFilter" placeholder="Site name">
+    <input type="text" id="ownerFilter" placeholder="Owner name">
+    <input type="number" id="minArtefacts" placeholder="Min artefacts" min="0">
+
+    <label>
+        <input type="checkbox" id="hasPassword">
+        Has password
+    </label>
+
+    <select id="sortBy">
+        <option value="name">Sort: Name</option>
+        <option value="artefacts">Sort: Artefacts</option>
+    </select>
+
+    <button id="clearFilters">Clear</button>
+</div>
+
+<div class="count" id="resultCount"></div>
+
+<!-- Sites -->
+<div id="sites">
+{% for site in sites %}
+    {% set artefact_count = artefacts | selectattr('2', 'equalto', site[0]) | list | length %}
+    <div class="site"
+         data-name="{{ site[1]|lower }}"
+         data-owner="{{ site[4]|lower }}"
+         data-password="{{ '1' if site[3] else '0' }}"
+         data-artefacts="{{ artefact_count }}">
+
+        <strong>{{ site[1] }}</strong>
+        <div class="meta">
+            owner: {{ site[4] }} · artefacts: {{ artefact_count }}
+        </div>
+    </div>
+{% endfor %}
+</div>
+
+<script>
+const els = {
+    name: document.getElementById('nameFilter'),
+    owner: document.getElementById('ownerFilter'),
+    minArtefacts: document.getElementById('minArtefacts'),
+    hasPassword: document.getElementById('hasPassword'),
+    sortBy: document.getElementById('sortBy'),
+    clear: document.getElementById('clearFilters'),
+    count: document.getElementById('resultCount'),
+    sites: document.getElementById('sites')
+};
+
+const siteNodes = Array.from(document.querySelectorAll('.site'));
+const total = siteNodes.length;
+
+function applyFilters(updateURL = true) {
+    const nameVal = els.name.value.toLowerCase();
+    const ownerVal = els.owner.value.toLowerCase();
+    const minArt = Number(els.minArtefacts.value || 0);
+    const pass = els.hasPassword.checked;
+    const sort = els.sortBy.value;
+
+    let visibleCount = 0;
+
+    siteNodes.forEach(site => {
+        let show = true;
+
+        if (nameVal && !site.dataset.name.includes(nameVal)) show = false;
+        if (ownerVal && !site.dataset.owner.includes(ownerVal)) show = false;
+        if (Number(site.dataset.artefacts) < minArt) show = false;
+        if (pass && site.dataset.password !== '1') show = false;
+
+        site.classList.toggle('hidden', !show);
+        if (show) visibleCount++;
+    });
+
+    sortSites(sort);
+    els.count.textContent = `Showing ${visibleCount} / ${total} sites`;
+
+    if (updateURL) syncURL();
+}
+
+function sortSites(mode) {
+    const sorted = [...siteNodes].sort((a, b) => {
+        if (mode === 'artefacts') {
+            return Number(b.dataset.artefacts) - Number(a.dataset.artefacts);
+        }
+        return a.dataset.name.localeCompare(b.dataset.name);
+    });
+
+    sorted.forEach(s => els.sites.appendChild(s));
+}
+
+function syncURL() {
+    const params = new URLSearchParams();
+
+    if (els.name.value) params.set('name', els.name.value);
+    if (els.owner.value) params.set('owner', els.owner.value);
+    if (els.minArtefacts.value) params.set('min', els.minArtefacts.value);
+    if (els.hasPassword.checked) params.set('pass', '1');
+    if (els.sortBy.value !== 'name') params.set('sort', els.sortBy.value);
+
+    history.replaceState(null, '', '?' + params.toString());
+}
+
+function loadFromURL() {
+    const params = new URLSearchParams(location.search);
+
+    els.name.value = params.get('name') || '';
+    els.owner.value = params.get('owner') || '';
+    els.minArtefacts.value = params.get('min') || '';
+    els.hasPassword.checked = params.get('pass') === '1';
+    els.sortBy.value = params.get('sort') || 'name';
+
+    applyFilters(false);
+}
+
+els.clear.addEventListener('click', () => {
+    Object.values(els).forEach(el => {
+        if (el.tagName === 'INPUT') {
+            el.type === 'checkbox' ? el.checked = false : el.value = '';
+        }
+    });
+    els.sortBy.value = 'name';
+    applyFilters();
+});
+
+Object.values(els).forEach(el => {
+    if (el instanceof HTMLElement && el !== els.clear && el !== els.count && el !== els.sites) {
+        el.addEventListener(el.type === 'checkbox' || el.tagName === 'SELECT' ? 'change' : 'input', applyFilters);
+    }
+});
+
+loadFromURL();
+</script>
+
+</body>
+</html>
