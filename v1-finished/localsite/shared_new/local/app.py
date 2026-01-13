@@ -86,9 +86,9 @@ def home():
 def signup():
     if request.method == "POST":
         conn, cursor = init_conn()
-        email = request.form['email']
-        name = request.form['name']
-        password = request.form['password']
+        email = request.form.get['email']
+        name = request.form.get['name']
+        password = request.form.get['password']
         if not email or not name or not password:
             flash('Something went wrong.', 'red')
             exit()
@@ -108,8 +108,8 @@ def signup():
 def login():
     if request.method == 'POST':
         conn, cursor = init_conn()
-        email = request.form['email']
-        password = request.form['password']
+        email = request.form.get['email']
+        password = request.form.get['password']
         if not email or not password:
             flash('Something went wrong.', 'red')
             return redirect('/login')
@@ -148,8 +148,8 @@ def my_sites():
     conn , cursor = init_conn()
     sites = []
     uid = cursor.execute('SELECT id FROM users WHERE email = ?', (session['email'],)).fetchone()[0]
-    if request.method == 'POST':
-        site_to_leave = request.form['site_to_leave']
+    if request.method == 'POST' and 'uid' in session:
+        site_to_leave = request.form.get['site_to_leave']
         if not site_to_leave:
             print(console_log('User ' + session['email'], 'warn'))
             flash('Something went wrong 1')
@@ -199,9 +199,9 @@ def my_sites():
 #         return redirect('/')
 #     if request.method == "POST":
 #         conn, cursor = init_conn()
-#         site_name = request.form['site_name']
-#         site_password = request.form['site_password']
-#         site_members = request.form['site_members']
+#         site_name = request.form.get['site_name']
+#         site_password = request.form.get['site_password']
+#         site_members = request.form.get['site_members']
 #         if not site_name or not site_password or not site_members:
 #             print(console_log('Unexpected error in create_sites, user may be tampering with requests', 'warn'))
 #             flash('Error')
@@ -230,10 +230,10 @@ def my_profile():
         return redirect('/')
     conn, cursor = init_conn()
     id, name = cursor.execute('SELECT id, name FROM users WHERE email = ?', (session['email'],)).fetchone()
-    if request.method == 'POST':
-        thing_to_change = request.form['thing_to_change']
+    if request.method == 'POST' and 'uid' in session:
+        thing_to_change = request.form.get['thing_to_change']
         if thing_to_change == 'email':
-            new_email = request.form['email']
+            new_email = request.form.get['email']
             if new_email == session['email']:
                 flash('New email cannot be the same as the old one!')
                 console_log(session['email'] + ' tried to update their email but reused the old one', 'info')
@@ -249,7 +249,7 @@ def my_profile():
             finally:
                 conn.close()
         elif thing_to_change == 'name':
-            new_name = request.form['name']
+            new_name = request.form.get['name']
             if new_name == session['name']:
                 flash('New name cannot be the same as the old one!')
                 console_log(session['email'] + ' tried to update their name but reused the old one', 'info')
@@ -265,7 +265,7 @@ def my_profile():
             finally:
                 conn.close()
         elif thing_to_change == 'password':
-            new_name = request.form['password']
+            new_name = request.form.get['password']
             if new_name == session['password']:
                 flash('New password cannot be the same as the old one!')
                 console_log(session['email'] + ' tried to update their password but reused the old one', 'info')
@@ -289,8 +289,8 @@ def join_site():
     conn, cursor = init_conn()
     sites_names = cursor.execute('SELECT name FROM sites').fetchall()
     if request.method == 'POST':
-        site_name = request.form['name']
-        site_password = request.form['password']
+        site_name = request.form.get['name']
+        site_password = request.form.get['password']
         if not cursor.execute('SELECT 1 FROM sites WHERE name = ?', (site_name,)).fetchone():
             flash('Site does not exist!')
             print(console_log(f'{session["email"]} tried to join a nonexistent site', 'info'))
@@ -335,10 +335,10 @@ def create_site():
         return redirect('/')
     conn, cursor = init_conn()
     users_names = cursor.execute('SELECT id, name FROM users WHERE id  != ?', (session['uid'],)).fetchall()
-    if request.method == 'POST':
-        site_name = request.form['name']
-        site_password = request.form['password']
-        site_members = request.form.getlist('site_members')
+    if request.method == 'POST' and 'uid' in session:
+        site_name = request.form.get['name']
+        site_password = request.form.get['password']
+        site_members = request.form.get.getlist('site_members')
         if cursor.execute('SELECT 1 FROM sites WHERE name = ?', (site_name,)).fetchone():
             print(console_log(f'{session["email"]} tried to create the site {site_name}, already exists', 'info'))
             flash('Site exists!')
@@ -372,6 +372,48 @@ def browse_sites():
     artefacts = cursor.execute('SELECT * FROM artefacts').fetchall()
     site_members = cursor.execute('SELECT * FROM site_members').fetchall()
     return render_template('browse_sites.html', sites=sites, artefacts=artefacts, site_members=site_members)
+
+
+@app.route('/log_artefact', methods = ["GET", "POST"])
+def log_artefact():
+    if not 'uid' in session:
+        console_log('User not logged in tried to access /log_artefact endpoint', 'warn')
+        return redirect('/')
+    conn, cursor = init_conn()
+    sites = []
+    sites_user_is_in = cursor.execute('SELECT site_id FROM site_members WHERE user_id = ?', (session['uid'],)).fetchall()
+    if not sites_user_is_in:
+        flash('You dont belong to any sites!')
+        return render_template('log_artefact.html', no_sites=True)
+
+    for site in sites_user_is_in:
+        site_id = site[0]
+        site_name = cursor.execute('SELECT name FROM sites WHERE id = ?', (site_id,)).fetchone()[0]
+        sites.append((site_id, site_name))
+
+    if request.method == 'POST' and 'uid' in session:
+        artefact_name = request.form.get['name']
+        weight = request.form.get['weight']
+        location_found = request.form.get['location']
+        site = request.form.get['site']
+        try:
+            cursor.execute('INSERT INTO artefacts (name, weight, site, location, user_found) VALUES =  (?, ?, ?, ?, ?)', (artefact_name, weight, site, location_found, session['uid']))
+            print(console_log(f'{session["email"]} just logged an artefact', 'success'))
+            conn.commit()
+            flash('Successfully logged ' + artefact_name + '!')
+        except sqlite3.Error as e:
+            print(console_log(f'{session["email"]} hit error {e} when logging artefact'))
+            flash('Error')
+        finally:
+            conn.close()
+        
+    return render_template('log_artefact.html', sites=sites)
+
+
+
+
+
+
 if __name__ == '__main__':
     print(console_log('Starting server', 'info'))
     init_db()
