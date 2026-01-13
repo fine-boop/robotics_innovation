@@ -2,86 +2,50 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Browse Sites</title>
-
+    <title>Browse Sites & Artefacts</title>
     <style>
         body {
             font-family: system-ui, sans-serif;
-            max-width: 900px;
+            max-width: 1000px;
             margin: 40px auto;
             padding: 0 16px;
         }
-
-        h1 {
-            margin-bottom: 12px;
-        }
-
+        h1, h2 { margin-bottom: 12px; }
         .controls {
             display: flex;
             flex-wrap: wrap;
             gap: 8px;
-            margin-bottom: 8px;
-        }
-
-        input, select, button {
-            padding: 6px 8px;
-            font-size: 14px;
-        }
-
-        button {
-            cursor: pointer;
-        }
-
-        label {
-            display: flex;
-            align-items: center;
-            gap: 4px;
-            font-size: 14px;
-        }
-
-        .count {
-            font-size: 13px;
-            color: #666;
             margin-bottom: 12px;
         }
-
-        .site {
+        input, select, button { padding: 6px 8px; font-size: 14px; }
+        button { cursor: pointer; }
+        label { display: flex; align-items: center; gap: 4px; font-size: 14px; }
+        .count { font-size: 13px; color: #666; margin-bottom: 12px; }
+        .item {
             padding: 10px 0;
             border-bottom: 1px solid #eee;
         }
-
-        .site strong {
-            font-weight: 600;
-        }
-
-        .meta {
-            font-size: 13px;
-            color: #666;
-        }
-
-        .hidden {
-            display: none;
-        }
+        .item strong { font-weight: 600; }
+        .meta { font-size: 13px; color: #666; }
+        .hidden { display: none; }
+        .section { margin-bottom: 32px; }
     </style>
 </head>
 <body>
 
-<h1>Browse Sites</h1>
+<h1>Browse Sites & Artefacts</h1>
 
-<!-- Controls -->
 <div class="controls">
-    <input type="text" id="nameFilter" placeholder="Site name">
+    <input type="text" id="nameFilter" placeholder="Site/Artefact name">
     <input type="text" id="ownerFilter" placeholder="Owner name">
     <input type="number" id="minArtefacts" placeholder="Min artefacts" min="0">
-
-    <label>
-        <input type="checkbox" id="hasPassword">
-        Has password
-    </label>
+    
+    <label><input type="checkbox" id="hasPassword"> Has password</label>
 
     <select id="sortBy">
         <option value="name">Sort: Name</option>
         <option value="artefacts">Sort: Artefacts</option>
+        <option value="date">Sort: Date Added</option>
     </select>
 
     <button id="clearFilters">Clear</button>
@@ -89,25 +53,60 @@
 
 <div class="count" id="resultCount"></div>
 
-<!-- Sites -->
-<div id="sites">
-{% for site in sites %}
-    {% set artefact_count = artefacts | selectattr('2', 'equalto', site[0]) | list | length %}
-    <div class="site"
-         data-name="{{ site[1]|lower }}"
-         data-owner="{{ site[4]|lower }}"
-         data-password="{{ '1' if site[3] else '0' }}"
-         data-artefacts="{{ artefact_count }}">
-
-        <strong>{{ site[1] }}</strong>
-        <div class="meta">
-            owner: {{ site[4] }} · artefacts: {{ artefact_count }}
+<div class="section" id="sitesSection">
+    <h2>Sites</h2>
+    <div id="sites">
+    {% for site in sites %}
+        {% set members = site_members | selectattr('1', 'equalto', site[0]) | list %}
+        {% set owner_id = members[0][2] if members else 'N/A' %}
+        {% set artefact_count = artefacts | selectattr('2', 'equalto', site[0]) | list | length %}
+        <div class="item site"
+             data-name="{{ site[1]|lower }}"
+             data-owner="{{ owner_id }}"
+             data-password="{{ '1' if site[2] else '0' }}"
+             data-artefacts="{{ artefact_count }}">
+            <strong>{{ site[1] }}</strong>
+            <div class="meta">
+                Owner ID: {{ owner_id }} · Artefacts: {{ artefact_count }}
+            </div>
         </div>
+    {% endfor %}
     </div>
-{% endfor %}
+</div>
+
+<div class="section" id="artefactsSection">
+    <h2>Artefacts</h2>
+    <div id="artefacts">
+    {% for art in artefacts %}
+        <div class="item artefact"
+             data-name="{{ art[1]|lower }}"
+             data-type="{{ art[3] }}"
+             data-date="{{ art[4] }}"
+             data-owner="{{ art[2] }}">
+            <strong>{{ art[1] }}</strong>
+            <div class="meta">
+                Type: {{ art[3] }} · Owner ID: {{ art[2] }} · Date: {{ art[4] }}
+            </div>
+        </div>
+    {% endfor %}
+    </div>
 </div>
 
 <script>
+// --- Build user mapping from Flask users ---
+const userMap = {
+    {% for user in users %}
+        {{ user[0] }}: "{{ user[1] }}"{% if not loop.last %},{% endif %}
+    {% endfor %}
+};
+
+// --- Define human-readable artefact types ---
+const typeMap = {
+    1: "Exploit",
+    2: "Tool",
+    3: "Document"
+};
+
 const els = {
     name: document.getElementById('nameFilter'),
     owner: document.getElementById('ownerFilter'),
@@ -116,11 +115,40 @@ const els = {
     sortBy: document.getElementById('sortBy'),
     clear: document.getElementById('clearFilters'),
     count: document.getElementById('resultCount'),
-    sites: document.getElementById('sites')
+    sites: document.getElementById('sites'),
+    artefacts: document.getElementById('artefacts')
 };
 
 const siteNodes = Array.from(document.querySelectorAll('.site'));
-const total = siteNodes.length;
+const artefactNodes = Array.from(document.querySelectorAll('.artefact'));
+const totalSites = siteNodes.length;
+const totalArtefacts = artefactNodes.length;
+
+// --- Replace IDs with human-readable names ---
+siteNodes.forEach(site => {
+    const ownerId = site.dataset.owner;
+    if (userMap[ownerId]) {
+        let meta = site.querySelector('.meta');
+        meta.innerHTML = meta.innerHTML.replace(`Owner ID: ${ownerId}`, `Owner: ${userMap[ownerId]}`);
+    }
+});
+
+artefactNodes.forEach(art => {
+    const typeNum = art.dataset.type;
+    const ownerId = art.dataset.owner;
+    let meta = art.querySelector('.meta');
+
+    // Replace type
+    if (typeMap[typeNum]) meta.innerHTML = meta.innerHTML.replace(`Type: ${typeNum}`, `Type: ${typeMap[typeNum]}`);
+    // Replace owner
+    if (userMap[ownerId]) meta.innerHTML = meta.innerHTML.replace(`Owner ID: ${ownerId}`, `Owner: ${userMap[ownerId]}`);
+    // Format date
+    let dateNum = Number(art.dataset.date);
+    if (!isNaN(dateNum)) {
+        let date = new Date(dateNum * 1000); // adjust multiplier if needed
+        meta.innerHTML = meta.innerHTML.replace(`Date: ${art.dataset.date}`, `Date: ${date.toLocaleDateString()}`);
+    }
+});
 
 function applyFilters(updateURL = true) {
     const nameVal = els.name.value.toLowerCase();
@@ -129,58 +157,66 @@ function applyFilters(updateURL = true) {
     const pass = els.hasPassword.checked;
     const sort = els.sortBy.value;
 
-    let visibleCount = 0;
-
+    let visibleSites = 0;
     siteNodes.forEach(site => {
         let show = true;
-
         if (nameVal && !site.dataset.name.includes(nameVal)) show = false;
-        if (ownerVal && !site.dataset.owner.includes(ownerVal)) show = false;
+        if (ownerVal && !site.querySelector('.meta').innerText.toLowerCase().includes(ownerVal)) show = false;
         if (Number(site.dataset.artefacts) < minArt) show = false;
         if (pass && site.dataset.password !== '1') show = false;
-
         site.classList.toggle('hidden', !show);
-        if (show) visibleCount++;
+        if (show) visibleSites++;
     });
 
-    sortSites(sort);
-    els.count.textContent = `Showing ${visibleCount} / ${total} sites`;
+    let visibleArtefacts = 0;
+    artefactNodes.forEach(art => {
+        let show = true;
+        if (nameVal && !art.dataset.name.includes(nameVal)) show = false;
+        if (ownerVal && !art.querySelector('.meta').innerText.toLowerCase().includes(ownerVal)) show = false;
+        art.classList.toggle('hidden', !show);
+        if (show) visibleArtefacts++;
+    });
+
+    sortItems(sort);
+    els.count.textContent = `Showing ${visibleSites} / ${totalSites} sites · ${visibleArtefacts} / ${totalArtefacts} artefacts`;
 
     if (updateURL) syncURL();
 }
 
-function sortSites(mode) {
-    const sorted = [...siteNodes].sort((a, b) => {
-        if (mode === 'artefacts') {
-            return Number(b.dataset.artefacts) - Number(a.dataset.artefacts);
-        }
-        return a.dataset.name.localeCompare(b.dataset.name);
-    });
-
-    sorted.forEach(s => els.sites.appendChild(s));
+function sortItems(mode) {
+    function sortNodes(nodes, key) {
+        const sorted = [...nodes].sort((a, b) => {
+            if (mode === 'artefacts' && a.dataset.artefacts !== undefined) {
+                return Number(b.dataset.artefacts) - Number(a.dataset.artefacts);
+            } else if (mode === 'date' && a.dataset.date) {
+                return new Date(b.dataset.date * 1000) - new Date(a.dataset.date * 1000);
+            } else {
+                return a.dataset[key].localeCompare(b.dataset[key]);
+            }
+        });
+        sorted.forEach(n => n.parentNode.appendChild(n));
+    }
+    sortNodes(siteNodes, 'name');
+    sortNodes(artefactNodes, 'name');
 }
 
 function syncURL() {
     const params = new URLSearchParams();
-
     if (els.name.value) params.set('name', els.name.value);
     if (els.owner.value) params.set('owner', els.owner.value);
     if (els.minArtefacts.value) params.set('min', els.minArtefacts.value);
     if (els.hasPassword.checked) params.set('pass', '1');
     if (els.sortBy.value !== 'name') params.set('sort', els.sortBy.value);
-
     history.replaceState(null, '', '?' + params.toString());
 }
 
 function loadFromURL() {
     const params = new URLSearchParams(location.search);
-
     els.name.value = params.get('name') || '';
     els.owner.value = params.get('owner') || '';
     els.minArtefacts.value = params.get('min') || '';
     els.hasPassword.checked = params.get('pass') === '1';
     els.sortBy.value = params.get('sort') || 'name';
-
     applyFilters(false);
 }
 
@@ -195,7 +231,7 @@ els.clear.addEventListener('click', () => {
 });
 
 Object.values(els).forEach(el => {
-    if (el instanceof HTMLElement && el !== els.clear && el !== els.count && el !== els.sites) {
+    if (el instanceof HTMLElement && el !== els.clear && el !== els.count && el !== els.sites && el !== els.artefacts) {
         el.addEventListener(el.type === 'checkbox' || el.tagName === 'SELECT' ? 'change' : 'input', applyFilters);
     }
 });
