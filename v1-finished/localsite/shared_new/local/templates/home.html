@@ -28,8 +28,8 @@
 {% else %}
     <body>
         <div class="idek">
-        <img src="v1-finished/localsite/shared_new/static/css/images/homepage1.png" height="700px" width="500px">
-        <a href="/signup">Signup</a>
+        <img src="{{ url_for('static', filename='image.png') }}"height="700" width="500">
+            <a href="/signup">Signup</a>
         <a href="/login">Login</a>
         </div>
     </body>
