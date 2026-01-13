@@ -101,7 +101,7 @@ def signup():
             print(console_log(e, 'error'))
         finally:
             conn.close()
-            return redirect('/signup')
+            return redirect('/login')
     return render_template('signup.html')
 
 @app.route('/login', methods=["GET", "POST"])

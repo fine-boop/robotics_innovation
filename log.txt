@@ -2,3 +2,10 @@
 2026-01-08T17:05:51.424186 [INFO] User sophiakidney@gmail.com has begun login proccess
 2026-01-08T17:05:51.425564 [SUCCESS] User sophiakidney@gmail.com sucessfully logged in
 2026-01-08T17:06:09.731952 [INFO] User sophiakidney@gmail.com has logged out
+2026-01-12T19:39:23.610942 [INFO] Starting server
+2026-01-13T10:34:01.757672 [INFO] Starting server
+2026-01-13T10:45:37.460016 [INFO] Starting server
+2026-01-13T16:09:47.340236 [INFO] Starting server
+2026-01-13T16:14:53.131087 [INFO] Starting server
+2026-01-13T16:22:56.439068 [INFO] Starting server
+2026-01-13T16:25:32.284648 [INFO] Starting server

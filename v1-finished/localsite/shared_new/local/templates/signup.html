@@ -5,10 +5,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Signup</title>
     <style>
+        body {
+            background-color: rgb(255, 255, 255);
+        }
         button{
             border-radius: 0.2rem;
-            background-color: rgba(255, 153, 231, 0.53);
+            background-color: rgba(255, 204, 243, 0.578);
+            border: 0.15rem rgb(255, 204, 243) solid;
+        }
+        input {
             border: 0.15rem rgb(255, 153, 231) solid;
+            background-color: rgba(255, 153, 231, 0.53);
         }
         .signup1 {
             width: 20rem;
@@ -16,13 +23,10 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            background-color: rgba(249, 215, 241, 0.422);
+            background-color: rgba(200, 200, 200, 0.418);
 
             border-radius: 0.5rem;
-            border: 0.5rem rgb(255, 204, 243) double;
-        }
-        input {
-            font: pink;
+            border: 0.5rem rgb(200, 200, 200) double;
         }
     </style>
 </head>
@@ -45,10 +49,5 @@
         {% endfor %}
     {% endif %}
     {% endwith %}
-<style>
-    body {
-        background-color: rgb(255, 255, 255);
-    }
-</style>
 </body>
 </html>
