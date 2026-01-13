@@ -224,7 +224,7 @@ def my_sites():
 #         finally:
 #             conn.close()
 
-@app.route('/my_profile', methods = ["GET", "POST"])
+@app.route('/profile', methods = ["GET", "POST"])
 def my_profile():
     if 'uid' not in session:
         return redirect('/')
