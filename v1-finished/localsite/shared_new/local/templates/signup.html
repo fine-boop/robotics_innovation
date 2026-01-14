@@ -4,10 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Signup</title>
-    <link rel="stylesheet" href="/v1-finished/localsite/shared_new/local/static/css/css.css">
     <style>
         body {
             background-color: rgb(255, 255, 255);
+        }
+        .page-center {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
         }
         button{
             border-radius: 1dvw;
@@ -21,6 +26,11 @@
             border-top: none;
             border-left: none;
             border-right: none;
+            border-bottom: 0.15rem rgb(99 141 187) solid;
+            transition: 0.5s;
+        }
+        input[type=text]:focus, input[type=email]:focus, input[type=password]:focus {
+            outline:none;
             border-bottom: 0.15rem rgb(99 141 187) solid;
         }
         .signup1 {
@@ -44,16 +54,18 @@
     </style>
 </head>
 <body>
-    <div class="signup1">
-        <h1 style="text-decoration: underline;">Sign Up</h1>
-        <form method="post" action="/signup">
-                <input type="text" name="name" id="name" placeholder="Name" required><br><br>
-                <input type="email" name="email" id="email" placeholder="Email" required><br><br>
-                <input type="password" name="password" id="password" placeholder="Password" required><br><br>
-                <button name="signup" id="signup">Sign Up</button>
-        </form>
-        <p>already have an account with us? <a href="/login">Log in here</a></p>
-        <a href="/">Home</a>
+    <div class="page-center">
+        <div class="signup1">
+            <h1 style="text-decoration: underline;">Sign Up</h1>
+            <form method="post" action="/signup">
+                    <input type="text" name="name" id="name" placeholder="Name" required><br><br>
+                    <input type="email" name="email" id="email" placeholder="Email" required><br><br>
+                    <input type="password" name="password" id="password" placeholder="Password" required><br><br>
+                    <button name="signup" id="signup">Sign Up</button>
+            </form>
+            <p>already have an account with us? <a href="/login">Log in here</a></p>
+            <a href="/">Home</a>
+        </div>
     </div>
     {% with messages = get_flashed_messages(with_categories=true) %}
     {% if messages %}
