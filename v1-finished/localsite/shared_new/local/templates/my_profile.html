@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile</title>
+    <script>
+        function showEdit(field) {
+            document.getElementById(field + "-display").style.display = "none";
+            document.getElementById(field + "-form").style.display = "block";
+        }
+    </script>
+</head>
+<body>
+    <h1>My Profile</h1>
+
+    <!-- Email -->
+    <div id="email-display">
+        <h2>Email:</h2>
+        <p>{{ session['email'] }}</p>
+        <button onclick="showEdit('email')">Edit</button>
+    </div>
+    <div id="email-form" style="display: none;">
+        <form method="POST">
+            <input type="hidden" name="thing_to_change" value="email">
+            <input type="email" name="email" value="{{ session['email'] }}">
+            <button type="submit">Save</button>
+        </form>
+    </div>
+
+    <!-- Name -->
+    <div id="name-display">
+        <h2>Name:</h2>
+        <p>{{ session['name'] }}</p>
+        <button onclick="showEdit('name')">Edit</button>
+    </div>
+    <div id="name-form" style="display: none;">
+        <form method="POST">
+            <input type="hidden" name="thing_to_change" value="name">
+            <input type="text" name="name" value="{{ session['name'] }}">
+            <button type="submit">Save</button>
+        </form>
+    </div>
+
+    <!-- Password -->
+    <div id="password-display">
+        <h2>Password:</h2>
+        <p>********</p>
+        <button onclick="showEdit('password')">Edit</button>
+    </div>
+    <div id="password-form" style="display: none;">
+        <form method="POST">
+            <input type="hidden" name="thing_to_change" value="password">
+            <input type="password" name="password">
+            <button type="submit">Save</button>
+        </form>
+    </div>
+
+</body>
+</html>

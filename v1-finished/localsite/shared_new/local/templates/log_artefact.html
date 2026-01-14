@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Log Artefact</title>
+
+    <!-- minimal CSS -->
+    <style>
+        body { font-family: sans-serif; max-width: 600px; margin: 40px auto; }
+        form { display: none; }
+        label { display: block; margin-top: 12px; }
+        input, select, button { width: 100%; padding: 6px; margin-top: 4px; }
+        .msg { margin-bottom: 16px; }
+    </style>
+</head>
+<body>
+
+<h2>Log Artefact</h2>
+
+<!-- flashed messages -->
+{% with messages = get_flashed_messages() %}
+  {% if messages %}
+    <div class="msg">
+      {% for message in messages %}
+        <div>{{ message }}</div>
+      {% endfor %}
+    </div>
+  {% endif %}
+{% endwith %}
+
+{% if no_sites %}
+    <p>You don’t belong to any sites.</p>
+{% else %}
+
+<form method="POST" id="artefactForm">
+    <label>
+        Artefact name
+        <input type="text" name="name" required>
+    </label>
+
+    <label>
+        Weight (kg)
+        <input type="number" name="weight" step="0.01" required>
+    </label>
+
+
+
+    <label>
+        Site
+        <select name="site" required>
+            <option value="">Select a site</option>
+            {% for site_id, site_name in sites %}
+                <option value="{{ site_id }}">{{ site_name }}</option>
+            {% endfor %}
+        </select>
+    </label>
+
+    <button type="submit">Log artefact</button>
+</form>
+
+{% endif %}
+
+<!-- JS-heavy, CSS-light -->
+<script>
+(() => {
+    const form = document.getElementById("artefactForm");
+    if (!form) return;
+
+    // reveal form only when JS loads
+    form.style.display = "block";
+
+    // client-side sanity checks
+    form.addEventListener("submit", e => {
+        const weight = form.weight.value;
+        if (weight <= 0) {
+            alert("Weight must be greater than 0");
+            e.preventDefault();
+        }
+    });
+})();
+</script>
+
+</body>
+</html>
