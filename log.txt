@@ -9,3 +9,84 @@
 2026-01-13T16:14:53.131087 [INFO] Starting server
 2026-01-13T16:22:56.439068 [INFO] Starting server
 2026-01-13T16:25:32.284648 [INFO] Starting server
+2026-01-13T16:29:46.388772 [INFO] Starting server
+2026-01-13T16:35:17.322864 [INFO] Starting server
+2026-01-13T16:47:26.323008 [INFO] User sophiakidney@gmail.com failed login with incorrect password: passowrd
+2026-01-13T16:48:04.590153 [INFO] User sophiakidney@gmail.com failed login with incorrect password: passowrd
+2026-01-13T16:50:20.894114 [INFO] User sophiakidney@gmail.com failed login with incorrect password: passowrd
+2026-01-13T16:50:44.041696 [SUCCESS] User sophiakidney@gmail.com sucessfully logged in
+2026-01-13T16:51:49.474954 [INFO] User sophiakidney@gmail.com has logged out
+2026-01-13T16:52:04.723224 [INFO] User sophiakidney@gmail.com failed login with incorrect password: passowrd
+2026-01-13T16:52:18.275626 [INFO] User sophiakidney@gmail.com failed login with incorrect password: passowrd
+2026-01-13T16:52:27.517805 [SUCCESS] User sophiakidney@gmail.com sucessfully logged in
+2026-01-13T17:43:09.083088 [INFO] Starting server
+2026-01-13T17:43:40.579516 [INFO] User sophiakidney@gmail.com failed login with incorrect password: passowrd
+2026-01-13T17:43:55.255057 [SUCCESS] User sophiakidney@gmail.com sucessfully logged in
+2026-01-13T17:45:04.270218 [INFO] Starting server
+2026-01-13T17:45:21.142494 [INFO] User sophiakidney@gmail.com failed login with incorrect password: passowrd
+2026-01-13T17:45:31.328473 [SUCCESS] User sophiakidney@gmail.com sucessfully logged in
+2026-01-13T18:10:21.493231 [INFO] Starting server
+2026-01-13T18:10:50.977589 [SUCCESS] User sophiakidney@gmail.com sucessfully logged in
+2026-01-13T18:18:16.764530 [INFO] Starting server
+2026-01-13T18:18:31.182864 [SUCCESS] User sophiakidney@gmail.com sucessfully logged in
+2026-01-13T18:26:34.698117 [INFO] Starting server
+2026-01-13T18:26:49.545927 [SUCCESS] User sophiakidney@gmail.com sucessfully logged in
+2026-01-13T20:21:05.804122 [INFO] Starting server
+2026-01-13T20:21:24.723200 [SUCCESS] User sophiakidney@gmail.com sucessfully logged in
+2026-01-13T20:28:43.096954 [INFO] Starting server
+2026-01-13T20:28:58.838374 [SUCCESS] User sophiakidney@gmail.com sucessfully logged in
+2026-01-13T20:38:10.373391 [INFO] Starting server
+2026-01-13T20:38:30.294021 [SUCCESS] User sophiakidney@gmail.com sucessfully logged in
+2026-01-13T20:44:45.335364 [INFO] Starting server
+2026-01-13T20:45:02.935685 [SUCCESS] User sophiakidney@gmail.com sucessfully logged in
+2026-01-13T20:46:15.777631 [INFO] Starting server
+2026-01-13T20:46:28.861045 [SUCCESS] User sophiakidney@gmail.com sucessfully logged in
+2026-01-13T21:23:49.925076 [INFO] Starting server
+2026-01-13T21:24:06.885029 [SUCCESS] User sophiakidney@gmail.com sucessfully logged in
+2026-01-14T15:52:04.233450 [INFO] Starting server
+2026-01-14T15:52:55.307800 [SUCCESS] User sophiakidney@gmail.com sucessfully logged in
+2026-01-14T15:55:28.112655 [INFO] User sophiakidney@gmail.com has logged out
+2026-01-14T15:56:15.953218 [INFO] Starting server
+2026-01-14T15:58:59.833207 [INFO] Starting server
+2026-01-14T16:03:54.208245 [INFO] Starting server
+2026-01-14T16:06:03.490918 [INFO] Starting server
+2026-01-14T16:12:08.422202 [INFO] Starting server
+2026-01-14T16:13:35.296110 [INFO] Starting server
+2026-01-14T16:23:20.569581 [INFO] Starting server
+2026-01-14T17:33:05.995350 [INFO] Starting server
+2026-01-14T17:39:34.871816 [INFO] Starting server
+2026-01-14T17:39:53.084433 [INFO] Starting server
+2026-01-14T17:40:32.570588 [INFO] Starting server
+2026-01-14T17:41:01.476227 [INFO] Starting server
+2026-01-14T18:41:41.892663 [INFO] Starting server
+2026-01-14T18:58:25.526354 [INFO] Starting server
+2026-01-14T19:22:03.025066 [INFO] Starting server
+2026-01-14T19:22:46.196018 [INFO] Starting server
+2026-01-14T19:23:02.974987 [INFO] Starting server
+2026-01-14T19:24:31.241619 [INFO] Starting server
+2026-01-14T19:25:14.675998 [INFO] Starting server
+2026-01-14T19:25:36.700509 [INFO] Starting server
+2026-01-14T19:26:13.869130 [INFO] Starting server
+2026-01-14T19:28:32.644273 [INFO] Starting server
+2026-01-14T19:31:45.594346 [INFO] Starting server
+2026-01-14T19:33:22.670464 [INFO] Starting server
+2026-01-14T19:33:52.014812 [INFO] Starting server
+2026-01-14T19:34:26.296095 [INFO] Starting server
+2026-01-14T19:34:58.946795 [INFO] Starting server
+2026-01-14T19:35:47.450524 [INFO] Starting server
+2026-01-14T19:36:53.699169 [INFO] Starting server
+2026-01-14T19:37:56.983595 [INFO] Starting server
+2026-01-14T20:24:48.252769 [INFO] Starting server
+2026-01-14T20:30:15.283612 [INFO] Starting server
+2026-01-14T20:30:35.083522 [INFO] Starting server
+2026-01-14T20:31:34.343032 [INFO] Starting server
+2026-01-14T20:32:34.080366 [INFO] Starting server
+2026-01-14T20:33:56.176125 [INFO] Starting server
+2026-01-14T20:35:34.746491 [INFO] Starting server
+2026-01-14T20:41:39.002328 [SUCCESS] User sophiakidney@gmail.com sucessfully logged in
+2026-01-14T20:42:07.209817 [INFO] User sophiakidney@gmail.com has logged out
+2026-01-14T20:44:10.166725 [INFO] Starting server
+2026-01-14T20:46:02.193249 [INFO] Starting server
+2026-01-14T20:46:56.306349 [INFO] Starting server
+2026-01-14T20:54:53.990328 [SUCCESS] User sophiakidney@gmail.com sucessfully logged in
+2026-01-14T20:57:49.868644 [INFO] User sophiakidney@gmail.com has logged out

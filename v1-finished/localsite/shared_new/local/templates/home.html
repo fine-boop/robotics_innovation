@@ -10,27 +10,93 @@
             background-color: white;
         }
         .idek {
-            font-size: 2vw;
-        }
-    </style>
-</head>
-{% if session['name'] %}
+            font-size: 2dvw;
+            display: flex;
+            flex-direction: row;
 
-<h1>Hello {{ session['email'] }}</h1>
-<a href="/my_sites"><h2>My sites</h2></a>
-<a href="/profile"><h2>My profile</h2></a>
-<a href="/logout"><h2>Logout</h2></a>
-<a href="/join_site"><h2>Join a site</h2></a>
-<a href="/create_site"><h2>Create a site</h2></a>
-<a href="/sites"><h2>Browse sites</h2></a>
-<a href="/log_artefact"><h2>Log artefact</h2></a>
+        }
+        .idek2 {
+            border-radius: 0.2rem;
+            padding: 1dvw;
+            background-color: rgba(99, 141, 187, 0.502);
+            border: 0.15rem rgb(99 141 187) solid;
+            border-radius: 1dvw;
+            text-decoration: none;
+        }
+        .idek3 {
+            display: flex;
+            flex-direction: column;
+            justify-content: right;
+        }
+        .home1 {
+            display: flex;
+            flex-direction: row;
+        }
+
+        .dropdown-button {
+        background-color: #4CAF50;
+        color: white;
+        padding: 16px;
+        font-size: 16px;
+        border: none;
+        cursor: pointer;
+        }
+        .dropdown-button:hover, .dropdown-button:focus {
+            background-color: #3e8e41;
+        }
+        .dropdown-hole {
+            position: relative;
+            display: inline-block;
+        }
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #f9f9f9;
+            min-width: 160px;
+            overflow: auto;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+        }
+        .dropdown-content a {
+            color: black;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+        }
+        .dropdown-content a:hover {background-color: #f1f1f1}
+        .show {display:block;}
+    </style>
+    <script>
+        function dropdown() {
+            document.getElementById("dropdown-content").classList.toggle("show");
+        }
+    </script>
+</head>
+<body>
+{% if session['email'] %}
+    <div class="home1">
+        <h1>Hello {{ session['name'] }}</h1>
+        <div class="dropdown-hole">
+            <button id="dropdownbutton" class="dropdown-button" onclick="dropdown()">dropdown</button>
+            <div id="dropdown-content" class="dropdown-content">
+                <a href="/my_sites"><h2>My sites</h2></a>
+                <a href="/profile"><h2>My profile</h2></a>
+                <a href="/logout"><h2>Logout</h2></a>
+                <a href="/join_site"><h2>Join a site</h2></a>
+                <a href="/create_site"><h2>Create a site</h2></a>
+                <a href="/sites"><h2>Browse sites</h2></a>
+                <a href="/log_artefact"><h2>Log artefact</h2></a>
+            </div>
+        </div>
+    </div>
 
 {% else %}
-    <body>
+    
         <div class="idek">
-        <img src="{{ url_for('static', filename='image.png') }}"height="700" width="500">
-            <a href="/signup">Signup</a>
-        <a href="/login">Login</a>
+            <img src="{{ url_for('static', filename='image.png') }}"height="700" width="500">
+            <div class="idek3">
+                <a href="/signup" class="idek2">Signup</a>
+                <a href="/login" class="idek2">Login</a>
+            </div>
         </div>
     </body>
     </html>

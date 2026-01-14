@@ -4,43 +4,56 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Signup</title>
+    <link rel="stylesheet" href="/v1-finished/localsite/shared_new/local/static/css/css.css">
     <style>
         body {
             background-color: rgb(255, 255, 255);
         }
         button{
-            border-radius: 0.2rem;
-            background-color: rgba(255, 204, 243, 0.578);
-            border: 0.15rem rgb(255, 204, 243) solid;
+            border-radius: 1dvw;
+            width: 13dvw;
+            height: 2dvw;
+            background-image: linear-gradient(to right, rgb(99 141 187) , rgba(99, 141, 187, 0.413));
+            border: none;
         }
         input {
-            border: 0.15rem rgb(255, 153, 231) solid;
-            background-color: rgba(255, 153, 231, 0.53);
+            background: none;
+            border-top: none;
+            border-left: none;
+            border-right: none;
+            border-bottom: 0.15rem rgb(99 141 187) solid;
         }
         .signup1 {
-            width: 20rem;
-            height: 20rem;
+            width: 25dvw;
+            height: 25dvw;
             display: flex;
             flex-direction: column;
+            justify-content: center;
             align-items: center;
-            background-color: rgba(200, 200, 200, 0.418);
+            background-color: rgba(150, 150, 150, 0.5);
 
-            border-radius: 0.5rem;
-            border: 0.5rem rgb(200, 200, 200) double;
+            border-radius: 0.5dvw;
+            border: 0.1dvw rgb(150, 150, 150) solid;
+            box-shadow: 5px 5px 3px rgb(225, 225, 225);
+        }
+        h3 {
+            font-size: 2dvw;
+            font-weight: bold;
+            margin: 0;
         }
     </style>
 </head>
 <body>
-    <a href="/">Home</a>
     <div class="signup1">
-    <h1>Signup</h1>
-    <form method="post" action="/signup">
-        <input type="text" name="name" id="name" placeholder="Name" required><br><br>
-        <input type="email" name="email" id="email" placeholder="Email" required><br><br>
-        <input type="password" name="password" id="password" placeholder="Password" required><br><br>
-        <button name="signup" id="signup">Sign Up</button>
-    </form>
-    <p>already have an account with us? <a href="/login">Log in here</a></p>
+        <h1 style="text-decoration: underline;">Sign Up</h1>
+        <form method="post" action="/signup">
+                <input type="text" name="name" id="name" placeholder="Name" required><br><br>
+                <input type="email" name="email" id="email" placeholder="Email" required><br><br>
+                <input type="password" name="password" id="password" placeholder="Password" required><br><br>
+                <button name="signup" id="signup">Sign Up</button>
+        </form>
+        <p>already have an account with us? <a href="/login">Log in here</a></p>
+        <a href="/">Home</a>
     </div>
     {% with messages = get_flashed_messages(with_categories=true) %}
     {% if messages %}
