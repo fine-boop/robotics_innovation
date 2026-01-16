@@ -26,6 +26,7 @@ def init_db():
         name TEXT UNIQUE,
         owner INTEGER,
         password TEXT,
+        location TEXT,
         FOREIGN KEY(owner) REFERENCES users(id) ON DELETE CASCADE
     )
     """)
@@ -91,17 +92,21 @@ def signup():
         password = request.form.get('password')
         if not email or not name or not password:
             flash('Something went wrong.', 'red')
-            exit()
         try:
             cursor.execute('INSERT INTO users (email, name, password) VALUES (?, ?, ?)', (email, name, password))
+            uid = cursor.execute("SELECT id FROM users WHERE email = ?", (email,)).fetchone()[0]
             conn.commit()
+            conn.close()
+            session['name'] = name
+            session['email'] = email
+            session['password'] = password
+            session['uid'] = uid
             print(console_log('Created account: ' + name, 'success'))
-            flash('Successfully created account!', 'green')
+            return redirect('/')
         except sqlite3.Error as e:
             print(console_log(e, 'error'))
         finally:
             conn.close()
-            return redirect('/signup')
     return render_template('signup.html')
 
 @app.route('/login', methods=["GET", "POST"])
@@ -310,14 +315,14 @@ def create_site():
         site_name = request.form.get('name')
         site_password = request.form.get('password')
         site_members = request.form.getlist('site_members')
+        site_location = request.form.get('location')
         if cursor.execute('SELECT 1 FROM sites WHERE name = ?', (site_name,)).fetchone():
             print(console_log(f'{session["email"]} tried to create the site {site_name}, already exists', 'info'))
             flash('Site exists!')
             conn.close()
             return redirect('/create_site')
         try:
-            cursor.execute('INSERT INTO sites (name, owner) VALUES (?, ?)', (site_name, session['uid']))
-            
+            cursor.execute('INSERT INTO sites (name, owner, location) VALUES (?, ?, ?)', (site_name, session['uid'], site_location))
             site_id = cursor.execute('SELECT id FROM sites WHERE name = ?', (site_name,)).fetchone()[0]
             cursor.execute('INSERT INTO site_members (site_id, user_id) VALUES (?, ?)', (site_id, session['uid']))
             for member in site_members:
@@ -341,13 +346,14 @@ def browse_sites():
         print(console_log('User with no account tried to access browse sites endpoint.', 'warn'))
         return redirect('/')
     conn, cursor = init_conn()
+    users = cursor.execute('SELECT id, name FROM users').fetchall()
     sites = cursor.execute('SELECT * FROM sites').fetchall()
     artefacts = cursor.execute('SELECT * FROM artefacts').fetchall()
     site_members = cursor.execute('SELECT * FROM site_members').fetchall()
     print('sites:' + str(sites))
     print('artefacts: ' + str(artefacts))
     print('site members: ' + str(site_members))
-    return render_template('browse_sites.html', sites=sites, artefacts=artefacts, site_members=site_members)
+    return render_template('browse_sites.html', sites=sites, artefacts=artefacts, site_members=site_members, users=users)
 
 
 @app.route('/log_artefact', methods = ["GET", "POST"])
@@ -387,7 +393,16 @@ def log_artefact():
 
 
 
+@app.route('/admin', methods=["GET", "POST"])
+def admin():
+    if not session['admin'] and request.method == 'POST':
+        email = request.form.get('email')
+        password = request.form.get('password')
 
+
+    if not session['admin']:
+        return render_template('admin_login.html')
+    
 
 
 if __name__ == '__main__':
