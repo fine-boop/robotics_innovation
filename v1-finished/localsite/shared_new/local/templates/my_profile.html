@@ -4,16 +4,39 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Profile</title>
+    <link rel="stylesheet" href="{{ url_for('static',filename='css/css.css') }}">
     <script>
         function showEdit(field) {
             document.getElementById(field + "-display").style.display = "none";
             document.getElementById(field + "-form").style.display = "block";
         }
     </script>
+    <style>
+        .editing {
+            display: flex;
+            flex-direction: column;
+            margin-top: 3dvh;
+            margin-bottom: 3dvh;
+        }
+        .myprofile {
+            margin: 3dvw;
+        }
+    </style>
 </head>
 <body>
-    <h1>My Profile</h1>
+    <header class="heading">
+    <h1 style="color:black;">My Profile</h1>
+    <a href="/" class="heading1"><h4>Home</h4></a>
+    <a href="/my_sites" class="heading1"><h4>My sites</h4></a>
+    <a href="/profile" class="heading1"><h4>My profile</h4></a>
+    <a href="/logout" class="heading1"><h4>Logout</h4></a>
+    <a href="/join_site" class="heading1"><h4>Join a site</h4></a>
+    <a href="/create_site" class="heading1"><h4>Create a site</h4></a>
+    <a href="/sites" class="heading1"><h4>Browse sites</h4></a>
+    <a href="/log_artefact" class="heading1"><h4>Log artefact</h4></a>
+    </header>
 
+    <div class="myprofile">
     <!-- Email -->
     <div id="email-display">
         <h2>Email:</h2>
@@ -23,8 +46,10 @@
     <div id="email-form" style="display: none;">
         <form method="POST">
             <input type="hidden" name="thing_to_change" value="email">
-            <input type="email" name="email" value="{{ session['email'] }}">
-            <button type="submit">Save</button>
+            <div class="editing">
+                <input  style="color: white;" type="email" name="email" value="{{ session['email'] }}">
+                <button style="margin-top: 2dvh;" type="submit">Save</button>
+            </div>
         </form>
     </div>
 
@@ -37,8 +62,10 @@
     <div id="name-form" style="display: none;">
         <form method="POST">
             <input type="hidden" name="thing_to_change" value="name">
-            <input type="text" name="name" value="{{ session['name'] }}">
-            <button type="submit">Save</button>
+            <div class="editing">
+                <input type="text" name="name" value="{{ session['name'] }}">
+                <button style="margin-top: 2dvh;" type="submit">Save</button>
+            </div>
         </form>
     </div>
 
@@ -51,10 +78,12 @@
     <div id="password-form" style="display: none;">
         <form method="POST">
             <input type="hidden" name="thing_to_change" value="password">
-            <input type="password" name="password">
-            <button type="submit">Save</button>
+            <div class="editing">
+                <input type="password" name="password">
+                <button style="margin-top: 2dvh;" type="submit">Save</button>
+            </div>
         </form>
     </div>
-
+    </div>
 </body>
 </html>

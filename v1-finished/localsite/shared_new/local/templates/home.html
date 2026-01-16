@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Home</title>
-
+    <link rel="stylesheet" href="{{ url_for('static',filename='css/css.css') }}">
     <style>
         body {
             background-color: white;
@@ -73,21 +73,18 @@
 </head>
 <body>
 {% if session['email'] %}
-    <div class="home1">
-        <h1>Hello {{ session['name'] }}</h1>
-        <div class="dropdown-hole">
-            <button id="dropdownbutton" class="dropdown-button" onclick="dropdown()">dropdown</button>
-            <div id="dropdown-content" class="dropdown-content">
-                <a href="/my_sites"><h2>My sites</h2></a>
-                <a href="/profile"><h2>My profile</h2></a>
-                <a href="/logout"><h2>Logout</h2></a>
-                <a href="/join_site"><h2>Join a site</h2></a>
-                <a href="/create_site"><h2>Create a site</h2></a>
-                <a href="/sites"><h2>Browse sites</h2></a>
-                <a href="/log_artefact"><h2>Log artefact</h2></a>
-            </div>
-        </div>
-    </div>
+    <h1>Hello {{ session['name'] }}</h1>
+    <header class="heading">
+    <h1 style="color:black;">Home</h1>
+    <a href="/" class="heading1"><h4>Home</h4></a>
+    <a href="/my_sites" class="heading1"><h4>My sites</h4></a>
+    <a href="/profile" class="heading1"><h4>My profile</h4></a>
+    <a href="/logout" class="heading1"><h4>Logout</h4></a>
+    <a href="/join_site" class="heading1"><h4>Join a site</h4></a>
+    <a href="/create_site" class="heading1"><h4>Create a site</h4></a>
+    <a href="/sites" class="heading1"><h4>Browse sites</h4></a>
+    <a href="/log_artefact" class="heading1"><h4>Log artefact</h4></a>
+    </header>
 
 {% else %}
     

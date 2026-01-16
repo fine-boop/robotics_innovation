@@ -4,59 +4,23 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Signup</title>
+    <link rel="stylesheet" href="{{ url_for('static',filename='css/css.css') }}">
     <style>
-        body {
-            background-color: rgb(255, 255, 255);
-        }
         .page-center {
             display: flex;
             align-items: center;
             justify-content: center;
             min-height: 100vh;
         }
-        button{
-            border-radius: 1dvw;
-            width: 13dvw;
-            height: 2dvw;
-            background-image: linear-gradient(to right, rgb(99 141 187) , rgba(99, 141, 187, 0.413));
-            border: none;
-        }
-        input {
-            background: none;
-            border-top: none;
-            border-left: none;
-            border-right: none;
+        .signup-text {
             border-bottom: 0.15rem rgb(99 141 187) solid;
-            transition: 0.5s;
-        }
-        input[type=text]:focus, input[type=email]:focus, input[type=password]:focus {
-            outline:none;
-            border-bottom: 0.15rem rgb(99 141 187) solid;
-        }
-        .signup1 {
-            width: 25dvw;
-            height: 25dvw;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            background-color: rgba(150, 150, 150, 0.5);
-
-            border-radius: 0.5dvw;
-            border: 0.1dvw rgb(150, 150, 150) solid;
-            box-shadow: 5px 5px 3px rgb(225, 225, 225);
-        }
-        h3 {
-            font-size: 2dvw;
-            font-weight: bold;
-            margin: 0;
         }
     </style>
 </head>
 <body>
     <div class="page-center">
         <div class="signup1">
-            <h1 style="text-decoration: underline;">Sign Up</h1>
+            <h1 class="signup-text">Sign Up</h1>
             <form method="post" action="/signup">
                     <input type="text" name="name" id="name" placeholder="Name" required><br><br>
                     <input type="email" name="email" id="email" placeholder="Email" required><br><br>
@@ -67,6 +31,11 @@
             <a href="/">Home</a>
         </div>
     </div>
+    <img src="{{ url_for('static', filename='peak.jpg') }}" height="350" width="250">
+    <img src="{{ url_for('static', filename='peak.jpg') }}" height="350" width="250">
+    <img src="{{ url_for('static', filename='peak.jpg') }}" height="350" width="250">
+    <img src="{{ url_for('static', filename='peak.jpg') }}" height="350" width="250">
+    <img src="{{ url_for('static', filename='peak.jpg') }}" height="350" width="250">
     {% with messages = get_flashed_messages(with_categories=true) %}
     {% if messages %}
         {% for category, message in messages %}

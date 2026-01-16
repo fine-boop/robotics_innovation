@@ -3,11 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <title>Join Site</title>
+    <link rel="stylesheet" href="{{ url_for('static',filename='css/css.css') }}">
 </head>
 <body>
 
 <div class="container">
-    <h1>Join a Site</h1>
+     <header class="heading">
+    <h1 style="color:black;">Join a site</h1>
+    <a href="/" class="heading1"><h4>Home</h4></a>
+    <a href="/my_sites" class="heading1"><h4>My sites</h4></a>
+    <a href="/profile" class="heading1"><h4>My profile</h4></a>
+    <a href="/logout" class="heading1"><h4>Logout</h4></a>
+    <a href="/join_site" class="heading1"><h4>Join a site</h4></a>
+    <a href="/create_site" class="heading1"><h4>Create a site</h4></a>
+    <a href="/sites" class="heading1"><h4>Browse sites</h4></a>
+    <a href="/log_artefact" class="heading1"><h4>Log artefact</h4></a>
+    </header>
 
     {% with messages = get_flashed_messages() %}
         {% if messages %}

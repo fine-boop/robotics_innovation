@@ -105,3 +105,123 @@
 2026-01-14T21:45:17.721265 [INFO] Starting server
 2026-01-14T21:48:02.662490 [INFO] Starting server
 2026-01-14T21:49:47.861324 [INFO] Starting server
+2026-01-14T21:50:34.351858 [INFO] Starting server
+2026-01-14T22:47:37.004791 [INFO] Starting server
+2026-01-14T22:48:14.413946 [INFO] Starting server
+2026-01-14T22:49:04.959385 [INFO] Starting server
+2026-01-14T22:50:57.050357 [INFO] Starting server
+2026-01-14T22:51:36.085856 [INFO] Starting server
+2026-01-14T22:52:00.958268 [INFO] Starting server
+2026-01-14T22:53:05.605130 [INFO] Starting server
+2026-01-14T22:55:10.875499 [INFO] Starting server
+2026-01-14T22:55:35.051935 [INFO] Starting server
+2026-01-14T22:57:19.999295 [INFO] Starting server
+2026-01-14T22:59:07.352776 [INFO] Starting server
+2026-01-14T23:00:28.466672 [INFO] Starting server
+2026-01-14T23:00:55.181486 [INFO] Starting server
+2026-01-14T23:04:26.344263 [INFO] Starting server
+2026-01-14T23:05:12.430975 [INFO] Starting server
+2026-01-14T23:11:23.130787 [INFO] Starting server
+2026-01-14T23:11:44.896331 [INFO] Starting server
+2026-01-14T23:12:11.657154 [INFO] Starting server
+2026-01-14T23:14:30.214557 [INFO] Starting server
+2026-01-14T23:14:37.303611 [INFO] Starting server
+2026-01-14T23:14:58.930216 [INFO] Starting server
+2026-01-15T16:52:30.981135 [INFO] Starting server
+2026-01-15T18:24:02.726290 [INFO] Starting server
+2026-01-15T18:32:37.724583 [INFO] Starting server
+2026-01-15T18:34:06.724132 [SUCCESS] User sophiakidney@gmail.com sucessfully logged in
+2026-01-15T18:36:29.066004 [INFO] Starting server
+2026-01-15T18:36:44.481583 [SUCCESS] User sophiakidney@gmail.com sucessfully logged in
+2026-01-15T18:41:21.008756 [INFO] Starting server
+2026-01-15T18:41:37.284446 [SUCCESS] User sophiakidney@gmail.com sucessfully logged in
+2026-01-15T18:41:58.287330 [SUCCESS] User sophiakidney@gmail.com sucessfully logged in
+2026-01-15T18:49:50.748828 [INFO] Starting server
+2026-01-15T18:50:07.926671 [SUCCESS] User sophiakidney@gmail.com sucessfully logged in
+2026-01-15T18:50:49.235559 [INFO] Starting server
+2026-01-15T18:51:05.424805 [SUCCESS] User sophiakidney@gmail.com sucessfully logged in
+2026-01-15T18:52:14.203814 [INFO] Starting server
+2026-01-15T18:52:23.209845 [SUCCESS] Created account: t
+2026-01-15T18:52:32.107482 [SUCCESS] User t@t sucessfully logged in
+2026-01-15T22:45:15.492212 [INFO] Starting server
+2026-01-15T22:45:56.246581 [SUCCESS] User t@t sucessfully logged in
+2026-01-15T22:47:13.693101 [INFO] t@t tried to update their email but reused the old one
+2026-01-15T22:50:03.504035 [INFO] t@t tried to update their email but reused the old one
+2026-01-15T22:50:11.820494 [INFO] t@t tried to update their email but reused the old one
+2026-01-15T22:51:07.382574 [INFO] Starting server
+2026-01-15T22:51:19.083285 [SUCCESS] User t@t sucessfully logged in
+2026-01-15T22:52:37.157512 [INFO] Starting server
+2026-01-15T22:53:21.889458 [INFO] Starting server
+2026-01-15T22:54:09.371425 [INFO] Starting server
+2026-01-15T22:56:35.006605 [INFO] Starting server
+2026-01-15T22:58:25.759686 [INFO] Starting server
+2026-01-15T22:59:37.011605 [INFO] Starting server
+2026-01-15T23:00:10.975331 [INFO] Starting server
+2026-01-15T23:03:02.882013 [INFO] Starting server
+2026-01-15T23:06:09.358616 [INFO] Starting server
+2026-01-15T23:07:15.154057 [SUCCESS] User t@t sucessfully logged in
+2026-01-16T16:36:20.399591 [INFO] Starting server
+2026-01-16T16:36:37.035725 [SUCCESS] User t@t sucessfully logged in
+2026-01-16T16:36:57.325650 [SUCCESS] User t@t sucessfully logged in
+2026-01-16T16:38:10.549620 [SUCCESS] User t@t successfully created t and added 0 members!
+2026-01-16T16:53:57.820036 [INFO] Starting server
+2026-01-16T16:54:11.451982 [SUCCESS] User t@t sucessfully logged in
+2026-01-16T16:55:55.761390 [INFO] Starting server
+2026-01-16T16:56:03.090414 [SUCCESS] User t@t sucessfully logged in
+2026-01-16T16:58:22.965034 [INFO] Starting server
+2026-01-16T16:58:31.818147 [SUCCESS] User t@t sucessfully logged in
+2026-01-16T16:59:41.702984 [INFO] Starting server
+2026-01-16T16:59:51.186102 [SUCCESS] User t@t sucessfully logged in
+2026-01-16T17:00:22.800801 [INFO] Starting server
+2026-01-16T17:00:29.538893 [SUCCESS] User t@t sucessfully logged in
+2026-01-16T17:02:44.066270 [INFO] Starting server
+2026-01-16T17:02:51.973059 [SUCCESS] User t@t sucessfully logged in
+2026-01-16T17:04:57.666336 [INFO] Starting server
+2026-01-16T17:05:04.540814 [SUCCESS] User t@t sucessfully logged in
+2026-01-16T17:10:57.773166 [INFO] Starting server
+2026-01-16T17:11:05.348761 [SUCCESS] User t@t sucessfully logged in
+2026-01-16T17:15:03.468610 [INFO] Starting server
+2026-01-16T17:15:10.187679 [SUCCESS] User t@t sucessfully logged in
+2026-01-16T17:17:32.321367 [INFO] Starting server
+2026-01-16T17:17:39.657427 [SUCCESS] User t@t sucessfully logged in
+2026-01-16T17:19:17.161598 [INFO] Starting server
+2026-01-16T17:19:23.053329 [SUCCESS] User t@t sucessfully logged in
+2026-01-16T17:19:53.678335 [INFO] t@t tried to update their email but reused the old one
+2026-01-16T17:21:15.375676 [INFO] Starting server
+2026-01-16T17:21:30.664356 [SUCCESS] User t@t sucessfully logged in
+2026-01-16T17:23:08.883022 [INFO] Starting server
+2026-01-16T17:23:16.195132 [SUCCESS] User t@t sucessfully logged in
+2026-01-16T17:25:01.900169 [INFO] Starting server
+2026-01-16T17:25:10.876814 [SUCCESS] User t@t sucessfully logged in
+2026-01-16T17:32:04.423391 [INFO] Starting server
+2026-01-16T17:32:11.019466 [SUCCESS] User t@t sucessfully logged in
+2026-01-16T20:26:57.828778 [INFO] Starting server
+2026-01-16T20:27:10.210293 [SUCCESS] User t@t sucessfully logged in
+2026-01-16T20:28:53.969595 [INFO] Starting server
+2026-01-16T20:28:59.997651 [SUCCESS] User t@t sucessfully logged in
+2026-01-16T20:30:52.591544 [INFO] Starting server
+2026-01-16T20:30:59.000042 [SUCCESS] User t@t sucessfully logged in
+2026-01-16T20:32:38.943021 [INFO] Starting server
+2026-01-16T20:32:46.798705 [SUCCESS] User t@t sucessfully logged in
+2026-01-16T20:33:25.076431 [INFO] Starting server
+2026-01-16T20:33:30.676108 [SUCCESS] User t@t sucessfully logged in
+2026-01-16T20:34:15.625984 [INFO] Starting server
+2026-01-16T20:34:21.279270 [SUCCESS] User t@t sucessfully logged in
+2026-01-16T20:36:56.939662 [INFO] Starting server
+2026-01-16T20:37:04.105513 [SUCCESS] User t@t sucessfully logged in
+2026-01-16T20:40:23.138596 [INFO] Starting server
+2026-01-16T20:40:45.221262 [INFO] Starting server
+2026-01-16T20:40:52.275406 [SUCCESS] User t@t sucessfully logged in
+2026-01-16T20:50:08.348043 [INFO] Starting server
+2026-01-16T20:50:29.656385 [SUCCESS] User t@t sucessfully logged in
+2026-01-16T20:51:52.511106 [INFO] Starting server
+2026-01-16T20:51:58.703336 [SUCCESS] User t@t sucessfully logged in
+2026-01-16T20:53:22.522711 [INFO] Starting server
+2026-01-16T20:53:29.538741 [SUCCESS] User t@t sucessfully logged in
+2026-01-16T20:58:17.607559 [INFO] Starting server
+2026-01-16T20:58:25.632507 [SUCCESS] User t@t sucessfully logged in
+2026-01-16T20:58:35.276872 [INFO] t@t tried to update their email but reused the old one
+2026-01-16T21:04:25.106295 [INFO] Starting server
+2026-01-16T21:05:01.011208 [SUCCESS] User t@t sucessfully logged in
+2026-01-16T21:05:16.516512 [INFO] User t@t has logged out
+2026-01-16T21:05:22.977399 [SUCCESS] User t@t sucessfully logged in
