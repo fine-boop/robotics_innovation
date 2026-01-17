@@ -8,23 +8,36 @@
     <script src="{{ url_for('static',filename='js/js.js') }}"></script>
     <style>
         .idek {
-            font-size: 2dvw;
+            font-size: 8dvw;
             display: flex;
             flex-direction: row;
-
         }
         .idek2 {
-            border-radius: 0.2rem;
-            padding: 1dvw;
-            background-color: rgba(99, 141, 187, 0.502);
-            border: 0.15rem rgb(99 141 187) solid;
-            border-radius: 1dvw;
+            border-radius: 1.5dvw;
+            width: 20dvw;
+            height: 5dvw;
+            font-size: 2dvw;
+            background-image: linear-gradient(to right, rgb(99 141 187) , rgba(99, 141, 187, 0.413));
+            border: none;
             text-decoration: none;
+            transition: 0.5s;
+            color: white;
+            margin: 1.5dvw;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .idek2:hover {
+            width: 20.3dvw;
+            height: 5.3dvw;
+            cursor: pointer;
         }
         .idek3 {
             display: flex;
             flex-direction: column;
-            justify-content: right;
+            justify-content: center;
+            align-items: center;
         }
         .home1 {
             display: flex;
@@ -52,25 +65,26 @@
     </script>
 </head>
 <body>
-{% if session['email'] %}
-    <h1>Hello {{ session['name'] }}</h1>
+    {% if session['email'] %}
     <header class="heading">
     <h1 style="color:black;">Home</h1>
     <a href="/" class="heading1"><h4>Home</h4></a>
     <a href="/my_sites" class="heading1"><h4>My sites</h4></a>
     <a href="/profile" class="heading1"><h4>My profile</h4></a>
-    <a href="/logout" class="heading1"><h4>Logout</h4></a>
     <a href="/join_site" class="heading1"><h4>Join a site</h4></a>
     <a href="/create_site" class="heading1"><h4>Create a site</h4></a>
     <a href="/sites" class="heading1"><h4>Browse sites</h4></a>
     <a href="/log_artefact" class="heading1"><h4>Log artefact</h4></a>
+    <a href="/logout" class="heading2"><h4>Logout</h4></a>
     </header>
+    <h1>Hello {{ session['name'] }}</h1>
 
 {% else %}
     
         <div class="idek">
             <img src="{{ url_for('static', filename='image.png') }}" class="element">
             <div class="idek3">
+                <h1>Welcome</h1>
                 <a href="/signup" class="idek2">Signup</a>
                 <a href="/login" class="idek2">Login</a>
             </div>

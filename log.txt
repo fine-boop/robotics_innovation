@@ -257,3 +257,69 @@
 2026-01-17T16:57:45.403341 [INFO] Starting server
 2026-01-17T16:58:35.461740 [INFO] Starting server
 2026-01-17T16:59:12.225145 [SUCCESS] User t@t sucessfully logged in
+2026-01-17T19:44:38.999022 [INFO] Starting server
+2026-01-17T19:44:59.506985 [SUCCESS] User t@t sucessfully logged in
+2026-01-17T20:05:07.247546 [INFO] Starting server
+2026-01-17T20:05:25.851524 [INFO] User sophiakidney@gmail.com tried to log into a nonexistent account
+2026-01-17T20:07:56.945329 [INFO] Starting server
+2026-01-17T20:08:07.457597 [INFO] User t@s tried to log into a nonexistent account
+2026-01-17T20:08:27.402678 [INFO] Starting server
+2026-01-17T20:08:35.568076 [INFO] User t@e tried to log into a nonexistent account
+2026-01-17T20:09:10.502239 [INFO] Starting server
+2026-01-17T20:09:18.047446 [INFO] User a@a tried to log into a nonexistent account
+2026-01-17T20:09:56.885277 [INFO] Starting server
+2026-01-17T20:10:03.373207 [INFO] User a@a tried to log into a nonexistent account
+2026-01-17T20:10:27.901218 [INFO] User sophiakidney@gmail.com tried to log into a nonexistent account
+2026-01-17T20:10:38.607279 [INFO] User sophiakidney@gmail.com tried to log into a nonexistent account
+2026-01-17T20:11:21.646375 [SUCCESS] User t@t sucessfully logged in
+2026-01-17T20:12:10.655324 [INFO] Starting server
+2026-01-17T20:12:24.916116 [INFO] Starting server
+2026-01-17T20:12:33.566332 [SUCCESS] User t@t sucessfully logged in
+2026-01-17T20:12:52.174152 [INFO] User t@t has logged out
+2026-01-17T20:19:54.891924 [INFO] Starting server
+2026-01-17T20:21:31.277551 [INFO] Starting server
+2026-01-17T20:21:55.856556 [INFO] Starting server
+2026-01-17T20:26:33.436667 [INFO] Starting server
+2026-01-17T20:27:16.789473 [INFO] Starting server
+2026-01-17T20:28:42.250241 [INFO] Starting server
+2026-01-17T20:29:26.260997 [INFO] Starting server
+2026-01-17T20:30:45.776147 [INFO] Starting server
+2026-01-17T20:30:59.103894 [INFO] Starting server
+2026-01-17T20:31:12.531049 [INFO] Starting server
+2026-01-17T20:31:37.222127 [INFO] Starting server
+2026-01-17T20:31:48.786983 [INFO] Starting server
+2026-01-17T20:36:57.145846 [INFO] Starting server
+2026-01-17T20:38:57.054568 [INFO] Starting server
+2026-01-17T20:39:35.564692 [INFO] Starting server
+2026-01-17T20:39:58.881062 [SUCCESS] User t@t sucessfully logged in
+2026-01-17T20:55:36.248736 [INFO] Starting server
+2026-01-17T20:55:47.708817 [SUCCESS] User t@t sucessfully logged in
+2026-01-17T20:56:28.925116 [INFO] Starting server
+2026-01-17T20:56:35.487895 [SUCCESS] User t@t sucessfully logged in
+2026-01-17T21:00:05.944744 [INFO] Starting server
+2026-01-17T21:00:13.516372 [SUCCESS] User t@t sucessfully logged in
+2026-01-17T21:02:28.800245 [INFO] Starting server
+2026-01-17T21:02:36.028651 [SUCCESS] User t@t sucessfully logged in
+2026-01-17T21:03:07.504590 [INFO] Starting server
+2026-01-17T21:03:16.460508 [SUCCESS] User t@t sucessfully logged in
+2026-01-17T21:03:56.398126 [INFO] Starting server
+2026-01-17T21:04:06.516204 [SUCCESS] User t@t sucessfully logged in
+2026-01-17T21:04:48.052069 [INFO] Starting server
+2026-01-17T21:05:00.682544 [SUCCESS] User t@t sucessfully logged in
+2026-01-17T21:06:42.152435 [INFO] Starting server
+2026-01-17T21:06:48.188776 [SUCCESS] User t@t sucessfully logged in
+2026-01-17T21:07:27.556338 [INFO] Starting server
+2026-01-17T21:07:33.807609 [SUCCESS] User t@t sucessfully logged in
+2026-01-17T21:09:17.750542 [INFO] Starting server
+2026-01-17T21:09:25.310046 [SUCCESS] User t@t sucessfully logged in
+2026-01-17T21:12:27.248062 [INFO] Starting server
+2026-01-17T21:12:34.380192 [SUCCESS] User t@t sucessfully logged in
+2026-01-17T21:12:49.952641 [INFO] User t@t has logged out
+2026-01-17T21:13:10.835216 [SUCCESS] Created account: sophia
+2026-01-17T21:13:21.731422 [INFO] User sophiakidney@gmail.com has logged out
+2026-01-17T21:14:00.916647 [INFO] Starting server
+2026-01-17T21:14:08.918393 [SUCCESS] User t@t sucessfully logged in
+2026-01-17T21:15:27.893904 [INFO] Starting server
+2026-01-17T21:15:34.493073 [SUCCESS] User t@t sucessfully logged in
+2026-01-17T22:39:48.476935 [INFO] Starting server
+2026-01-17T22:47:03.139342 [SUCCESS] User t@t sucessfully logged in
