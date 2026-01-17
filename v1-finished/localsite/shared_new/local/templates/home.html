@@ -5,10 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Home</title>
     <link rel="stylesheet" href="{{ url_for('static',filename='css/css.css') }}">
+    <script src="{{ url_for('static',filename='js/js.js') }}"></script>
     <style>
-        body {
-            background-color: white;
-        }
         .idek {
             font-size: 2dvw;
             display: flex;
@@ -32,43 +30,25 @@
             display: flex;
             flex-direction: row;
         }
-
-        .dropdown-button {
-        background-color: #4CAF50;
-        color: white;
-        padding: 16px;
-        font-size: 16px;
-        border: none;
-        cursor: pointer;
+        .element { height: 100vh; height: 100lvh }
+            @supports (-webkit-touch-callout: none) {
+            @media screen and (max-width: 991px) {
+            .element { height: calc( var( --vh, 1vh ) * 100 ); }
         }
-        .dropdown-button:hover, .dropdown-button:focus {
-            background-color: #3e8e41;
         }
-        .dropdown-hole {
-            position: relative;
-            display: inline-block;
-        }
-        .dropdown-content {
-            display: none;
-            position: absolute;
-            background-color: #f9f9f9;
-            min-width: 160px;
-            overflow: auto;
-            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-        }
-        .dropdown-content a {
-            color: black;
-            padding: 12px 16px;
-            text-decoration: none;
-            display: block;
-        }
-        .dropdown-content a:hover {background-color: #f1f1f1}
-        .show {display:block;}
     </style>
     <script>
-        function dropdown() {
-            document.getElementById("dropdown-content").classList.toggle("show");
-        }
+        // First we get the viewport height and we multiple it by 1% to get a value for a vh unit
+        let vh = window.screen.height * 0.01;
+        // Then we set the value in the --vh custom property to the root of the document
+        document.documentElement.style.setProperty('--vh', `${vh}px`);
+
+        // We listen to the resize event
+        window.addEventListener('resize', () => {
+        // We execute the same script as before
+        let vh = window.screen.height * 0.01;
+        document.documentElement.style.setProperty('--vh', `${vh}px`);
+        });
     </script>
 </head>
 <body>
@@ -89,7 +69,7 @@
 {% else %}
     
         <div class="idek">
-            <img src="{{ url_for('static', filename='image.png') }}"height="700" width="500">
+            <img src="{{ url_for('static', filename='image.png') }}" class="element">
             <div class="idek3">
                 <a href="/signup" class="idek2">Signup</a>
                 <a href="/login" class="idek2">Login</a>

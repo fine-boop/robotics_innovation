@@ -5,16 +5,13 @@
     <title>My Sites</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{{ url_for('static',filename='css/css.css') }}">
+    <script src="{{ url_for('static',filename='js/js.js') }}"></script>
      <style>
         body {
             font-family: Arial, sans-serif;
             background: #0f172a;
             color: #e5e7eb;
             padding: 2rem;
-        }
-
-        h1 {
-            margin-bottom: 1rem;
         }
 
         .flash {
@@ -28,7 +25,6 @@
             background: #020617;
             padding: 1rem;
             border-radius: 8px;
-            margin-bottom: 1rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -46,13 +42,8 @@
 
         button {
             background: #dc2626;
-            color: white;
-            border: none;
-            padding: 0.5rem 0.75rem;
-            border-radius: 6px;
-            cursor: pointer;
         }
-
+        
         button:hover {
             background: #b91c1c;
         }
@@ -64,6 +55,7 @@
     </style>
 </head>
 <body>
+    <div class="element">
     <header class="heading">
     <h1 style="color:black;">My Sites</h1>
     <a href="/" class="heading1"><h4>Home</h4></a>
@@ -102,6 +94,6 @@
         </div>
     {% endfor %}
 {% endif %}
-
+</div>
 </body>
 </html>

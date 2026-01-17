@@ -1,5 +1,6 @@
      * {
             color: white;
+            font-family: system-ui, sans-serif;
         }
         body {
             background-color: rgb(15 23 42);
@@ -93,4 +94,13 @@
             border: 0.1dvw rgb(150, 150, 150) solid;
             box-shadow:0 0 10px rgb(99 141 187);
             /*box-shadow: 5px 5px 3px rgb(225, 225, 225);*/
+        }
+        .element { height: 100vh; height: 100lvh }
+            @supports (-webkit-touch-callout: none) {
+            @media screen and (max-width: 991px) {
+            .element { height: calc( var( --vh, 1vh ) * 100 ); }
+        }
+        }
+        .everything-but-header {
+            margin: 2dvh
         }
