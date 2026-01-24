@@ -4,15 +4,38 @@
     <meta charset="UTF-8">
     <title>Log Artefact</title>
     <link rel="stylesheet" href="{{ url_for('static',filename='css/css.css') }}">
+    <script src="{{ url_for('static',filename='js/js.js') }}"></script>
 
     <!-- minimal CSS -->
     <style>
-        body { font-family: sans-serif; max-width: 600px; }
-        form { display: none; }
-        label { display: block; margin-top: 12px; }
-        input, select, button { width: 100%; padding: 6px; margin-top: 4px; }
-        .msg { margin-bottom: 16px; }
-        
+        body {
+            max-width: 600px;
+        }
+        form {
+            display: none;
+        }
+        label {
+            display: block; margin-top: 12px;
+        }
+        input, select, button {
+            width: 100%; 
+        }
+        button {
+            margin-top: 2lvh;
+        }
+        input[type=text]:hover, input[type=text]:focus, input[type=number]:hover, input[type=number]:focus, button:hover {
+            width: 100%;
+        }
+        .msg {
+            margin-bottom: 16px;
+            color: #b91c1c;
+        }
+        select {
+            color: black;
+        }
+        option {
+            color: black;
+        }
     </style>
 </head>
 <body>
@@ -29,7 +52,7 @@
     </header>
 
 
-
+<div class="everything-but-header">
 <!-- flashed messages -->
 {% with messages = get_flashed_messages() %}
   {% if messages %}
@@ -70,7 +93,7 @@
 
     <button type="submit">Log artefact</button>
 </form>
-
+</div>
 {% endif %}
 
 <!-- JS-heavy, CSS-light -->

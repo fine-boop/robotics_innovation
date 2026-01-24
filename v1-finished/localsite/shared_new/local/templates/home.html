@@ -49,6 +49,24 @@
             .element { height: calc( var( --vh, 1vh ) * 100 ); }
         }
         }
+        .page-center {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+
+            width: 25dvw;
+            height: 25dvw;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background-color: rgba(150, 150, 150, 0.5);
+
+            border-radius: 0.5dvw;
+            border: 0.1dvw rgb(150, 150, 150) solid;
+            box-shadow:0 0 10px rgb(99 141 187);
+        }
     </style>
     <script>
         // First we get the viewport height and we multiple it by 1% to get a value for a vh unit
@@ -78,6 +96,12 @@
     <a href="/logout" class="heading2"><h4>Logout</h4></a>
     </header>
     <h1>Hello {{ session['name'] }}</h1>
+
+    <div class="page-center">
+        <h1>Latest Discoverys</h1>
+        <img src="{{ url_for('static', filename='arch1.jpg') }}" height="100px" width="100px">
+        <a href="https://archaeology.org/news/2026/01/14/bronze-age-burial-uncovered-in-greece/" clss=""><h2>Bronze Age Burial Uncovered in Greece</h2></a>
+    </div>
 
 {% else %}
     

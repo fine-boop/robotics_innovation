@@ -4,12 +4,33 @@
     <meta charset="UTF-8">
     <title>Join Site</title>
     <link rel="stylesheet" href="{{ url_for('static',filename='css/css.css') }}">
+    <script src="{{ url_for('static',filename='js/js.js') }}"></script>
     <style>
+        body {
+            max-width: 420px;
+        }
         option {
             color: black;
         }
         select {
             color: black;
+        }
+        .form1 {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+        }
+        .form2 {
+            padding: 2lvh;
+        }
+        input {
+            width: 100%;
+        }
+        input[type=password]:hover, input[type=password]:focus {
+            width: 100%;
+        }
+        .flash {
+            color: #b91c1c;
         }
     </style>
 </head>
@@ -37,18 +58,24 @@
     {% endwith %}
 
     <form method="POST">
-        <label for="name">Select Site</label>
-        <select name="name" id="name" required>
-            <option value="" disabled selected>Choose a site</option>
-            {% for site in sites_names %}
-                <option value="{{ site[0] }}">{{ site[0] }}</option>
-            {% endfor %}
-        </select>
-
-        <label for="password">Site Password</label>
-        <input type="password" name="password" id="password" required>
-
-        <button type="submit">Join Site</button>
+        <div class="form1">
+            <div class="form2">
+                <label for="name">Select Site</label>
+                    <select name="name" id="name" required>
+                    <option value="" disabled selected>Choose a site</option>
+                    {% for site in sites_names %}
+                    <option value="{{ site[0] }}">{{ site[0] }}</option>
+                {% endfor %}
+                </select>
+            </div>
+            <div class="form2">
+                <label for="password">Site Password</label>
+                <input type="password" name="password" id="password" required>
+            </div>
+            <div class="form2">
+                <button type="submit">Join Site</button>
+            </div>
+        </div>
     </form>
 </div>
 

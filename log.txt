@@ -323,3 +323,75 @@
 2026-01-17T21:15:34.493073 [SUCCESS] User t@t sucessfully logged in
 2026-01-17T22:39:48.476935 [INFO] Starting server
 2026-01-17T22:47:03.139342 [SUCCESS] User t@t sucessfully logged in
+2026-01-17T22:56:50.374951 [INFO] Starting server
+2026-01-17T22:56:57.643922 [SUCCESS] User t@t sucessfully logged in
+2026-01-18T09:47:37.783918 [INFO] Starting server
+2026-01-18T09:47:59.681590 [SUCCESS] User t@t sucessfully logged in
+2026-01-18T09:51:46.977833 [INFO] Starting server
+2026-01-18T09:51:55.141446 [SUCCESS] User t@t sucessfully logged in
+2026-01-18T09:53:25.022775 [INFO] Starting server
+2026-01-18T09:53:41.910747 [SUCCESS] User t@t sucessfully logged in
+2026-01-18T09:57:01.906428 [INFO] Starting server
+2026-01-18T09:57:08.819072 [SUCCESS] User t@t sucessfully logged in
+2026-01-18T09:57:58.589125 [INFO] Starting server
+2026-01-18T09:58:05.952951 [SUCCESS] User t@t sucessfully logged in
+2026-01-18T10:01:29.007977 [INFO] Starting server
+2026-01-18T10:01:36.765755 [SUCCESS] User t@t sucessfully logged in
+2026-01-18T10:03:45.274533 [INFO] Starting server
+2026-01-18T10:03:52.829156 [SUCCESS] User t@t sucessfully logged in
+2026-01-18T10:04:18.791996 [INFO] t@t entered the wrong password to join t
+2026-01-18T10:05:22.305872 [INFO] Starting server
+2026-01-18T10:05:29.714345 [SUCCESS] User t@t sucessfully logged in
+2026-01-18T10:05:36.526111 [INFO] t@t entered the wrong password to join t
+2026-01-18T10:22:44.714397 [INFO] Starting server
+2026-01-18T10:23:37.865739 [SUCCESS] User sophiakidney@gmail.com sucessfully logged in
+2026-01-18T10:27:54.137600 [INFO] Starting server
+2026-01-18T11:17:24.394844 [INFO] Starting server
+2026-01-18T11:27:49.073077 [INFO] Starting server
+2026-01-18T11:32:09.656142 [SUCCESS] User sophiakidney@gmail.com sucessfully logged in
+2026-01-18T11:39:28.408775 [INFO] User sophiakidney@gmail.com has logged out
+2026-01-18T11:39:35.108117 [SUCCESS] User t@t sucessfully logged in
+2026-01-18T11:40:05.138354 [SUCCESS] t@t just logged an artefact
+2026-01-18T14:59:30.342444 [INFO] Starting server
+2026-01-18T14:59:37.846984 [SUCCESS] User t@t sucessfully logged in
+2026-01-18T15:00:25.602681 [INFO] Starting server
+2026-01-18T15:00:34.679799 [SUCCESS] User t@t sucessfully logged in
+2026-01-18T15:01:46.499708 [INFO] Starting server
+2026-01-18T15:01:53.282999 [SUCCESS] User t@t sucessfully logged in
+2026-01-22T14:26:37.347397 [INFO] Starting server
+2026-01-22T14:26:56.409290 [SUCCESS] User t@t sucessfully logged in
+2026-01-22T14:34:02.788865 [INFO] Starting server
+2026-01-22T14:34:09.509492 [SUCCESS] User t@t sucessfully logged in
+2026-01-22T14:35:01.357669 [INFO] Starting server
+2026-01-22T14:35:08.250510 [SUCCESS] User t@t sucessfully logged in
+2026-01-22T14:36:59.412678 [INFO] Starting server
+2026-01-22T14:37:06.355579 [SUCCESS] User t@t sucessfully logged in
+2026-01-22T14:38:08.071831 [INFO] Starting server
+2026-01-22T14:38:14.790628 [SUCCESS] User t@t sucessfully logged in
+2026-01-22T14:44:46.814557 [INFO] Starting server
+2026-01-22T14:44:54.320651 [SUCCESS] User t@t sucessfully logged in
+2026-01-22T14:45:27.428541 [INFO] Starting server
+2026-01-22T14:45:33.748049 [SUCCESS] User t@t sucessfully logged in
+2026-01-22T14:49:43.036204 [INFO] Starting server
+2026-01-22T14:49:53.611354 [SUCCESS] User t@t sucessfully logged in
+2026-01-22T14:50:37.879879 [INFO] Starting server
+2026-01-22T14:50:43.983982 [SUCCESS] User t@t sucessfully logged in
+2026-01-22T16:35:59.844219 [INFO] Starting server
+2026-01-22T16:36:12.108157 [SUCCESS] User t@t sucessfully logged in
+2026-01-23T19:55:33.449413 [INFO] Starting server
+2026-01-23T19:56:11.334396 [SUCCESS] Created account: julian
+2026-01-23T19:56:38.055418 [INFO] User j@j has logged out
+2026-01-23T19:58:01.551267 [INFO] User j@j failed login with incorrect password: password
+2026-01-23T19:58:08.238006 [INFO] User j@j failed login with incorrect password: password
+2026-01-23T19:58:23.909601 [INFO] User j@j failed login with incorrect password: password
+2026-01-23T19:58:30.649299 [INFO] User j@j failed login with incorrect password: password
+2026-01-23T19:58:43.022926 [INFO] User o@o tried to log into a nonexistent account
+2026-01-23T19:58:57.298497 [SUCCESS] Created account: o
+2026-01-23T20:05:58.382291 [ERROR] o@o hit the error table sites has no column named location when making a new site
+2026-01-24T16:06:02.414490 [INFO] Starting server
+2026-01-24T16:06:42.658954 [SUCCESS] User t@t sucessfully logged in
+2026-01-24T17:29:12.038413 [INFO] Starting server
+2026-01-24T17:35:30.627632 [SUCCESS] User t@t sucessfully logged in
+2026-01-24T17:37:58.656231 [ERROR] t@t hit the error table sites has no column named location when making a new site
+2026-01-24T17:40:09.605843 [ERROR] t@t hit the error table sites has no column named location when making a new site
+2026-01-24T17:41:17.297979 [SUCCESS] t@t just logged an artefact

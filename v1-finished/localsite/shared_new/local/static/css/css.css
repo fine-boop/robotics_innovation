@@ -80,12 +80,12 @@
             width: 12dvw;
             transition: 0.5s;
         }
-        input[type=text]:focus, input[type=email]:focus, input[type=password]:focus {
+        input[type=text]:focus, input[type=email]:focus, input[type=password]:focus, input[type=number]:focus {
             outline:none;
             border-bottom: 0.15rem rgb(99 141 187) solid;
             box-shadow:0 0 10px rgb(99 141 187);
         }
-        input[type=text]:hover, input[type=email]:hover, input[type=password]:hover {
+        input[type=text]:hover, input[type=email]:hover, input[type=password]:hover, input[type=number]:hover {
             width: 12dvw;
             box-shadow:0 0 10px rgb(99 141 187);
         }

@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <title>Browse Sites & Artefacts</title>
     <link rel="stylesheet" href="{{ url_for('static',filename='css/css.css') }}">
+    <script src="{{ url_for('static',filename='js/js.js') }}"></script>
     <style>
         body {
             font-family: system-ui, sans-serif;
@@ -45,9 +46,10 @@
     <a href="/create_site" class="heading1"><h4>Create a site</h4></a>
     <a href="/sites" class="heading1"><h4>Browse sites</h4></a>
     <a href="/log_artefact" class="heading1"><h4>Log artefact</h4></a>
-    <a href="/logout" class="heading2"><h4>Logout</h4></a>
+    <a href="/logout" class="heading2"><h4>Logout</h4></a> <!-- add this as a dropdown with the my profile button -->
     </header>
 
+    <h2>Filters</h2> <!-- add this as a dropdown -->
 <div class="controls">
     <input type="text" id="nameFilter" placeholder="Site/Artefact name">
     <input type="text" id="ownerFilter" placeholder="Owner name">
