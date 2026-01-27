@@ -395,3 +395,5 @@
 2026-01-24T17:37:58.656231 [ERROR] t@t hit the error table sites has no column named location when making a new site
 2026-01-24T17:40:09.605843 [ERROR] t@t hit the error table sites has no column named location when making a new site
 2026-01-24T17:41:17.297979 [SUCCESS] t@t just logged an artefact
+2026-01-27T14:06:19.888629 [INFO] Starting server
+2026-01-27T14:07:13.371411 [SUCCESS] Created account: Hugo
