@@ -34,6 +34,22 @@
         .meta { font-size: 13px; color: #666; }
         .hidden { display: none; }
         .section { margin-bottom: 32px; }
+
+        .hovering {
+            position: relative;
+            min-width: 130px;
+        }
+        .hovering-content{
+            display: none;
+            position: absolute;
+            background-color: #f9f9f9;
+            color: black;
+            min-width: 130px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+        }
+        .hovering:hover .hovering-content, .hovering-content:hover {
+            display: block;
+        }
     </style>
 </head>
 <body>
@@ -48,7 +64,10 @@
     <a href="/log_artefact" class="heading1"><h4>Log artefact</h4></a>
     <a href="/logout" class="heading2"><h4>Logout</h4></a> <!-- add this as a dropdown with the my profile button -->
     </header>
-
+    <div class="hovering">
+        <h4 style="background-color: aqua;">hover over me</h4>
+        <p class="hovering-content">hello!</p>
+    </div>
     <h2>Filters</h2> <!-- add this as a dropdown -->
 <div class="controls">
     <input type="text" id="nameFilter" placeholder="Site/Artefact name">

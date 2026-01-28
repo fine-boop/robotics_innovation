@@ -397,3 +397,27 @@
 2026-01-24T17:41:17.297979 [SUCCESS] t@t just logged an artefact
 2026-01-27T14:06:19.888629 [INFO] Starting server
 2026-01-27T14:07:13.371411 [SUCCESS] Created account: Hugo
+2026-01-28T09:44:31.448530 [INFO] Starting server
+2026-01-28T09:44:39.128815 [SUCCESS] User t@t sucessfully logged in
+2026-01-28T09:45:31.946646 [INFO] Starting server
+2026-01-28T09:45:40.825077 [SUCCESS] User t@t sucessfully logged in
+2026-01-28T09:53:40.335652 [INFO] Starting server
+2026-01-28T09:53:47.564247 [SUCCESS] User t@t sucessfully logged in
+2026-01-28T10:00:35.531812 [INFO] Starting server
+2026-01-28T10:00:42.093709 [SUCCESS] User t@t sucessfully logged in
+2026-01-28T10:03:50.543176 [INFO] Starting server
+2026-01-28T10:03:58.445968 [SUCCESS] User t@t sucessfully logged in
+2026-01-28T13:24:53.136310 [INFO] Starting server
+2026-01-28T13:25:02.141904 [SUCCESS] User t@t sucessfully logged in
+2026-01-28T13:25:25.737027 [INFO] Starting server
+2026-01-28T13:25:33.082327 [SUCCESS] User t@t sucessfully logged in
+2026-01-28T13:27:33.267388 [INFO] Starting server
+2026-01-28T13:27:39.510842 [SUCCESS] User t@t sucessfully logged in
+2026-01-28T13:28:02.584463 [INFO] Starting server
+2026-01-28T13:28:08.841315 [SUCCESS] User t@t sucessfully logged in
+2026-01-28T13:48:31.280783 [INFO] Starting server
+2026-01-28T13:48:37.476495 [SUCCESS] User t@t sucessfully logged in
+2026-01-28T13:49:40.040554 [INFO] Starting server
+2026-01-28T13:49:46.720717 [SUCCESS] User t@t sucessfully logged in
+2026-01-28T13:52:33.205241 [INFO] Starting server
+2026-01-28T13:54:34.602556 [SUCCESS] User t@t sucessfully logged in
