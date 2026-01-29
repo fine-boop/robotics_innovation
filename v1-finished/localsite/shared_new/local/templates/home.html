@@ -54,9 +54,8 @@
             align-items: center;
             justify-content: center;
             min-height: 100vh;
-
-            width: 25dvw;
-            height: 25dvw;
+        }
+        .signup2 {
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -84,23 +83,38 @@
 </head>
 <body>
     {% if session['email'] %}
-    <header class="heading">
+        <header class="heading">
     <h1 style="color:black;">Home</h1>
     <a href="/" class="heading1"><h4>Home</h4></a>
     <a href="/my_sites" class="heading1"><h4>My sites</h4></a>
-    <a href="/profile" class="heading1"><h4>My profile</h4></a>
     <a href="/join_site" class="heading1"><h4>Join a site</h4></a>
     <a href="/create_site" class="heading1"><h4>Create a site</h4></a>
     <a href="/sites" class="heading1"><h4>Browse sites</h4></a>
     <a href="/log_artefact" class="heading1"><h4>Log artefact</h4></a>
-    <a href="/logout" class="heading2"><h4>Logout</h4></a>
+    <div class="hovering">
+        <h4 class="hovering-text">Profile</h4>
+        <div class="hovering-content">
+           <div class="hovering-content1"><a href="/logout" class="heading3"><h6 class="heading3">Logout</h6></a></div>
+            <div class="hovering-content1"><a href="/profile" class="heading3"><h6 class="heading3">about</h6></a></div>
+        </div>
+    </div>
     </header>
     <h1>Hello {{ session['name'] }}</h1>
 
     <div class="page-center">
         <h1>Latest Discoverys</h1>
-        <img src="{{ url_for('static', filename='arch1.jpg') }}" height="100px" width="100px">
-        <a href="https://archaeology.org/news/2026/01/14/bronze-age-burial-uncovered-in-greece/" clss=""><h2>Bronze Age Burial Uncovered in Greece</h2></a>
+        <div class="discoverys">
+            <img src="{{ url_for('static', filename='arch2.jpg') }}" height="100px" width="100px">
+            <a href="https://archaeology.org/news/2026/01/26/imported-paleolithic-tools-in-spain-may-reflect-long-distance-social-networks/" clss=""><h2>patholigic tools in spain</h2></a>
+        </div>
+        <div class="discoverys">
+            <img src="{{ url_for('static', filename='arch3.jpg') }}" height="100px" width="100px">
+            <a href="https://archaeology.org/news/2026/01/23/500000-year-old-bone-tool-identified-in-england/" clss=""><h2>500000 old bone tool in england</h2></a>
+        </div>
+        <div class="discoverys"> 
+            <img src="{{ url_for('static', filename='arch1.jpg') }}" height="100px" width="100px">
+            <a href="https://archaeology.org/news/2026/01/14/bronze-age-burial-uncovered-in-greece/" clss=""><h2>Bronze Age Burial Uncovered in Greece</h2></a>
+        </div>
     </div>
 
 {% else %}

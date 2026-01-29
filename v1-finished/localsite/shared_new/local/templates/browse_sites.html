@@ -10,64 +10,25 @@
             font-family: system-ui, sans-serif;
             max-width: 1000px;
         }
-        .controls {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-            margin-bottom: 12px;
-        }
-        select {
-            color: black;
-        }
-        option {
-            color: black;
-        }
-        input, select, button { padding: 6px 8px; font-size: 14px; }
-        button { cursor: pointer; }
-        label { display: flex; align-items: center; gap: 4px; font-size: 14px; }
-        .count { font-size: 13px; color: #666; margin-bottom: 12px; }
-        .item {
-            padding: 10px 0;
-            border-bottom: 1px solid #eee;
-        }
-        .item strong { font-weight: 600; }
-        .meta { font-size: 13px; color: #666; }
-        .hidden { display: none; }
-        .section { margin-bottom: 32px; }
-
-        .hovering {
-            position: relative;
-            min-width: 130px;
-        }
-        .hovering-content{
-            display: none;
-            position: absolute;
-            background-color: #f9f9f9;
-            color: black;
-            min-width: 130px;
-            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-        }
-        .hovering:hover .hovering-content, .hovering-content:hover {
-            display: block;
-        }
     </style>
 </head>
 <body>
     <header class="heading">
-    <h1 style="color:black;">Browse Sites & Artefacts</h1>
+    <h1 style="color:black;">Browse sites & Artefacts</h1>
     <a href="/" class="heading1"><h4>Home</h4></a>
     <a href="/my_sites" class="heading1"><h4>My sites</h4></a>
-    <a href="/profile" class="heading1"><h4>My profile</h4></a>
     <a href="/join_site" class="heading1"><h4>Join a site</h4></a>
     <a href="/create_site" class="heading1"><h4>Create a site</h4></a>
     <a href="/sites" class="heading1"><h4>Browse sites</h4></a>
     <a href="/log_artefact" class="heading1"><h4>Log artefact</h4></a>
-    <a href="/logout" class="heading2"><h4>Logout</h4></a> <!-- add this as a dropdown with the my profile button -->
-    </header>
     <div class="hovering">
-        <h4 style="background-color: aqua;">hover over me</h4>
-        <p class="hovering-content">hello!</p>
+        <h4 class="hovering-text">Profile</h4>
+        <div class="hovering-content">
+            <a href="/logout" class="heading3"><h6 class="heading3">Logout</h6></a>
+            <a href="/profile" class="heading3"><h6 class="heading3">about</h6></a>
+        </div>
     </div>
+    </header>
     <h2>Filters</h2> <!-- add this as a dropdown -->
 <div class="controls">
     <input type="text" id="nameFilter" placeholder="Site/Artefact name">

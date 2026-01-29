@@ -33,7 +33,7 @@
         p {
             color: white;
         }
-                a {
+        a {
             color: rgb(99 141 187);
         }
         button {
@@ -112,4 +112,32 @@
         }
         .everything-but-header {
             margin: 2dvh
+        }
+        .hovering {
+            position: relative;
+            width: 130px;
+        }
+        .hovering-content{
+            display: none;
+            position: absolute;
+            background-color: #f9f9f9;
+            color: black;
+            min-width: 130px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+        }
+        .hovering:hover .hovering-content, .hovering-content:hover {
+            display: block;
+        }
+        .heading3 {
+            color: black;
+            text-decoration: none;
+            font-size: 1dvw;
+
+        }
+        .hovering-content1 {
+            border-width: 10dvw;
+            border-color: red;
+        }
+        .discoverys {
+            
         }
