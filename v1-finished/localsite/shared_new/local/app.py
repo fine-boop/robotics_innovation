@@ -174,7 +174,7 @@ def manage_site(site_id):
             if not check:
                 flash('Error removing member: member is not in site')
                 conn.close()
-                print(console_log(f'{session['email']} tried removing a member ()from {site} b', 'error'))
+                print(console_log(f'{session["email"]} tried removing a member ()from {site} b', 'error'))
                 return redirect(f'/my_sites/manage_site/{site_id}')
             
     elif request.method == 'POST' and 'add_members' in request:
