@@ -150,15 +150,19 @@ def logout():
 
 @app.route('/my_sites/manage_site/<int:site_id>', methods=["GET", "POST"])
 def manage_site(site_id):
+    #auth checks
     if 'uid' not in session:
         print(console_log('User with no account attempted to access /my_sites/manage_site enpoint', 'warn'))
         return redirect('/login') 
     conn, cursor = init_conn()
-    site = cursor.execute("SELECT name FROM sites WHERE id = ? AND owner = ?",(site_id, session['uid'])).fetchone()[0]
+    site = cursor.execute("SELECT name FROM sites WHERE id = ? AND owner = ?",(site_id, session['uid'])).fetchone()
     if not site:
         conn.close()
         print(console_log(f'{session["email"]} tried to access management of site id: {site_id}', 'warn'))
         return redirect('/')
+    site = site[0]
+    
+    #begin actual logic 
     site_info = cursor.execute('SELECT user_id FROM site_members WHERE site_id = ?', (site_id,)).fetchall()
     if not site_info:
         return render_template('members.html', members=False)
@@ -166,21 +170,69 @@ def manage_site(site_id):
     for id in site_info:
         id = id[0]
         members.append(cursor.execute('SELECT id, name FROM users WHERE id = ?', (id,)).fetchone())
-    conn.close()
-    if request.method == 'POST' and 'remove_members' in request:
-        members_to_add = request.form.getlist('members')
-        for member in members_to_add:
+
+    members = [term for term in members if term[0] != session['uid']]
+    users_not_in_site = cursor.execute("""SELECT users.id, users.name FROM users
+    LEFT JOIN site_members
+    ON users.id = site_members.user_id
+    AND site_members.site_id = ?
+    WHERE site_members.user_id IS NULL
+    """, (site_id,)).fetchall()
+    
+
+    #remove members
+    if request.method == 'POST' and 'remove_members' in request.form:
+        members_to_remove = request.form.getlist('members')
+        for member in members_to_remove:
             check = cursor.execute('SELECT 1 FROM site_members WHERE site_id = ? and user_id = ?', (site_id, member)).fetchone()
             if not check:
                 flash('Error removing member: member is not in site')
                 conn.close()
                 print(console_log(f'{session["email"]} tried removing a member ()from {site} b', 'error'))
                 return redirect(f'/my_sites/manage_site/{site_id}')
-            
-    elif request.method == 'POST' and 'add_members' in request:
-        pass
-    return render_template('members.html', members=members)
+            try:
+                cursor.execute('DELETE FROM site_members WHERE user_id = ? AND site_id = ?', (member, site_id))
+                conn.commit()
 
+            except sqlite3.Error as e:
+                flash('Error')
+                conn.close()
+                print(console_log(f'{session["email"]} tried removing member {member} from site {site} and hit error {str(e)}', 'error'))
+                return redirect(f'/my_sites/manage_site/{site_id}')
+            
+        flash(f'Successfully removed {len(members_to_remove)} from {site}!')
+        print(console_log(f'{session["email"]} successfully removed {len(members_to_remove)} from {site}', 'success'))
+        conn.close()
+        return redirect(f'/my_sites/manage_site/{site_id}')
+
+    
+    #add members 
+    elif request.method == 'POST' and 'add_members' in request.form:
+        members_to_add = request.form.getlist('members')
+        for member in members_to_add:
+            check = cursor.execute('SELECT 1 FROM site_members WHERE site_id = ? and user_id = ?', (site_id, member)).fetchone()
+            if check:
+                flash(f'Error adding member: member is in site')
+                conn.close()
+                print(console_log(f'{session["email"]} tried adding a member to {site} but they were already in it', 'error'))
+                return redirect(f'/my_sites/manage_site/{site_id}')
+            try:
+                cursor.execute('INSERT INTO site_members (user_id, site_id) VALUES (?, ?)', (member, site_id))
+                conn.commit()
+            except sqlite3.Error as e:
+                flash('Error')
+                conn.close()
+                print(console_log(f'{session["email"]} tried adding member {member} to site {site} and hit error {str(e)}', 'error'))
+                return redirect(f'/my_sites/manage_site/{site_id}')
+            
+        flash(f'Successfully added {len(members_to_add)} to {site}!')
+        conn.close()
+        return redirect(f'/my_sites/manage_site/{site_id}')
+    conn.close()
+    return render_template('members.html', members=members, users_not_in_site=users_not_in_site)
+
+
+#ADD OWNERSHIP CHECKS!!!
 
 @app.route('/my_sites', methods = ['GET', 'POST'])
 def my_sites():
@@ -190,6 +242,7 @@ def my_sites():
     conn , cursor = init_conn()
     sites = []
     uid = cursor.execute('SELECT id FROM users WHERE email = ?', (session['email'],)).fetchone()[0]
+
     if request.method == 'POST' and 'uid' in session:
         site_to_leave = request.form.get('site_to_leave')
         if not site_to_leave:
@@ -303,7 +356,15 @@ def join_site():
     if 'uid' not in session:
         return redirect('/')
     conn, cursor = init_conn()
-    sites_names = cursor.execute('SELECT name FROM sites').fetchall()
+    sites_names = cursor.execute('''
+        SELECT sites.name
+        FROM sites
+        LEFT JOIN site_members 
+        ON sites.id = site_members.site_id 
+        AND site_members.user_id = ?
+        WHERE site_members.user_id IS NULL
+    ''', (session['uid'],)).fetchall()
+
     if request.method == 'POST' and 'uid' in session:
         site_name = request.form.get('name')
         site_password = request.form.get('password')
@@ -314,6 +375,8 @@ def join_site():
             return redirect('/join_site')
         site_info = cursor.execute('SELECT id, password, owner FROM sites WHERE name = ?', (site_name,)).fetchone()
         site_id = site_info[0]
+        print(f'Site info 1 =  {site_info[1]}')
+        print(f'Password = {site_password}')
         if site_info[1] != site_password:
             flash('Incorrect password')
             print(console_log(f'{session["email"]} entered the wrong password to join {site_name}', 'info'))
@@ -342,6 +405,7 @@ def join_site():
         finally:
             conn.close()
             return redirect('/join_site')
+    
     return render_template('join_site.html', sites_names = sites_names)
 
 @app.route('/create_site', methods = ["GET", "POST"])
@@ -356,13 +420,14 @@ def create_site():
         site_password = request.form.get('password')
         site_members = request.form.getlist('site_members')
         site_location = request.form.get('location')
+        
         if cursor.execute('SELECT 1 FROM sites WHERE name = ?', (site_name,)).fetchone():
             print(console_log(f'{session["email"]} tried to create the site {site_name}, already exists', 'info'))
             flash('Site exists!')
             conn.close()
             return redirect('/create_site')
         try:
-            cursor.execute('INSERT INTO sites (name, owner, location) VALUES (?, ?, ?)', (site_name, session['uid'], site_location))
+            cursor.execute('INSERT INTO sites (name, owner, location, password) VALUES (?, ?, ?, ?)', (site_name, session['uid'], site_location, site_password))
             site_id = cursor.execute('SELECT id FROM sites WHERE name = ?', (site_name,)).fetchone()[0]
             cursor.execute('INSERT INTO site_members (site_id, user_id) VALUES (?, ?)', (site_id, session['uid']))
             for member in site_members:

@@ -2,70 +2,120 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Site Members</title>
+    <title>Manage Site Members</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
-        body {
-            font-family: sans-serif;
-            background: #0f0f0f;
-            color: #eaeaea;
-            padding: 2rem;
+        label {
+            display: block;
+            margin-top: 1em;
+            font-weight: bold;
         }
-
-        h1 {
-            margin-bottom: 1rem;
-        }
-
-        table {
-            border-collapse: collapse;
+        select {
             width: 100%;
-            max-width: 600px;
+            min-height: 150px;
         }
-
-        th, td {
-            padding: 0.75rem;
-            border-bottom: 1px solid #333;
-            text-align: left;
+        button {
+            margin-top: 1em;
+            padding: 0.5em 1em;
         }
-
-        th {
-            color: #aaa;
-            font-weight: normal;
-        }
-
-        tr:hover {
-            background: #1a1a1a;
-        }
-
-        .empty {
-            color: #888;
-            font-style: italic;
+        .flash {
+            background-color: #f0f0f0;
+            padding: 0.5em;
+            margin: 0.5em 0;
+            border-radius: 4px;
         }
     </style>
 </head>
 <body>
 
-<h1>Site Members</h1>
+<header>
+    <nav>
+        <a href="/">Home</a>
+        <a href="/my_sites">My Sites</a>
+        <a href="/join_site">Join Site</a>
+        <a href="/create_site">Create Site</a>
+        <a href="/profile">Profile</a>
+        <a href="/logout">Logout</a>
+    </nav>
+</header>
 
-{% if members %}
-    <table>
-        <thead>
-            <tr>
-                <th>User ID</th>
-                <th>Name</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for member in members %}
-                <tr>
-                    <td>{{ member[0] }}</td>
-                    <td>{{ member[1] }}</td>
-                </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-{% else %}
-    <p class="empty">No members found.</p>
-{% endif %}
+<main>
+    <h1>Manage Members for {{ site }}</h1>
+
+    <!-- Flash messages -->
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        {% for message in messages %}
+            <div class="flash">{{ message }}</div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    <form method="POST">
+
+        <div>
+            <label for="action">Select Action:</label>
+            <select name="action" id="action" required>
+                <option value="">--Choose an action--</option>
+                <option value="add">Add Members</option>
+                <option value="remove">Remove Members</option>
+            </select>
+        </div>
+
+        <div>
+            <label for="members_select">Members (Ctrl / Cmd to select multiple)</label>
+            <select name="members_select" id="members_select" multiple>
+                <!-- Options will be populated by JS -->
+            </select>
+        </div>
+
+        <div>
+            <button type="submit">Update Members</button>
+        </div>
+    </form>
+</main>
+
+<script>
+    // Convert Flask template lists into JS arrays
+    const usersNotInSite = [
+        {% for user in users_not_in_site %}
+            {id: "{{ user[0] }}", name: "{{ user[1] }}"}{% if not loop.last %},{% endif %}
+        {% endfor %}
+    ];
+
+    const members = [
+        {% for user in members %}
+            {id: "{{ user[0] }}", name: "{{ user[1] }}"}{% if not loop.last %},{% endif %}
+        {% endfor %}
+    ];
+
+    const actionSelect = document.getElementById('action');
+    const membersSelect = document.getElementById('members_select');
+
+    function populateMembersList(list) {
+        membersSelect.innerHTML = ''; // clear current options
+        list.forEach(user => {
+            const option = document.createElement('option');
+            option.value = user.id;
+            option.textContent = user.name;
+            membersSelect.appendChild(option);
+        });
+    }
+
+    // Update list on action change
+    actionSelect.addEventListener('change', () => {
+        if (actionSelect.value === 'add') {
+            populateMembersList(usersNotInSite);
+        } else if (actionSelect.value === 'remove') {
+            populateMembersList(members);
+        } else {
+            membersSelect.innerHTML = ''; // empty if no action
+        }
+    });
+
+    // Optionally, populate default list (empty)
+    membersSelect.innerHTML = '';
+</script>
 
 </body>
 </html>
