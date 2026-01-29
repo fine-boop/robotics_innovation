@@ -146,6 +146,42 @@ def logout():
     else:
         return redirect('/')
 
+
+
+@app.route('/my_sites/manage_site/<int:site_id>', methods=["GET", "POST"])
+def manage_site(site_id):
+    if 'uid' not in session:
+        print(console_log('User with no account attempted to access /my_sites/manage_site enpoint', 'warn'))
+        return redirect('/login') 
+    conn, cursor = init_conn()
+    site = cursor.execute("SELECT name FROM sites WHERE id = ? AND owner = ?",(site_id, session['uid'])).fetchone()[0]
+    if not site:
+        conn.close()
+        print(console_log(f'{session["email"]} tried to access management of site id: {site_id}', 'warn'))
+        return redirect('/')
+    site_info = cursor.execute('SELECT user_id FROM site_members WHERE site_id = ?', (site_id,)).fetchall()
+    if not site_info:
+        return render_template('members.html', members=False)
+    members = []
+    for id in site_info:
+        id = id[0]
+        members.append(cursor.execute('SELECT id, name FROM users WHERE id = ?', (id,)).fetchone())
+    conn.close()
+    if request.method == 'POST' and 'remove_members' in request:
+        members_to_add = request.form.getlist('members')
+        for member in members_to_add:
+            check = cursor.execute('SELECT 1 FROM site_members WHERE site_id = ? and user_id = ?', (site_id, member)).fetchone()
+            if not check:
+                flash('Error removing member: member is not in site')
+                conn.close()
+                print(console_log(f'{session['email']} tried removing a member ()from {site} b', 'error'))
+                return redirect(f'/my_sites/manage_site/{site_id}')
+            
+    elif request.method == 'POST' and 'add_members' in request:
+        pass
+    return render_template('members.html', members=members)
+
+
 @app.route('/my_sites', methods = ['GET', 'POST'])
 def my_sites():
     if 'uid' not in session:
@@ -198,6 +234,10 @@ def my_sites():
         site_name = site[0]
         sites.append((site_id, site_name, owner_name))
     return render_template('my_sites.html', sites=sites)
+
+
+
+
 
 
 @app.route('/profile', methods = ["GET", "POST"])
@@ -398,8 +438,6 @@ def admin():
     if not session['admin'] and request.method == 'POST':
         email = request.form.get('email')
         password = request.form.get('password')
-
-
     if not session['admin']:
         return render_template('admin_login.html')
     
