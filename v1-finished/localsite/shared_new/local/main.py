@@ -1,6 +1,7 @@
-from flask import Flask, render_template, request, redirect, flash, url_for, session, Response
+from flask import Flask, render_template, request, redirect, flash, url_for, session, Response, stream_with_context, send_from_directory, jsonify
 import time
 import sqlite3
+import threading
 from colorama import Fore, Style, init
 from datetime import datetime
 import os
@@ -11,11 +12,21 @@ import RPi.GPIO as GPIO
 import signal
 import sys
 import cv2
-
+import json
 
 init(autoreset=True)
 app = Flask(__name__)
 app.secret_key = secrets.token_hex(32)
+
+# Camera management and streaming/capture endpoints
+camera = None
+camera_active = False
+# Locks to protect camera access and capture state
+camera_lock = threading.Lock()
+capture_lock = threading.Lock()
+capture_in_progress = False
+
+
 
 def init_db():
     conn = sqlite3.connect('database.db')
@@ -68,6 +79,54 @@ def init_conn():
     conn = sqlite3.connect('database.db')
     cursor = conn.cursor()
     return conn, cursor
+
+
+# Hardware pins and calibration
+DT_PIN = 5
+SCK_PIN = 6
+REFERENCE_UNIT = -45.98148148148146
+
+
+import subprocess
+
+PIENV_PYTHON = "/home/pi/pienv/bin/python"   # adjust username if needed
+SCRIPT_PATH = "weight_subproc.py"   # path to the script above
+
+def get_average_weight_subproc(samples=10, dt_pin=5, sck_pin=6, reference_unit=1.0, timeout=10):
+    try:
+        result = subprocess.run(
+            [PIENV_PYTHON, SCRIPT_PATH, str(dt_pin), str(sck_pin), str(reference_unit), str(samples)],
+            capture_output=True,
+            text=True,
+            timeout=timeout
+        )
+    except subprocess.TimeoutExpired:
+        print("Weight subprocess timed out")
+        return None
+
+    if result.returncode != 0:
+        print("Weight subprocess error:", result.stderr.strip())
+        return None
+
+    output = result.stdout.strip()
+    if output == "None" or output == "":
+        return None
+
+    try:
+        return float(output)
+    except ValueError:
+        print("Unexpected output from weight subprocess:", output)
+        return None
+
+
+
+
+
+
+
+
+
+
 
 def console_log(arg, level):
     timestamp = datetime.now().isoformat()
@@ -279,7 +338,7 @@ def my_profile():
             new_email = request.form.get('email')
             if new_email == session['email']:
                 flash('New email cannot be the same as the old one!')
-                console_log(session['email'] + ' tried to update their email but reused the old one', 'info')
+                print(console_log(session['email'] + ' tried to update their email but reused the old one', 'info'))
                 return redirect('/my_site')
             try:
                 cursor.execute('UPDATE users SET email = ? WHERE email = ?', (new_email, session['email']))
@@ -295,7 +354,7 @@ def my_profile():
             new_name = request.form.get('name')
             if new_name == session['name']:
                 flash('New name cannot be the same as the old one!')
-                console_log(session['email'] + ' tried to update their name but reused the old one', 'info')
+                print(console_log(session['email'] + ' tried to update their name but reused the old one', 'info'))
                 return redirect('/my_site')
             try:
                 cursor.execute('UPDATE users SET name = ? WHERE name = ?', (new_name, session['name']))
@@ -311,7 +370,7 @@ def my_profile():
             new_name = request.form.get('password')
             if new_name == session['password']:
                 flash('New password cannot be the same as the old one!')
-                console_log(session['email'] + ' tried to update their password but reused the old one', 'info')
+                print(console_log(session['email'] + ' tried to update their password but reused the old one', 'info'))
                 return redirect('/my_site')
             try:
                 cursor.execute('UPDATE users SET password = ? WHERE password = ?', (new_name, session['password']))
@@ -364,7 +423,7 @@ def join_site():
             cursor.execute('INSERT INTO site_members (site_id, user_id) VALUES (?, ?)', (site_id, session['uid']))
             conn.commit()
             flash(f'Successfully joined {site_name}!')
-            console_log(f'{session["email"]} successfully joined {site_name}', 'success')
+            print(console_log(f'{session["email"]} successfully joined {site_name}', 'success'))
         except sqlite3.Error as e:
             print(console_log(f'Error in join site: {e}', 'error'))
             flash("Error")
@@ -428,7 +487,7 @@ def browse_sites():
 @app.route('/log_artefact', methods = ["GET", "POST"])
 def log_artefact():
     if not 'uid' in session:
-        console_log('User not logged in tried to access /log_artefact endpoint', 'warn')
+        print(console_log('User not logged in tried to access /log_artefact endpoint', 'warn'))
         return redirect('/')
     conn, cursor = init_conn()
     sites = []
@@ -443,48 +502,299 @@ def log_artefact():
 
     if request.method == 'POST' and 'uid' in session:
         artefact_name = request.form.get('name')
-        weight = request.form.get('weight')
+        form_weight = request.form.get('weight')
         site = request.form.get('site')
+
+        # Try to measure weight from HX711 first (average of first 10 samples)
+        measured = get_average_weight_subproc(
+            samples=10,
+            dt_pin=DT_PIN,
+            sck_pin=SCK_PIN,
+            reference_unit=REFERENCE_UNIT,
+            timeout=10
+        )
+        if measured is not None:
+            chosen_weight = measured
+            print(console_log(f'{session["email"]} measured artefact weight: {chosen_weight}kg', 'info'))
+        else:
+            # Fallback to provided form value if measurement is not available
+            try:
+                chosen_weight = float(form_weight) if form_weight is not None and form_weight != '' else None
+            except Exception:
+                chosen_weight = None
+            print(console_log(f'{session["email"]} could not measure weight; using form value: {chosen_weight}', 'warn'))
+
         try:
-            cursor.execute('INSERT INTO artefacts (name, weight, site_found, user_found) VALUES (?, ?, ?, ?)', (artefact_name, weight, site, session['uid']))
+            cursor.execute('INSERT INTO artefacts (name, weight, site_found, user_found) VALUES (?, ?, ?, ?)', (artefact_name, chosen_weight, site, session['uid']))
             print(console_log(f'{session["email"]} just logged an artefact', 'success'))
             conn.commit()
-            flash('Successfully logged ' + artefact_name + '!')
+
+            # Start camera for live preview and capture
+            start_camera()
+            conn.close()
+
+            # Render capture UI so user can preview and capture photos
+            return render_template('log_artefact.html', sites=sites, capture_mode=True, artefact_name=artefact_name, measured_weight=chosen_weight, form_weight=form_weight)
+
         except sqlite3.Error as e:
             print(console_log(f'{session["email"]} hit error {e} when logging artefact', 'error'))
             flash('Error')
         finally:
             conn.close()
-    return render_template('log_artefact.html', sites=sites)
+    return render_template('log_artefact.html', sites=sites) 
 
 
 
-@app.route('/artefact', methods=['GET', 'POST'])
-def artefact():
-    if not 'uid' in session:
-        return redirect('/')
-    
-
-camera = cv2.VideoCapture('0')  # use 0 for web camera
 
 
-def gen_frames():  # generate frame by frame from camera
-    while True:
-        # Capture frame-by-frame
-        success, frame = camera.read()  # read the camera frame
-        if not success:
-            break
+def start_camera():
+    global camera, camera_active
+    with camera_lock:
+        if camera is None:
+            print(console_log('Starting camera for live preview', 'info'))
+            camera = cv2.VideoCapture(0)
+            if not camera.isOpened():
+                print(console_log('Camera failed to open', 'error'))
+                camera = None
+                camera_active = False
+            else:
+                camera_active = True
         else:
-            ret, buffer = cv2.imencode('.jpg', frame)
-            frame = buffer.tobytes()
-            yield (b'--frame\r\n' b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')  # concat frame one by one and show result
+            # ensure state is accurate
+            if camera.isOpened():
+                camera_active = True
+            else:
+                camera_active = False
 
 
+def stop_camera():
+    global camera, camera_active
+    with camera_lock:
+        if camera is not None:
+            print(console_log('Stopping camera', 'info'))
+            try:
+                camera.release()
+            except Exception as e:
+                print(console_log(f'Error releasing camera: {e}', 'error'))
+            camera = None
+            camera_active = False
 
 
-@app.route('/video_feed')
-def video_feed():
-    return Response(gen_frames(), mimetype='multipart/x-mixed-replace; boundary=frame')
+def gen_frames():
+    global camera, camera_active
+    print(console_log('Video stream generator started', 'info'))
+    if camera is None or not camera.isOpened():
+        print(console_log('Camera not initialized for streaming', 'warn'))
+        return
+
+    while camera_active and camera is not None:
+        success, frame = camera.read()
+        if not success:
+            print(console_log('Failed to read frame', 'error'))
+            break
+        ret, buffer = cv2.imencode('.jpg', frame)
+        yield (b'--frame\r\n' b'Content-Type: image/jpeg\r\n\r\n' + buffer.tobytes() + b'\r\n')
+    print(console_log('Video stream generator stopped', 'info'))
+
+
+@app.route('/artefact_video')
+def artefact_video():
+    global camera_active
+    if not camera_active or camera is None:
+        return 'Camera off', 403
+    return Response(stream_with_context(gen_frames()), mimetype='multipart/x-mixed-replace; boundary=frame')
+
+
+@app.route('/capture_artefact/<artefact_name>')
+def capture_artefact(artefact_name):
+    global camera, camera_active, capture_in_progress
+    print(console_log(f'Request to capture for {artefact_name}', 'info'))
+
+    # If another capture is in progress, immediately notify client and exit
+    with capture_lock:
+        if capture_in_progress:
+            print(console_log('Capture already in progress, rejecting new request', 'warn'))
+            def already():
+                payload = {'status': 'error', 'message': 'capture_in_progress'}
+                yield f"data: {json.dumps(payload)}\n\n"
+            return Response(already(), mimetype='text/event-stream')
+        capture_in_progress = True
+
+    # Ensure camera is running (try to start it)
+    if camera is None or not getattr(camera, 'isOpened', lambda: False)():
+        print(console_log('Camera not initialized, attempting to start it...', 'info'))
+        start_camera()
+        # wait a moment for camera to become ready
+        timeout = 3.0
+        waited = 0.0
+        interval = 0.2
+        while (camera is None or not getattr(camera, 'isOpened', lambda: False)()) and waited < timeout:
+            time.sleep(interval)
+            waited += interval
+        if camera is None or not getattr(camera, 'isOpened', lambda: False)():
+            print(console_log('Camera failed to initialize for capture', 'error'))
+            with capture_lock:
+                capture_in_progress = False
+            def no_cam():
+                payload = {'status': 'error', 'message': 'camera_unavailable'}
+                yield f"data: {json.dumps(payload)}\n\n"
+            return Response(no_cam(), mimetype='text/event-stream')
+
+    # Resolve artefact id to use as directory name (prefer numeric id if provided, else find latest by name and user)
+    artefact_id = None
+    try:
+        artefact_id = int(artefact_name)
+    except Exception:
+        conn2, cursor2 = init_conn()
+        row = cursor2.execute(
+            "SELECT id FROM artefacts WHERE name = ? AND user_found = ? ORDER BY id DESC LIMIT 1",
+            (artefact_name, session.get('uid'))
+        ).fetchone()
+        if not row:
+            row = cursor2.execute("SELECT id FROM artefacts WHERE name = ? ORDER BY id DESC LIMIT 1", (artefact_name,)).fetchone()
+        conn2.close()
+        if row:
+            artefact_id = row[0]
+
+    if artefact_id is None:
+        with capture_lock:
+            capture_in_progress = False
+        def no_artefact():
+            payload = {'status': 'error', 'message': 'artefact_not_found'}
+            yield f"data: {json.dumps(payload)}\n\n"
+        return Response(no_artefact(), mimetype='text/event-stream')
+
+    photos_dir = os.path.join('photos', str(artefact_id))
+    os.makedirs(photos_dir, exist_ok=True)
+    captured = 0
+    errors = []
+
+    def generate():
+        nonlocal captured
+        try:
+            # notify client that capture started
+            payload = {'status': 'started'}
+            yield f"data: {json.dumps(payload)}\n\n"
+
+            for i in range(20):
+                # read frame under camera lock to avoid races with stop_camera
+                with camera_lock:
+                    try:
+                        success, frame = camera.read()
+                    except Exception as e:
+                        print(console_log(f'Exception reading camera: {e}', 'error'))
+                        success = False
+                        frame = None
+
+                if not success or frame is None:
+                    errors.append(i)
+                    payload = {'frame': i+1, 'total': 20, 'status': 'error'}
+                    yield f"data: {json.dumps(payload)}\n\n"
+                    time.sleep(1)
+                    continue
+
+                # write file under camera lock as well
+                try:
+                    path = os.path.join(photos_dir, f"{i}.jpg")
+                    with camera_lock:
+                        cv2.imwrite(path, frame)
+                    captured += 1
+                    payload = {'frame': i+1, 'total': 20, 'status': 'captured'}
+                    yield f"data: {json.dumps(payload)}\n\n"
+                except Exception as e:
+                    print(console_log(f'Error writing photo {i}: {e}', 'error'))
+                    errors.append(i)
+                    payload = {'frame': i+1, 'total': 20, 'status': 'error'}
+                    yield f"data: {json.dumps(payload)}\n\n"
+                time.sleep(1)
+        finally:
+            # ensure camera is stopped and flag reset
+            try:
+                stop_camera()
+            finally:
+                with capture_lock:
+                    capture_in_progress = False
+            payload = {'status': 'done', 'captured': captured, 'errors': errors}
+            yield f"data: {json.dumps(payload)}\n\n"
+
+    return Response(stream_with_context(generate()), mimetype='text/event-stream')
+
+
+@app.route('/photos/<artefact_name>/<path:filename>')
+def serve_photo(artefact_name, filename):
+    # Resolve artefact id if printable numeric, otherwise try to find record by name
+    artefact_id = None
+    try:
+        artefact_id = int(artefact_name)
+    except Exception:
+        conn, cursor = init_conn()
+        row = cursor.execute("SELECT id FROM artefacts WHERE name = ? ORDER BY id DESC LIMIT 1", (artefact_name,)).fetchone()
+        conn.close()
+        if row:
+            artefact_id = row[0]
+
+    if artefact_id is None:
+        return 'Not found', 404
+
+    directory = os.path.join('photos', str(artefact_id))
+    if not os.path.exists(os.path.join(directory, filename)):
+        return 'Not found', 404
+    return send_from_directory(directory, filename)
+
+
+@app.route('/photos_list/<artefact_name>')
+def photos_list(artefact_name):
+    # Resolve artefact id like other endpoints
+    artefact_id = None
+    try:
+        artefact_id = int(artefact_name)
+    except Exception:
+        conn, cursor = init_conn()
+        row = cursor.execute("SELECT id FROM artefacts WHERE name = ? ORDER BY id DESC LIMIT 1", (artefact_name,)).fetchone()
+        conn.close()
+        if row:
+            artefact_id = row[0]
+
+    if artefact_id is None:
+        return jsonify([])
+
+    directory = os.path.join('photos', str(artefact_id))
+    if not os.path.exists(directory):
+        return jsonify([])
+    files = sorted([f for f in os.listdir(directory) if f.lower().endswith(('.jpg', '.jpeg', '.png'))])
+    return jsonify(files)
+
+
+@app.route('/save_artefact', methods=['POST'])
+def save_artefact():
+    # Persist the photo folder path to the latest artefact logged by this user with the given name
+    if 'uid' not in session:
+        return jsonify({'ok': False, 'error': 'unauthenticated'}), 403
+    data = request.get_json() or request.form
+    artefact_name = data.get('artefact_name')
+    if not artefact_name:
+        return jsonify({'ok': False, 'error': 'missing_name'}), 400
+
+    conn, cursor = init_conn()
+    row = cursor.execute(
+        "SELECT id FROM artefacts WHERE name = ? AND user_found = ? ORDER BY id DESC LIMIT 1",
+        (artefact_name, session['uid'])
+    ).fetchone()
+    if not row:
+        conn.close()
+        return jsonify({'ok': False, 'error': 'not_found'}), 404
+
+    artefact_id = row[0]
+    # Save path using artefact id rather than the name
+    scan_path = os.path.join('photos', str(artefact_id))
+    try:
+        cursor.execute('UPDATE artefacts SET scan_path = ? WHERE id = ?', (scan_path, artefact_id))
+        conn.commit()
+    except Exception as e:
+        conn.close()
+        return jsonify({'ok': False, 'error': str(e)}), 500
+    conn.close()
+    return jsonify({'ok': True, 'redirect': url_for('log_artefact')})
 
 
 @app.route('/admin', methods=["GET", "POST"])

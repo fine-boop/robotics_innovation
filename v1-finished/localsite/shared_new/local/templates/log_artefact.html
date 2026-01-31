@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Log Artefact</title>
+    <title>Proceed to recording</title>
     <link rel="stylesheet" href="{{ url_for('static',filename='css/css.css') }}">
     <script src="{{ url_for('static',filename='js/js.js') }}"></script>
 
@@ -40,13 +40,13 @@
 </head>
 <body>
         <header class="heading">
-    <h1 style="color:black;">Log an arefact</h1>
+    <h1 style="color:black;">Proceed to recording</h1>
     <a href="/" class="heading1"><h4>Home</h4></a>
     <a href="/my_sites" class="heading1"><h4>My sites</h4></a>
     <a href="/join_site" class="heading1"><h4>Join a site</h4></a>
     <a href="/create_site" class="heading1"><h4>Create a site</h4></a>
     <a href="/sites" class="heading1"><h4>Browse sites</h4></a>
-    <a href="/log_artefact" class="heading1"><h4>Log artefact</h4></a>
+    <a href="/log_artefact" class="heading1"><h4>Proceed to recording</h4></a>
     <div class="hovering">
         <h4 class="hovering-text">Profile</h4>
         <div class="hovering-content">
@@ -69,9 +69,14 @@
   {% endif %}
 {% endwith %}
 
+
 {% if no_sites %}
     <p>You don’t belong to any sites.</p>
 {% else %}
+
+
+
+
 
 <form method="POST" id="artefactForm">
     <label>
@@ -98,6 +103,30 @@
 
     <button type="submit">Log artefact</button>
 </form>
+
+{% if capture_mode %}
+    <hr>
+    <h3>Measured weight</h3>
+    {% if measured_weight is not none %}
+        <p><strong>{{ measured_weight }} kg</strong></p>
+    {% else %}
+        <p><em>No measured weight available. Using provided weight: {{ form_weight or 'N/A' }}</em></p>
+    {% endif %}
+
+    <hr>
+    <h2>Live Preview</h2>
+    <img id="videoStream" src="{{ url_for('artefact_video') }}" width="640"><br>
+    <button type="button" onclick="startCapture()">Start Capture</button>
+
+    <h3>Progress</h3>
+    <ul id="progressLog"></ul>
+
+    <h3>Gallery</h3>
+    <div id="gallery" style="display:flex;flex-wrap:wrap;gap:8px"></div>
+
+    <button id="saveBtn" type="button" disabled style="margin-top:12px;">Save & Continue</button>
+{% endif %}
+
 </div>
 {% endif %}
 
@@ -110,15 +139,117 @@
     // reveal form only when JS loads
     form.style.display = "block";
 
-    // client-side sanity checks
+    // No client-side weight validation; the server measures weight automatically on submit
     form.addEventListener("submit", e => {
-        const weight = form.weight.value;
-        if (weight <= 0) {
-            alert("Weight must be greater than 0");
-            e.preventDefault();
-        }
+        // server will perform measurement; nothing to validate client-side here
     });
 })();
+
+function startCapture() {
+    const artefactName = "{{ artefact_name }}";
+    const btn = document.querySelector('button[onclick="startCapture()"]');
+    if (!btn) return;
+    if (btn.disabled) return; // already capturing
+
+    btn.disabled = true;
+    btn.textContent = 'Capturing...';
+
+    const eventSource = new EventSource("{{ url_for('capture_artefact', artefact_name=artefact_name) }}");
+    const log = document.getElementById("progressLog");
+    const gallery = document.getElementById("gallery");
+
+    eventSource.onerror = function(e) {
+        const li = document.createElement('li');
+        li.textContent = 'Error: failed to start capture (camera unavailable or server error)';
+        log.appendChild(li);
+        btn.disabled = false;
+        btn.textContent = 'Start Capture';
+        eventSource.close();
+    };
+
+    eventSource.onmessage = async function(e) {
+        let data;
+        try {
+            data = JSON.parse(e.data);
+        } catch (err) {
+            console.error('Failed to parse SSE data', err, e.data);
+            return;
+        }
+
+        const li = document.createElement("li");
+
+        if (data.status === 'started') {
+            li.textContent = 'Capture started';
+            log.appendChild(li);
+            return;
+        }
+
+        if(data.status === 'captured') {
+            li.textContent = `Captured frame ${data.frame} of ${data.total}`;
+        } else if(data.status === 'error') {
+            if (data.message) {
+                li.textContent = `Error: ${data.message}`;
+            } else {
+                li.textContent = `Error capturing frame ${data.frame}`;
+            }
+        } else if(data.status === 'done') {
+            li.textContent = `Capture finished. ${data.captured} frames saved. Errors: ${data.errors.length}`;
+            btn.disabled = false;
+            btn.textContent = 'Start Capture';
+            eventSource.close();
+
+            // load gallery
+            try {
+                const res = await fetch("{{ url_for('photos_list', artefact_name=artefact_name) }}");
+                const files = await res.json();
+                gallery.innerHTML = '';
+                files.forEach(f => {
+                    const img = document.createElement('img');
+                    img.src = `/photos/${artefactName}/${f}`;
+                    img.style.width = '200px';
+                    img.style.margin = '6px';
+                    gallery.appendChild(img);
+                });
+
+                // enable save button now that gallery is loaded
+                const saveBtn = document.getElementById('saveBtn');
+                if (saveBtn) {
+                    saveBtn.disabled = false;
+                    saveBtn.textContent = 'Save & Continue';
+                    saveBtn.onclick = async function() {
+                        saveBtn.disabled = true;
+                        saveBtn.textContent = 'Saving...';
+                        try {
+                            const res = await fetch("{{ url_for('save_artefact') }}", {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify({ artefact_name: artefactName })
+                            });
+                            const data = await res.json();
+                            if (res.ok && data.ok) {
+                                // redirect to a fresh page
+                                window.location = data.redirect || "{{ url_for('log_artefact') }}";
+                            } else {
+                                alert('Save failed: ' + (data.error || 'unknown'));
+                                saveBtn.disabled = false;
+                                saveBtn.textContent = 'Save & Continue';
+                            }
+                        } catch (err) {
+                            console.error('Save request failed', err);
+                            alert('Save request failed');
+                            saveBtn.disabled = false;
+                            saveBtn.textContent = 'Save & Continue';
+                        }
+                    }
+                }
+
+            } catch (err) {
+                console.error('Failed to fetch photos', err);
+            }
+        }
+        log.appendChild(li);
+    }
+}
 </script>
 
 </body>
