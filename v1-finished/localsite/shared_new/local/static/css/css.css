@@ -124,6 +124,7 @@
             color: black;
             min-width: 130px;
             box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            border: 0.1dvw, solid, rgba(224, 224, 224, 0.792);
         }
         .hovering:hover .hovering-content, .hovering-content:hover {
             display: block;
@@ -132,12 +133,20 @@
             color: black;
             text-decoration: none;
             font-size: 1dvw;
-
         }
         .hovering-content1 {
-            border-width: 10dvw;
-            border-color: red;
+            /*border: 0.1dvw, solid, white;
+            height: 50px;
+            display: flex;
+            align-items: top;
+            justify-content: center;*/
         }
         .discoverys {
-            
+            display: flex;
+            flex-direction: row;
+        }
+        .imagestyling {
+            height:10dvw;
+            width: 10dvw;
+            border: 0.1dvw, solid, rgb(15 23 42);
         }
