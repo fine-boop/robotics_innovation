@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Manage Site Members</title>
+    <link rel="stylesheet" href="{{ url_for('static',filename='css/css.css') }}">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
         label {
@@ -44,11 +45,11 @@
 
     <!-- Flash messages -->
     {% with messages = get_flashed_messages() %}
-      {% if messages %}
+    {% if messages %}
         {% for message in messages %}
             <div class="flash">{{ message }}</div>
         {% endfor %}
-      {% endif %}
+    {% endif %}
     {% endwith %}
 
     <form method="POST">
@@ -76,18 +77,8 @@
 </main>
 
 <script>
-    // Convert Flask template lists into JS arrays
-    const usersNotInSite = [
-        {% for user in users_not_in_site %}
-            {id: "{{ user[0] }}", name: "{{ user[1] }}"}{% if not loop.last %},{% endif %}
-        {% endfor %}
-    ];
-
-    const members = [
-        {% for user in members %}
-            {id: "{{ user[0] }}", name: "{{ user[1] }}"}{% if not loop.last %},{% endif %}
-        {% endfor %}
-    ];
+    const usersNotInSite = {{ users_not_in_site|default([])|tojson }};
+    const members = {{ members|default([])|tojson }};
 
     const actionSelect = document.getElementById('action');
     const membersSelect = document.getElementById('members_select');
@@ -96,8 +87,8 @@
         membersSelect.innerHTML = ''; // clear current options
         list.forEach(user => {
             const option = document.createElement('option');
-            option.value = user.id;
-            option.textContent = user.name;
+            option.value = user[0];  // id
+            option.textContent = user[1]; // name
             membersSelect.appendChild(option);
         });
     }
@@ -109,13 +100,14 @@
         } else if (actionSelect.value === 'remove') {
             populateMembersList(members);
         } else {
-            membersSelect.innerHTML = ''; // empty if no action
+            membersSelect.innerHTML = '';
         }
     });
 
-    // Optionally, populate default list (empty)
+    // Optionally, start with empty list
     membersSelect.innerHTML = '';
 </script>
+
 
 </body>
 </html>

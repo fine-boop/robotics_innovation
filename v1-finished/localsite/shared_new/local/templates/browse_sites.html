@@ -1,237 +1,381 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Browse Sites & Artefacts</title>
-    <link rel="stylesheet" href="{{ url_for('static',filename='css/css.css') }}">
-    <script src="{{ url_for('static',filename='js/js.js') }}"></script>
-    <style>
-        body {
-            font-family: system-ui, sans-serif;
-            max-width: 1000px;
-        }
-    </style>
+<meta charset="UTF-8">
+<title>Browse</title>
+
+<style>
+* {
+    font-family: system-ui, sans-serif;
+    color: white;
+    box-sizing: border-box;
+}
+body {
+    background-color: rgb(15 23 42);
+    margin: 0;
+}
+
+h1 { font-size: 2.5vw; font-weight: bold; margin: 0; }
+h2 { font-size: 2vw; font-weight: bold; margin: 0; }
+h3 { font-size: 2vw; font-weight: bold; margin: 0; }
+h4 { font-size: 1.5vw; font-weight: bold; margin: 0; }
+
+a { color: rgb(99 141 187); text-decoration: none; }
+
+button {
+    border-radius: 1vw;
+    width: 13vw;
+    height: 2.5vw;
+    background-image: linear-gradient(to right, rgb(99 141 187), rgba(99, 141, 187, 0.413));
+    border: none;
+    transition: 0.15s ease;
+    color: black;
+    font-weight: 600;
+}
+button:hover {
+    width: 13.3vw;
+    height: 2.8vw;
+    cursor: pointer;
+    box-shadow: 0 0 10px rgb(99 141 187);
+}
+
+input {
+    background: none;
+    border-top: none;
+    border-left: none;
+    border-right: none;
+    border-bottom: 0.15rem rgb(99 141 187) solid;
+    width: 20vw;
+    transition: 0.2s;
+    padding: 0.5vh;
+    color: white;
+}
+input::placeholder { color: rgba(255,255,255,0.6); }
+input:focus {
+    outline:none;
+    box-shadow:0 0 10px rgb(99 141 187);
+}
+
+/* Top Nav */
+.heading {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 1.5vw;
+    background-image: linear-gradient(to right, rgb(150, 150, 150) , rgba(150, 150, 150, 0.5));
+    width: 100vw;
+    height: 12vh;
+    padding: 0 2vw;
+}
+
+.heading a {
+    color: black;
+    font-weight: bold;
+    padding: 0.5vh 1vw;
+    border-radius: 0.5vw;
+    transition: 0.2s;
+    text-decoration: none;
+}
+
+.heading a:hover {
+    box-shadow: 0 0 10px rgb(99 141 187);
+}
+
+.everything-but-header {
+    margin: 2vh;
+}
+
+/* Layout */
+.container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2vw;
+    height: calc(100vh - 16vh);
+}
+
+.left, .right {
+    background-color: rgba(150,150,150,0.06);
+    border-radius: 1vw;
+    border: 0.1vw rgb(150, 150, 150) solid;
+    box-shadow: 0 0 10px rgb(99 141 187);
+    padding: 1.5vw;
+    overflow: auto;
+}
+table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed; /* enforce column alignment */
+}
+
+th, td {
+    padding: 0.8vh;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    font-size: 0.9vw;
+    word-wrap: break-word; /* wrap long content */
+    overflow-wrap: break-word;
+    white-space: normal; /* allow wrapping */
+    text-overflow: clip;
+}
+tr:hover {
+    background-color: rgba(99,141,187,0.12);
+    cursor: pointer;
+}
+
+/* Tabs */
+.tabs {
+    display: flex;
+    gap: 1vw;
+    margin-bottom: 1vh;
+}
+
+.tabs button.active {
+    box-shadow: 0 0 10px rgb(99 141 187);
+}
+
+/* Detail fields */
+.field {
+    margin-bottom: 1vh;
+}
+.field span {
+    font-size: 0.8vw;
+    color: rgb(180, 200, 220);
+    display: block;
+    margin-bottom: 0.4vh;
+}
+.field div {
+    font-family: monospace;
+    word-break: break-all;
+    color: white;
+}
+.info-note {
+    color: rgb(180,180,200);
+    font-size: 0.9vw;
+}
+</style>
 </head>
 <body>
-    <header class="heading">
-    <h1 style="color:black;">Browse sites & Artefacts</h1>
-    <a href="/" class="heading1"><h4>Home</h4></a>
-    <a href="/my_sites" class="heading1"><h4>My sites</h4></a>
-    <a href="/join_site" class="heading1"><h4>Join a site</h4></a>
-    <a href="/create_site" class="heading1"><h4>Create a site</h4></a>
-    <a href="/sites" class="heading1"><h4>Browse sites</h4></a>
-    <a href="/log_artefact" class="heading1"><h4>Log artefact</h4></a>
-    <div class="hovering">
-        <h4 class="hovering-text">Profile</h4>
-        <div class="hovering-content">
-            <a href="/logout" class="heading3"><h6 class="heading3">Logout</h6></a>
-            <a href="/profile" class="heading3"><h6 class="heading3">about</h6></a>
-        </div>
-    </div>
-    </header>
-    <h2>Filters</h2> <!-- add this as a dropdown -->
-<div class="controls">
-    <input type="text" id="nameFilter" placeholder="Site/Artefact name">
-    <input type="text" id="ownerFilter" placeholder="Owner name">
-    <input type="number" id="minArtefacts" placeholder="Min artefacts" min="0">
-    
-    <label><input type="checkbox" id="hasPassword"> Has password</label>
 
-    <select id="sortBy">
-        <option value="name">Sort: Name</option>
-        <option value="artefacts">Sort: Artefacts</option>
-        <option value="date">Sort: Date Added</option>
-    </select>
-
-    <button id="clearFilters">Clear</button>
+<!-- Top Navigation -->
+<div class="heading">
+    <h1 style="margin-right: 2vw;">My App</h1>
+    <a href="/">Home</a>
+    <a href="/sites">Browse</a>
+    <a href="/profile">Profile</a>
+    <a href="/logout">Logout</a>
 </div>
 
-<div class="count" id="resultCount"></div>
+<div class="everything-but-header">
 
-<div class="section" id="sitesSection">
-    <h2>Sites</h2>
-    <div id="sites">
-    {% for site in sites %}
-        {% set members = site_members | selectattr('1', 'equalto', site[0]) | list %}
-        {% set owner_id = members[0][2] if members else 'N/A' %}
-        {% set artefact_count = artefacts | selectattr('2', 'equalto', site[0]) | list | length %}
-        <div class="item site"
-             data-name="{{ site[1]|lower }}"
-             data-owner="{{ owner_id }}"
-             data-password="{{ '1' if site[2] else '0' }}"
-             data-artefacts="{{ artefact_count }}">
-            <strong>{{ site[1] }}</strong>
-            <div class="meta">
-                Owner ID: {{ owner_id }} · Artefacts: {{ artefact_count }}
+    <div class="tabs" role="tablist" aria-label="Data tabs">
+        <button id="tab-sites" class="active" onclick="switchTab('sites')">Sites</button>
+        <button id="tab-artefacts" onclick="switchTab('artefacts')">Artefacts</button>
+        <button id="tab-users" onclick="switchTab('users')">Users</button>
+    </div>
+
+    <input id="search" placeholder="Search / filter..." oninput="renderTable()">
+
+    <div class="container" role="main">
+        <div class="left" aria-live="polite">
+            <table id="dataTable" role="table" aria-label="Data table"></table>
+        </div>
+        <div class="right">
+            <h2>Details</h2>
+            <div id="details">
+                <p class="info-note">Click a row to see details.</p>
             </div>
         </div>
-    {% endfor %}
     </div>
-</div>
 
-<div class="section" id="artefactsSection">
-    <h2>Artefacts</h2>
-    <div id="artefacts">
-    {% for art in artefacts %}
-        <div class="item artefact"
-             data-name="{{ art[1]|lower }}"
-             data-type="{{ art[3] }}"
-             data-date="{{ art[4] }}"
-             data-owner="{{ art[2] }}">
-            <strong>{{ art[1] }}</strong>
-            <div class="meta">
-                Type: {{ art[3] }} · Owner ID: {{ art[2] }} · Date: {{ art[4] }}
-            </div>
-        </div>
-    {% endfor %}
-    </div>
 </div>
 
 <script>
-// --- Build user mapping from Flask users ---
-const userMap = {
-    {% for user in users %}
-        {{ user[0] }}: "{{ user[1] }}" {% if not loop.last %},{% endif %}
-    {% endfor %}
+/*
+  Note: the server-side template engine should render JSON arrays here.
+  If any of these variables are null/undefined the script will fallback to empty arrays.
+*/
+const data = {
+    sites: {{ sites|tojson }},
+    artefacts: {{ artefacts|tojson }},
+    users: {{ users|tojson }},
+    site_members: {{ site_members|tojson }}
 };
 
-// --- Define human-readable artefact types ---
-const typeMap = {
-    1: "Exploit",
-    2: "Tool",
-    3: "Document"
-};
-
-const els = {
-    name: document.getElementById('nameFilter'),
-    owner: document.getElementById('ownerFilter'),
-    minArtefacts: document.getElementById('minArtefacts'),
-    hasPassword: document.getElementById('hasPassword'),
-    sortBy: document.getElementById('sortBy'),
-    clear: document.getElementById('clearFilters'),
-    count: document.getElementById('resultCount'),
-    sites: document.getElementById('sites'),
-    artefacts: document.getElementById('artefacts')
-};
-
-const siteNodes = Array.from(document.querySelectorAll('.site'));
-const artefactNodes = Array.from(document.querySelectorAll('.artefact'));
-const totalSites = siteNodes.length;
-const totalArtefacts = artefactNodes.length;
-
-// --- Replace IDs with human-readable names ---
-siteNodes.forEach(site => {
-    const ownerId = site.dataset.owner;
-    if (userMap[ownerId]) {
-        let meta = site.querySelector('.meta');
-        meta.innerHTML = meta.innerHTML.replace(`Owner ID: ${ownerId}`, `Owner: ${userMap[ownerId]}`);
-    }
+// Ensure each expected entry is an array (defensive)
+['sites', 'artefacts', 'users', 'site_members'].forEach(k => {
+    if (!Array.isArray(data[k])) data[k] = [];
 });
 
-artefactNodes.forEach(art => {
-    const typeNum = art.dataset.type;
-    const ownerId = art.dataset.owner;
-    let meta = art.querySelector('.meta');
-
-    // Replace type
-    if (typeMap[typeNum]) meta.innerHTML = meta.innerHTML.replace(`Type: ${typeNum}`, `Type: ${typeMap[typeNum]}`);
-    // Replace owner
-    if (userMap[ownerId]) meta.innerHTML = meta.innerHTML.replace(`Owner ID: ${ownerId}`, `Owner: ${userMap[ownerId]}`);
-    // Format date
-    let dateNum = Number(art.dataset.date);
-    if (!isNaN(dateNum)) {
-        let date = new Date(dateNum * 1000); // adjust multiplier if needed
-        meta.innerHTML = meta.innerHTML.replace(`Date: ${art.dataset.date}`, `Date: ${date.toLocaleDateString()}`);
-    }
+// Build lookup maps safely
+const userById = {};
+(data.users || []).forEach(u => {
+    // expected shape: [id, email, name, password] (index 0 -> id, index 2 -> name)
+    if (u && u.length >= 3) userById[u[0]] = u[2];
 });
 
-function applyFilters(updateURL = true) {
-    const nameVal = els.name.value.toLowerCase();
-    const ownerVal = els.owner.value.toLowerCase();
-    const minArt = Number(els.minArtefacts.value || 0);
-    const pass = els.hasPassword.checked;
-    const sort = els.sortBy.value;
+const siteById = {};
+(data.sites || []).forEach(s => {
+    // expected shape: [id, name, owner, password, location]
+    if (s && s.length >= 2) siteById[s[0]] = s[1];
+});
 
-    let visibleSites = 0;
-    siteNodes.forEach(site => {
-        let show = true;
-        if (nameVal && !site.dataset.name.includes(nameVal)) show = false;
-        if (ownerVal && !site.querySelector('.meta').innerText.toLowerCase().includes(ownerVal)) show = false;
-        if (Number(site.dataset.artefacts) < minArt) show = false;
-        if (pass && site.dataset.password !== '1') show = false;
-        site.classList.toggle('hidden', !show);
-        if (show) visibleSites++;
-    });
-
-    let visibleArtefacts = 0;
-    artefactNodes.forEach(art => {
-        let show = true;
-        if (nameVal && !art.dataset.name.includes(nameVal)) show = false;
-        if (ownerVal && !art.querySelector('.meta').innerText.toLowerCase().includes(ownerVal)) show = false;
-        art.classList.toggle('hidden', !show);
-        if (show) visibleArtefacts++;
-    });
-
-    sortItems(sort);
-    els.count.textContent = `Showing ${visibleSites} / ${totalSites} sites · ${visibleArtefacts} / ${totalArtefacts} artefacts`;
-
-    if (updateURL) syncURL();
+function formatUser(id) {
+    if (id == null || id === '') return "";
+    return userById[id] || "Unknown User";
 }
 
-function sortItems(mode) {
-    function sortNodes(nodes, key) {
-        const sorted = [...nodes].sort((a, b) => {
-            if (mode === 'artefacts' && a.dataset.artefacts !== undefined) {
-                return Number(b.dataset.artefacts) - Number(a.dataset.artefacts);
-            } else if (mode === 'date' && a.dataset.date) {
-                return new Date(b.dataset.date * 1000) - new Date(a.dataset.date * 1000);
-            } else {
-                return a.dataset[key].localeCompare(b.dataset[key]);
+function formatSite(id) {
+    if (id == null || id === '') return "";
+    return siteById[id] || "Unknown Site";
+}
+
+// Columns to display (skip IDs)
+const columns = {
+    sites: ["name", "owner", "password", "location"],
+    artefacts: ["name", "site_found", "user_found", "weight", "scan_path"],
+    users: ["email", "name", "password"]
+};
+
+// Column index map (skip id at index 0)
+const columnIndexMap = {
+    sites: [1,2,3,4],
+    artefacts: [1,2,3,4,5],
+    users: [1,2,3]
+};
+
+let currentTab = "sites";
+
+function switchTab(tab) {
+    currentTab = tab;
+    document.querySelectorAll(".tabs button").forEach(b => b.classList.remove("active"));
+    const btn = document.getElementById("tab-" + tab);
+    if (btn) btn.classList.add("active");
+    document.getElementById("search").value = "";
+    renderTable();
+    clearDetails();
+}
+
+function prettyLabel(key) {
+    // "scan_path" -> "Scan path", etc.
+    return key.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+}
+
+function renderTable() {
+    const table = document.getElementById("dataTable");
+    table.innerHTML = "";
+
+    const rowsRaw = data[currentTab] || [];
+    const cols = columns[currentTab] || [];
+    const idxs = columnIndexMap[currentTab] || [];
+
+    // Create and append header (always)
+    const thead = document.createElement("thead");
+    const htr = document.createElement("tr");
+    cols.forEach(c => {
+        const th = document.createElement("th");
+        th.textContent = prettyLabel(c);
+        htr.appendChild(th);
+    });
+    thead.appendChild(htr);
+    table.appendChild(thead);
+
+    const tbody = document.createElement("tbody");
+
+    const filter = (document.getElementById("search").value || "").toLowerCase().trim();
+
+    let matched = 0;
+
+    rowsRaw.forEach(row => {
+        // row may be an array or object; we expect array
+        if (!row) return;
+        const visibleValues = idxs.map(i => row[i] === undefined ? '' : String(row[i]));
+
+        const text = visibleValues.join(" ").toLowerCase();
+        if (filter && !text.includes(filter)) return;
+
+        const tr = document.createElement("tr");
+
+        visibleValues.forEach((cell, idx) => {
+            const td = document.createElement("td");
+            let value = cell;
+
+            // Replace IDs with names where appropriate
+            if (currentTab === "sites" && cols[idx] === "owner") {
+                value = formatUser(cell);
             }
+            if (currentTab === "artefacts" && cols[idx] === "user_found") {
+                value = formatUser(cell);
+            }
+            if (currentTab === "artefacts" && cols[idx] === "site_found") {
+                value = formatSite(cell);
+            }
+
+            td.textContent = value;
+            tr.appendChild(td);
         });
-        sorted.forEach(n => n.parentNode.appendChild(n));
-    }
-    sortNodes(siteNodes, 'name');
-    sortNodes(artefactNodes, 'name');
-}
 
-function syncURL() {
-    const params = new URLSearchParams();
-    if (els.name.value) params.set('name', els.name.value);
-    if (els.owner.value) params.set('owner', els.owner.value);
-    if (els.minArtefacts.value) params.set('min', els.minArtefacts.value);
-    if (els.hasPassword.checked) params.set('pass', '1');
-    if (els.sortBy.value !== 'name') params.set('sort', els.sortBy.value);
-    history.replaceState(null, '', '?' + params.toString());
-}
-
-function loadFromURL() {
-    const params = new URLSearchParams(location.search);
-    els.name.value = params.get('name') || '';
-    els.owner.value = params.get('owner') || '';
-    els.minArtefacts.value = params.get('min') || '';
-    els.hasPassword.checked = params.get('pass') === '1';
-    els.sortBy.value = params.get('sort') || 'name';
-    applyFilters(false);
-}
-
-els.clear.addEventListener('click', () => {
-    Object.values(els).forEach(el => {
-        if (el.tagName === 'INPUT') {
-            el.type === 'checkbox' ? el.checked = false : el.value = '';
-        }
+        tr.onclick = () => showDetails(row);
+        tbody.appendChild(tr);
+        matched++;
     });
-    els.sortBy.value = 'name';
-    applyFilters();
-});
 
-Object.values(els).forEach(el => {
-    if (el instanceof HTMLElement && el !== els.clear && el !== els.count && el !== els.sites && el !== els.artefacts) {
-        el.addEventListener(el.type === 'checkbox' || el.tagName === 'SELECT' ? 'change' : 'input', applyFilters);
+    if (matched === 0) {
+        const tr = document.createElement("tr");
+        const td = document.createElement("td");
+        td.setAttribute("colspan", String(cols.length || 1));
+        td.style.padding = "1.4vh";
+        td.style.textAlign = "center";
+        td.style.color = "rgba(255,255,255,0.7)";
+        td.textContent = rowsRaw.length === 0 ? "No data available." : "No matching results.";
+        tr.appendChild(td);
+        tbody.appendChild(tr);
     }
-});
 
-loadFromURL();
+    table.appendChild(tbody);
+}
+
+function showDetails(row) {
+    if (!row) return;
+    const container = document.getElementById("details");
+    container.innerHTML = "";
+
+    const cols = columns[currentTab] || [];
+    const idxs = columnIndexMap[currentTab] || [];
+
+    cols.forEach((col, i) => {
+        const field = document.createElement("div");
+        field.className = "field";
+
+        const label = document.createElement("span");
+        label.textContent = prettyLabel(col);
+
+        let value = row[idxs[i]];
+
+        // Replace IDs with names
+        if (currentTab === "sites" && col === "owner") {
+            value = formatUser(value);
+        }
+        if (currentTab === "artefacts" && col === "user_found") {
+            value = formatUser(value);
+        }
+        if (currentTab === "artefacts" && col === "site_found") {
+            value = formatSite(value);
+        }
+
+        const val = document.createElement("div");
+        val.textContent = (value === undefined || value === null) ? "" : String(value);
+
+        field.appendChild(label);
+        field.appendChild(val);
+        container.appendChild(field);
+    });
+}
+
+function clearDetails() {
+    document.getElementById("details").innerHTML = '<p class="info-note">Click a row to see details.</p>';
+}
+
+renderTable();
 </script>
 
 </body>
