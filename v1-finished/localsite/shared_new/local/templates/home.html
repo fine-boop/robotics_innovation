@@ -51,20 +51,24 @@
         }
         .page-center {
             display: flex;
-            align-items: center;
             justify-content: center;
-            min-height: 100vh;
+            min-height: 50vh;
         }
         .signup2 {
             display: flex;
             flex-direction: column;
             justify-content: center;
-            align-items: center;
             background-color: rgba(150, 150, 150, 0.5);
-
+            width: 50dvw;
+            height: auto;
             border-radius: 0.5dvw;
             border: 0.1dvw rgb(150, 150, 150) solid;
             box-shadow:0 0 10px rgb(99 141 187);
+        }
+        .scrolls {
+            overflow: scroll;
+            height: 60dvh;
+            width: auto;
         }
     </style>
     <script>
@@ -85,7 +89,6 @@
     {% if session['email'] %}
         <header class="heading">
     <h1 style="color:black;">Home</h1>
-    <a href="/" class="heading1"><h4>Home</h4></a>
     <a href="/my_sites" class="heading1"><h4>My sites</h4></a>
     <a href="/join_site" class="heading1"><h4>Join a site</h4></a>
     <a href="/create_site" class="heading1"><h4>Create a site</h4></a>
@@ -94,27 +97,42 @@
     <div class="hovering">
         <h4 class="hovering-text">Profile</h4>
         <div class="hovering-content">
-           <div class="hovering-content1"><a href="/logout" class="heading3"><h6 class="heading3">Logout</h6></a></div>
+            <div class="hovering-content1"><a href="/logout" class="heading3"><h6 class="heading3">Logout</h6></a></div>
             <div class="hovering-content1"><a href="/profile" class="heading3"><h6 class="heading3">about</h6></a></div>
         </div>
     </div>
     </header>
-    <h1>Hello {{ session['name'] }}</h1>
-
+        <h1 style="display:flex; justify-content: center; font-size:5dvw; padding:3dvw;">Hello {{ session['name'] }}</h1>
     <div class="page-center">
+    <div class="scrolls">
+        <div class="signup2">
         <h1>Latest Discoverys</h1>
         <div class="discoverys">
-            <img src="{{ url_for('static', filename='arch2.jpg') }}" height="100px" width="100px">
+            <img src="{{ url_for('static', filename='arch4.jpg') }}" class="imagestyling">
+            <a href="https://archaeology.org/news/2026/01/30/genetic-study-identifies-disease-in-12000-year-old-remains/"><h2>Desease found in 12,000-Year-Old Remains</h2></a>
+        </div>
+        <div class="discoverys">
+            <img src="{{ url_for('static', filename='arch5.jpg') }}" class="imagestyling">
+            <a href="https://archaeology.org/news/2026/01/29/medieval-wheel-cross-recovered-in-germany/"><h2>Medieval Wheel Cross Recovered in Germany</h2></a>
+        </div>
+        <div class="discoverys">
+            <img src="{{ url_for('static', filename='arch6.jpg') }}" class="imagestyling">
+            <a href="https://archaeology.org/news/2026/01/28/430000-year-old-wooden-tools-found-in-greece/"><h2>430,000-Year-Old Wooden Tools Found in Greece</h2></a>
+        </div>
+        <div class="discoverys">
+            <img src="{{ url_for('static', filename='arch2.jpg') }}" class="imagestyling">
             <a href="https://archaeology.org/news/2026/01/26/imported-paleolithic-tools-in-spain-may-reflect-long-distance-social-networks/" clss=""><h2>patholigic tools in spain</h2></a>
         </div>
         <div class="discoverys">
-            <img src="{{ url_for('static', filename='arch3.jpg') }}" height="100px" width="100px">
+            <img src="{{ url_for('static', filename='arch3.jpg') }}" class="imagestyling">
             <a href="https://archaeology.org/news/2026/01/23/500000-year-old-bone-tool-identified-in-england/" clss=""><h2>500000 old bone tool in england</h2></a>
         </div>
         <div class="discoverys"> 
-            <img src="{{ url_for('static', filename='arch1.jpg') }}" height="100px" width="100px">
+            <img src="{{ url_for('static', filename='arch1.jpg') }}" class="imagestyling">
             <a href="https://archaeology.org/news/2026/01/14/bronze-age-burial-uncovered-in-greece/" clss=""><h2>Bronze Age Burial Uncovered in Greece</h2></a>
         </div>
+        </div>
+    </div>
     </div>
 
 {% else %}
