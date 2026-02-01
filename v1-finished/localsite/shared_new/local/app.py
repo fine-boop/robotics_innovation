@@ -556,9 +556,9 @@ def create_site():
 
 @app.route('/sites', methods = ["GET", "POST"])
 def browse_sites():
-    if not session['admin']:
-        print(console_log('User tried to access browse sites endpoint.', 'warn'))
-        return redirect('/')
+    # if not session['admin']:
+    #     print(console_log('User tried to access browse sites endpoint.', 'warn'))
+    #     return redirect('/')
     conn, cursor = init_conn()
     users = cursor.execute('SELECT * FROM users').fetchall()
     sites = cursor.execute('SELECT * FROM sites').fetchall()
