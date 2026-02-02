@@ -17,13 +17,12 @@ import subprocess
 import requests
 import shutil
 
-ready_downloads = []
+
 
 init(autoreset=True)
 app = Flask(__name__)
 app.secret_key = secrets.token_hex(32)
 
-server_url = 'http://109.255.108.201'
 
 
 # Camera management and streaming/capture endpoints
@@ -44,11 +43,42 @@ REFERENCE_UNIT = -45.98148148148146
 
 
 
-PIENV_PYTHON = "/home/pi/pienv/bin/python"   # adjust username if needed
+PIENV_PYTHON = "/home/pi/pienv/bin/python"   
 SCRIPT_PATH = "weight_subproc.py"   # path to the script above
 
 
+ready_downloads = []
+server_url = 'http://109.255.108.201'
 
+
+
+####################################################################################################################################################################################
+# SETUP FUNCTIONS
+####################################################################################################################################################################################
+
+def console_log(arg, level):
+    timestamp = datetime.now().isoformat()
+    if level == "error":
+        line = Fore.RED + '[ERROR] ' + arg + Style.RESET_ALL
+        # print(Fore.RED + '[ERROR] ' + arg + Style.RESET_ALL)
+        with open('log.txt', 'a') as file:
+            file.write(timestamp + ' [ERROR] ' + arg + '\n')
+    elif level == "success":
+        # print(Fore.GREEN + '[SUCCESS] ' + arg + Style.RESET_ALL)
+        line = Fore.GREEN + '[SUCCESS] ' + arg + Style.RESET_ALL
+        with open('log.txt', 'a') as file:
+            file.write(timestamp + ' [SUCCESS] ' + arg + '\n')
+    elif level == "info":
+        line = Fore.BLUE + '[INFO] ' + arg + Style.RESET_ALL
+        # print(Fore.CYAN + '[INFO] ' + arg + Style.RESET_ALL)
+        with open('log.txt', 'a') as file:
+            file.write(timestamp + ' [INFO] ' + arg + '\n')
+    elif level == "warn":
+        line = Style.RESET_ALL + f"\033[33m[WARN] {arg}\033[0m"
+        # print(Fore.CYAN + '[WARN] ' + arg + Style.RESET_ALL)
+        with open('log.txt', 'a') as file:
+            file.write(timestamp + ' [WARN] ' + arg + '\n')
+    return line
 
 
 def init_db():
@@ -92,16 +122,11 @@ def init_db():
     conn.commit()
     conn.close()
 
-
-
-
-
-
-
 def init_conn():
     conn = sqlite3.connect('database.db')
     cursor = conn.cursor()
     return conn, cursor
+
 
 
 
@@ -141,31 +166,6 @@ def get_average_weight_subproc(samples=10, dt_pin=5, sck_pin=6, reference_unit=1
 
 
 
-def console_log(arg, level):
-    timestamp = datetime.now().isoformat()
-    if level == "error":
-        line = Fore.RED + '[ERROR] ' + arg + Style.RESET_ALL
-        # print(Fore.RED + '[ERROR] ' + arg + Style.RESET_ALL)
-        with open('log.txt', 'a') as file:
-            file.write(timestamp + ' [ERROR] ' + arg + '\n')
-    elif level == "success":
-        # print(Fore.GREEN + '[SUCCESS] ' + arg + Style.RESET_ALL)
-        line = Fore.GREEN + '[SUCCESS] ' + arg + Style.RESET_ALL
-        with open('log.txt', 'a') as file:
-            file.write(timestamp + ' [SUCCESS] ' + arg + '\n')
-    elif level == "info":
-        line = Fore.BLUE + '[INFO] ' + arg + Style.RESET_ALL
-        # print(Fore.CYAN + '[INFO] ' + arg + Style.RESET_ALL)
-        with open('log.txt', 'a') as file:
-            file.write(timestamp + ' [INFO] ' + arg + '\n')
-    elif level == "warn":
-        line = Style.RESET_ALL + f"\033[33m[WARN] {arg}\033[0m"
-        # print(Fore.CYAN + '[WARN] ' + arg + Style.RESET_ALL)
-        with open('log.txt', 'a') as file:
-            file.write(timestamp + ' [WARN] ' + arg + '\n')
-    return line
-
-
 
 
 
@@ -174,10 +174,9 @@ def home():
     return render_template('home.html')
 
 
-
-
-
-
+####################################################################################################################################################################################
+# REGULAR DATABASE AND USER INTERACTIONS
+####################################################################################################################################################################################
 @app.route('/signup', methods=["GET", "POST"])
 def signup():
     if request.method == "POST":
@@ -203,8 +202,6 @@ def signup():
         finally:
             conn.close()
     return render_template('signup.html')
-
-
 
 @app.route('/login', methods=["GET", "POST"])
 def login():
@@ -244,9 +241,6 @@ def logout():
         return redirect('/')
     else:
         return redirect('/')
-
-
-
 
 @app.route('/my_sites/manage_site/<int:site_id>', methods=["GET", "POST"])
 def manage_site(site_id):
@@ -342,15 +336,6 @@ def manage_site(site_id):
         users_not_in_site=users_not_in_site
     )
 
-
-
-
-
-
-
-
-
-
 @app.route('/my_sites', methods = ['GET', 'POST'])
 def my_sites():
     if 'uid' not in session:
@@ -418,7 +403,6 @@ def my_sites():
         sites.append((site_id, site_name, owner_name, owner_id))
     return render_template('my_sites.html', sites=sites)
 
-
 @app.route('/profile', methods = ["GET", "POST"])
 def my_profile():
     if 'uid' not in session:
@@ -476,8 +460,6 @@ def my_profile():
             finally:
                 conn.close()
     return render_template('my_profile.html')
-
-
 
 @app.route('/join_site', methods = ["GET", "POST"])
 def join_site():
@@ -583,7 +565,6 @@ def browse_sites():
         users=users
     )
 
-
 @app.route('/admin', methods=['GET', 'POST'])
 def admin():
     if not session['admin']:
@@ -596,9 +577,6 @@ def admin():
     site_members = cursor.execute('SELECT * FROM site_members').fetchall()
 
     return render_template('admin_browse_sites.html', sites=sites, artefacts=artefacts, site_members=site_members, users=users)
-
-
-
 
 @app.route('/log_artefact', methods = ["GET", "POST"])
 def log_artefact():
@@ -663,6 +641,9 @@ def log_artefact():
 
 
 
+####################################################################################################################################################################################
+# PHOTO HELPER FUNCTIOSN
+####################################################################################################################################################################################
 def start_camera():
     global camera, camera_active
     with camera_lock:
@@ -681,8 +662,6 @@ def start_camera():
                 camera_active = True
             else:
                 camera_active = False
-
-
 def stop_camera():
     global camera, camera_active
     with camera_lock:
@@ -694,8 +673,6 @@ def stop_camera():
                 print(console_log(f'Error releasing camera: {e}', 'error'))
             camera = None
             camera_active = False
-
-
 def gen_frames():
     global camera, camera_active
     print(console_log('Video stream generator started', 'info'))
@@ -719,8 +696,6 @@ def artefact_video():
     if not camera_active or camera is None:
         return 'Camera off', 403
     return Response(stream_with_context(gen_frames()), mimetype='multipart/x-mixed-replace; boundary=frame')
-
-
 @app.route('/capture_artefact/<artefact_name>')
 def capture_artefact(artefact_name):
     global camera, camera_active, capture_in_progress
@@ -834,8 +809,6 @@ def capture_artefact(artefact_name):
             yield f"data: {json.dumps(payload)}\n\n"
 
     return Response(stream_with_context(generate()), mimetype='text/event-stream')
-
-
 @app.route('/photos/<artefact_name>/<path:filename>')
 def serve_photo(artefact_name, filename):
     # Resolve artefact id if printable numeric, otherwise try to find record by name
@@ -859,43 +832,18 @@ def serve_photo(artefact_name, filename):
 
 
 
+
+
+####################################################################################################################################################################################
+# REMOTE INTERACTIONS
+####################################################################################################################################################################################
+
 @app.route('/remote', methods=["GET", "POST"])
 def remote():
     return render_template('remote.html')
 
 
 
-# @app.route('/upload_queue', methods=["GET", "POST"])
-# def upload_queue():
-
-#     os.makedirs('zips', exist_ok=True)
-#     os.makedirs('photos', exist_ok=True)
-
-#     conn, cursor = init_conn()
-#     completion = []
-    
-#     folder_names = os.listdir('photos')
-    
-#     if not folder_names:
-#         return jsonify({"queue": "empty"})
-#     for folder in folder_names[:]:
-#         int_name = int(folder)
-#         name = cursor.execute('SELECT name FROM artefacts WHERE id = ?', (int_name,)).fetchone()[0]
-#         os.system(f'zip -r zips/{folder}.zip photos/{folder}')
-#         print(console_log(f'{session["email"]} zipped {folder}. Now in zips/{folder}.zip. Awaiting post to server_url...', 'info'))
-#         with open(f'zips/{folder}.zip', 'rb') as f:
-#             files = {"files": f}
-#             resp = requests.post(f'{server_url}/upload/', files=files)
-#             time.sleep(1)
-#             if resp.status_code == 200:
-#                 print(console_log(f'{session["email"]} successfully uploaded {folder}.zip to server_url {server_url}', 'success'))
-
-#             elif resp.status_code == 500:
-#                 print(console_log(f'{session["email"]} hit an error when uploading {folder}.zip to server_url {server_url}', 'error'))
-    
-#             completion.append({'id': int_name, 'name': folder, 'status': resp.status_code})
-#             # shutil.rmtree(f'photos/{folder}')
-#     return jsonify(completion)
 
 
 
@@ -947,11 +895,6 @@ def upload_queue():
 
 
 
-
-
-
-
-
 @app.route('/get_queue')
 def get_queue():
     conn, cursor = init_conn()
@@ -964,12 +907,10 @@ def get_queue():
         folder = int(folder)
         name = cursor.execute('SELECT name FROM artefacts WHERE id = ?', (folder,)).fetchone()[0]
         queue.append({"id": folder, "name": name})
-
     return jsonify({"queue": queue})
 
-@app.route('/view_queue')
-def view_queue():
-    return render_template('view_queue.html')
+
+
 
 @app.route('/connect', methods=["GET"])
 def connect():    
@@ -977,7 +918,7 @@ def connect():
     status = None
 
     try:
-        r = requests.get(server_url, timeout=10)
+        r = requests.get(server_url + '/status', timeout=10)
         status = r.status_code
     except Exception as e:
         print("Error when connecting!", e)
@@ -985,11 +926,15 @@ def connect():
     return jsonify({"status": status, "error": error})
 
 
+
+
 @app.route('/download')
 def main_download():
     return jsonify(download())
 
-def download():
+
+@app.route('/download<int:id>')
+def download(item):
     conn, cursor = init_conn()
 
     successes = {
@@ -1012,21 +957,29 @@ def download():
             print(console_log(f"Failed to download {artefact_id}: {e}", 'error'))
         finally:
             time.sleep(.5)
-        
     return successes
 
 
 @app.route('/check', methods=['POST'])
 def check():
     try:
-        data = request.json
-        artefact_id = int(data.get('number'))
-        ready_downloads.append(artefact_id)
-        successes = download()
-        return jsonify(successes)
+        time.sleep(1)
+        r = requests.get(server_url + '/download_list', timeout=10)
+        if r.text == 'nothing':
+            return jsonify({'ready_downloads': None})
+        download_list = r.text.splitlines()
+        return jsonify(download_list)
     except Exception as e:
         print(console_log('Error when server_url sending data', 'error'))
+        return jsonify({'Error': True})
+        
+    
 
+
+    # data = request.json
+    # artefact_id = int(data.get('number'))
+    # ready_downloads.append(artefact_id)
+    # successes = download()
 
 #prototype
 # @app.route('/server_url', methods=['GET', 'POST'])
@@ -1078,6 +1031,10 @@ def check():
 #             if ready_to_download == 'nothing':
 #                 conn.close()
 #                 return render_template('server_url.html', ready_to_download=False)
+
+
+
+
 
 
 
