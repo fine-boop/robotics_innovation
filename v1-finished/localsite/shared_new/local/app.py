@@ -16,7 +16,7 @@ import json
 import subprocess
 import requests
 import shutil
-
+from rotate20 import rotate_20_degrees
 
 
 init(autoreset=True)
@@ -696,6 +696,8 @@ def artefact_video():
     if not camera_active or camera is None:
         return 'Camera off', 403
     return Response(stream_with_context(gen_frames()), mimetype='multipart/x-mixed-replace; boundary=frame')
+
+
 @app.route('/capture_artefact/<artefact_name>')
 def capture_artefact(artefact_name):
     global camera, camera_active, capture_in_progress
@@ -730,6 +732,7 @@ def capture_artefact(artefact_name):
                 payload = {'status': 'error', 'message': 'camera_unavailable'}
                 yield f"data: {json.dumps(payload)}\n\n"
             return Response(no_cam(), mimetype='text/event-stream')
+
 
     # Resolve artefact id to use as directory name (prefer numeric id if provided, else find latest by name and user)
     artefact_id = None
@@ -792,6 +795,7 @@ def capture_artefact(artefact_name):
                     captured += 1
                     payload = {'frame': i+1, 'total': 20, 'status': 'captured'}
                     yield f"data: {json.dumps(payload)}\n\n"
+                    rotate_20_degrees()
                 except Exception as e:
                     print(console_log(f'Error writing photo {i}: {e}', 'error'))
                     errors.append(i)
@@ -910,22 +914,14 @@ def get_queue():
     return jsonify({"queue": queue})
 
 
-
-
 @app.route('/connect', methods=["GET"])
 def connect():    
-    error = None
-    status = None
-
     try:
-        r = requests.get(server_url + '/status', timeout=10)
-        status = r.status_code
+        r = requests.get(f'{server_url}/status', timeout=5)
+        return jsonify({"status": "ONLINE"}), 200
     except Exception as e:
-        print("Error when connecting!", e)
-        error = f"{str(e)}"
-    return jsonify({"status": status, "error": error})
-
-
+        print("Error connecting to server:", e)
+        return jsonify({"status": "OFFLINE", "error": str(e)}), 503
 
 
 @app.route('/download')
