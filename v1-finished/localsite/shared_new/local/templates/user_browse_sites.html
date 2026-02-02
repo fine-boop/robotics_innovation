@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Browse</title>
+
+<link rel="stylesheet" href="{{ url_for('static',filename='css/css.css') }}">
+<script src="{{ url_for('static',filename='js/js.js') }}"></script>
+
+<style>
+* {
+    font-family: system-ui, sans-serif;
+    color: white;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: rgb(15 23 42);
+    margin: 0;
+}
+
+/* === OLD BROWSE LAYOUT === */
+.container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2dvw;
+    padding: 2dvw;
+    min-height: calc(100vh - 10dvw);
+}
+
+.panel {
+    background-color: rgba(150, 150, 150, 0.5);
+    border-radius: 0.5dvw;
+    border: 0.1dvw rgb(150, 150, 150) solid;
+    box-shadow: 0 0 10px rgb(99 141 187);
+    padding: 1.5dvw;
+    /* overflow: auto; */
+}
+.panel:last-child {
+    align-self: start;
+}
+.tabs {
+    display: flex;
+    gap: 1dvw;
+    margin-bottom: 1dvw;
+}
+
+.tabs button {
+    border-radius: 0.8dvw;
+    padding: 0.8dvw 1.6dvw;
+    font-size: 1.2dvw;
+    background-image: linear-gradient(to right, rgb(99 141 187), rgba(99, 141, 187, 0.4));
+    border: none;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.tabs button.active {
+    box-shadow: 0 0 10px rgb(99 141 187);
+}
+
+#search {
+    width: 100%;
+    margin-bottom: 1dvw;
+    padding: 0.8dvw;
+    background: none;
+    border: none;
+    border-bottom: 0.2dvw solid rgb(99 141 187);
+    font-size: 1.1dvw;
+    color: white;
+    outline: none;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+}
+
+th, td {
+    padding: 0.8dvw;
+    border-bottom: 1px solid rgba(255,255,255,0.2);
+    font-size: 1dvw;
+    word-wrap: break-word;
+}
+
+th {
+    color: rgb(180,200,220);
+    text-align: left;
+}
+
+tr:hover {
+    background-color: rgba(99,141,187,0.2);
+    cursor: pointer;
+}
+
+h2 {
+    margin: 0 0 1dvw 0;
+    font-size: 1.8dvw;
+}
+
+.field {
+    margin-bottom: 1dvw;
+}
+
+.field span {
+    display: block;
+    font-size: 0.9dvw;
+    color: rgb(180,200,220);
+}
+
+.field div {
+    font-family: monospace;
+    font-size: 1dvw;
+}
+</style>
+</head>
+<body>
+
+{% if session['email'] %}
+<header class="heading">
+    <h1 style="color:black;">Browse</h1>
+    <a href="/" class="heading1"><h4>Home</h4></a>
+    <a href="/my_sites" class="heading1"><h4>My sites</h4></a>
+    <a href="/join_site" class="heading1"><h4>Join a site</h4></a>
+    <a href="/create_site" class="heading1"><h4>Create a site</h4></a>
+    <a href="/sites" class="heading1"><h4>Browse sites</h4></a>
+    <a href="/log_artefact" class="heading1"><h4>Log artefact</h4></a>
+    <div class="hovering">
+        <h4 class="hovering-text">Profile</h4>
+        <div class="hovering-content">
+            <div class="hovering-content1"><a href="/logout" class="heading3"><h6 class="heading3">Logout</h6></a></div>
+            <div class="hovering-content1"><a href="/profile" class="heading3"><h6 class="heading3">About</h6></a></div>
+        </div>
+    </div>
+</header>
+
+<div class="container">
+    <div class="panel">
+        <div class="tabs">
+            <button id="tab-sites" class="active" onclick="switchTab('sites')">Sites</button>
+            <button id="tab-artefacts" onclick="switchTab('artefacts')">Artefacts</button>
+        </div>
+
+        <input id="search" placeholder="Search..." oninput="renderTable()">
+        <table id="dataTable"></table>
+    </div>
+
+    <div class="panel">
+        <h2>Details</h2>
+        <div id="details">
+            <p>Click a row to see details.</p>
+        </div>
+    </div>
+</div>
+
+<script>
+const data = {
+    sites: {{ sites|tojson }},
+    artefacts: {{ artefacts|tojson }},
+    users: {{ users|tojson }}
+};
+
+const userById = {};
+data.users.forEach(u => userById[u[0]] = u[2]);
+
+const siteById = {};
+data.sites.forEach(s => siteById[s[0]] = s[1]);
+
+function formatUser(id) { return userById[id] || "Unknown User"; }
+function formatSite(id) { return siteById[id] || "Unknown Site"; }
+
+const columns = {
+    sites: ["Name", "Owner"],
+    artefacts: ["Name", "Site", "Found By", "Weight", "Scan Path"]
+};
+
+const columnIndexMap = {
+    sites: [1, 2],
+    artefacts: [1, 2, 3, 4, 5]
+};
+
+let currentTab = "sites";
+
+function switchTab(tab) {
+    currentTab = tab;
+    document.querySelectorAll(".tabs button").forEach(b => b.classList.remove("active"));
+    document.getElementById("tab-" + tab).classList.add("active");
+    document.getElementById("search").value = "";
+    renderTable();
+    clearDetails();
+}
+
+function renderTable() {
+    const table = document.getElementById("dataTable");
+    table.innerHTML = "";
+
+    const cols = columns[currentTab];
+    const idxs = columnIndexMap[currentTab];
+    const rows = data[currentTab];
+
+    const thead = document.createElement("thead");
+    const trh = document.createElement("tr");
+    cols.forEach(c => {
+        const th = document.createElement("th");
+        th.textContent = c;
+        trh.appendChild(th);
+    });
+    thead.appendChild(trh);
+    table.appendChild(thead);
+
+    const tbody = document.createElement("tbody");
+    const filter = document.getElementById("search").value.toLowerCase();
+
+    let matched = 0;
+
+    rows.forEach(row => {
+        const values = idxs.map(i => String(row[i] ?? ""));
+        if (filter && !values.join(" ").toLowerCase().includes(filter)) return;
+
+        const tr = document.createElement("tr");
+
+        values.forEach((v, i) => {
+            let val = v;
+            if (currentTab === "sites" && i === 1) val = formatUser(v);
+            if (currentTab === "artefacts" && i === 1) val = formatSite(v);
+            if (currentTab === "artefacts" && i === 2) val = formatUser(v);
+
+            const td = document.createElement("td");
+            td.textContent = val;
+            tr.appendChild(td);
+        });
+
+        tr.onclick = () => showDetails(row);
+        tbody.appendChild(tr);
+        matched++;
+    });
+
+    if (matched === 0) {
+        const tr = document.createElement("tr");
+        const td = document.createElement("td");
+        td.colSpan = cols.length;
+        td.textContent = "No results.";
+        td.style.textAlign = "center";
+        tr.appendChild(td);
+        tbody.appendChild(tr);
+    }
+
+    table.appendChild(tbody);
+}
+
+function showDetails(row) {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+    const details = document.getElementById("details");
+    details.innerHTML = "";
+
+    const cols = columns[currentTab];
+    const idxs = columnIndexMap[currentTab];
+
+    cols.forEach((c, i) => {
+        let val = row[idxs[i]];
+        if (currentTab === "sites" && i === 1) val = formatUser(val);
+        if (currentTab === "artefacts" && i === 1) val = formatSite(val);
+        if (currentTab === "artefacts" && i === 2) val = formatUser(val);
+
+        const field = document.createElement("div");
+        field.className = "field";
+
+        const label = document.createElement("span");
+        label.textContent = c;
+
+        const valueDiv = document.createElement("div");
+        valueDiv.textContent = val ?? "";
+
+        field.appendChild(label);
+        field.appendChild(valueDiv);
+        details.appendChild(field);
+    });
+}
+
+function clearDetails() {
+    document.getElementById("details").innerHTML = "<p>Click a row to see details.</p>";
+}
+
+renderTable();
+</script>
+
+{% endif %}
+</body>
+</html>

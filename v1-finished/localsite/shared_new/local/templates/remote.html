@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>AI / Upload Dashboard</title>
+<style>
+    body {
+        font-family: system-ui, sans-serif;
+        background-color: #0f172a;
+        color: white;
+        margin: 0;
+        padding: 20px;
+    }
+    h1, h2 {
+        margin-bottom: 10px;
+    }
+    button {
+        margin: 5px;
+        padding: 10px 20px;
+        background-color: #1e293b;
+        color: white;
+        border: none;
+        cursor: pointer;
+        border-radius: 5px;
+    }
+    button:hover {
+        background-color: #334155;
+    }
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 15px;
+    }
+    th, td {
+        border: 1px solid #334155;
+        padding: 8px;
+        text-align: left;
+    }
+    th {
+        background-color: #1e293b;
+    }
+    .success { color: #4ade80; }
+    .error { color: #f87171; }
+    .info { color: #60a5fa; }
+</style>
+</head>
+<body>
+<h1>Dashboard</h1>
+
+<!-- Server Connection -->
+<h2>Server Status</h2>
+<button onclick="checkServer()">Check Server</button>
+<div id="server-status">Unknown</div>
+
+<!-- Upload Queue -->
+<h2>Upload Queue</h2>
+<button onclick="uploadQueue()">Upload All Folders</button>
+<table id="queue-table">
+    <thead>
+        <tr>
+            <th>ID / Folder</th>
+            <th>Name</th>
+            <th>Status</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr><td colspan="3">Loading queue...</td></tr>
+    </tbody>
+</table>
+
+<!-- Downloads -->
+<h2>Ready Downloads</h2>
+<input type="number" id="artefact-id" placeholder="Artefact ID">
+<button onclick="checkDownload()">Check & Download</button>
+<table id="download-table">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Path</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr><td colspan="3">No downloads yet.</td></tr>
+    </tbody>
+</table>
+
+<script>
+async function checkServer() {
+    const resp = await fetch('/connect');
+    const data = await resp.json();
+    const div = document.getElementById('server-status');
+    if (data.status === 200) {
+        div.textContent = 'Server is ONLINE';
+        div.className = 'success';
+    } else {
+        div.textContent = 'Server offline: ' + (data.error || 'Unknown');
+        div.className = 'error';
+    }
+}
+
+async function loadQueue() {
+    const resp = await fetch('/get_queue');
+    const data = await resp.json();
+    const tbody = document.querySelector('#queue-table tbody');
+    tbody.innerHTML = '';
+    
+    if (data.queue === "empty") {
+        tbody.innerHTML = '<tr><td colspan="3">Queue is empty</td></tr>';
+        return;
+    }
+
+    data.queue.forEach(item => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `<td>${item.id}</td><td>${item.name}</td><td id="status-${item.id}">Pending</td>`;
+        tbody.appendChild(tr);
+    });
+}
+
+async function uploadQueue() {
+    const resp = await fetch('/upload_queue', {method: 'POST'});
+    const data = await resp.json();
+    
+    data.forEach(item => {
+        const statusCell = document.getElementById('status-' + item.name);
+        if (statusCell) {
+            statusCell.textContent = item.status === 200 ? 'Uploaded' : 'Failed';
+            statusCell.className = item.status === 200 ? 'success' : 'error';
+        }
+    });
+
+    loadQueue();  // refresh queue after upload
+}
+
+async function checkDownload() {
+    const artefactId = document.getElementById('artefact-id').value;
+    if (!artefactId) return alert('Enter an artefact ID');
+    
+    const resp = await fetch('/check', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({number: artefactId})
+    });
+    const data = await resp.json();
+    const tbody = document.querySelector('#download-table tbody');
+    tbody.innerHTML = '';
+    
+    for (const id in data) {
+        const item = data[id];
+        const tr = document.createElement('tr');
+        tr.innerHTML = `<td>${id}</td><td>${item.name}</td><td>${item.path}</td>`;
+        tbody.appendChild(tr);
+    }
+}
+
+// Load queue automatically
+loadQueue();
+setInterval(loadQueue, 5000);
+</script>
+</body>
+</html>

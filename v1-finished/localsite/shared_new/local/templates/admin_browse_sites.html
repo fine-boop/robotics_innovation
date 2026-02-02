@@ -155,8 +155,6 @@ tr:hover {
 </style>
 </head>
 <body>
-<<<<<<< HEAD
-=======
     <header class="heading">
     <h1 style="color:black;">Browse sites & Artefacts</h1>
     <a href="/" class="heading1"><h4>Home</h4></a>
@@ -179,7 +177,6 @@ tr:hover {
     <input type="number" id="minArtefacts" placeholder="Min artefacts" min="0">
     
     <label><input type="checkbox" id="hasPassword"> Has password</label>
->>>>>>> 5b13855850cbeeb2bdb08db5b41077a25c0c6952
 
 <!-- Top Navigation -->
 <div class="heading">
@@ -219,7 +216,7 @@ tr:hover {
   Note: the server-side template engine should render JSON arrays here.
   If any of these variables are null/undefined the script will fallback to empty arrays.
 */
-const data = {
+const data = {/*  */
     sites: {{ sites|tojson }},
     artefacts: {{ artefacts|tojson }},
     users: {{ users|tojson }},

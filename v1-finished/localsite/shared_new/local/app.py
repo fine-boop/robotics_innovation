@@ -14,11 +14,17 @@ import sys
 import cv2
 import json
 import subprocess
+import requests
+import shutil
 
+ready_downloads = []
 
 init(autoreset=True)
 app = Flask(__name__)
 app.secret_key = secrets.token_hex(32)
+
+server_url = 'http://109.255.108.201'
+
 
 # Camera management and streaming/capture endpoints
 
@@ -554,23 +560,44 @@ def create_site():
             conn.close()
     return render_template('/create_site.html', users_names = users_names)
 
-@app.route('/sites', methods = ["GET", "POST"])
+@app.route('/sites', methods=["GET", "POST"])
 def browse_sites():
     # if not session['admin']:
-    #     print(console_log('User tried to access browse sites endpoint.', 'warn'))
     #     return redirect('/')
+
+    conn, cursor = init_conn()
+
+    # Only fetch SAFE fields for users
+    users = cursor.execute('SELECT id, email, name FROM users').fetchall()
+
+    sites = cursor.execute('SELECT id, name, owner FROM sites').fetchall()
+    artefacts = cursor.execute('SELECT * FROM artefacts').fetchall()
+    site_members = cursor.execute('SELECT * FROM site_members').fetchall()
+    
+    conn.close()
+    return render_template(
+        'user_browse_sites.html',
+        sites=sites,
+        artefacts=artefacts,
+        site_members=site_members,
+        users=users
+    )
+
+
+@app.route('/admin', methods=['GET', 'POST'])
+def admin():
+    if not session['admin']:
+        print(console_log('User tried to access browse sites endpoint.', 'warn'))
+        return redirect('/')
     conn, cursor = init_conn()
     users = cursor.execute('SELECT * FROM users').fetchall()
     sites = cursor.execute('SELECT * FROM sites').fetchall()
     artefacts = cursor.execute('SELECT * FROM artefacts').fetchall()
     site_members = cursor.execute('SELECT * FROM site_members').fetchall()
-    print('sites:' + str(sites))
-    print('artefacts: ' + str(artefacts))
-    print('site members: ' + str(site_members))
-    print(cursor.execute('PRAGMA table_info(sites)').fetchall())
-    print(cursor.execute('PRAGMA table_info(artefacts)').fetchall())
-    print(cursor.execute('PRAGMA table_info(users)').fetchall())
-    return render_template('browse_sites.html', sites=sites, artefacts=artefacts, site_members=site_members, users=users)
+
+    return render_template('admin_browse_sites.html', sites=sites, artefacts=artefacts, site_members=site_members, users=users)
+
+
 
 
 @app.route('/log_artefact', methods = ["GET", "POST"])
@@ -831,6 +858,167 @@ def serve_photo(artefact_name, filename):
     return send_from_directory(directory, filename)
 
 
+
+@app.route('/remote', methods=["GET", "POST"])
+def remote():
+    return render_template('remote.html')
+
+
+
+@app.route('/upload_queue', methods=["GET", "POST"])
+def upload_queue():
+    conn, cursor = init_conn()
+    completion = []
+    folder_names = os.listdir('photos')
+    if not folder_names:
+        return jsonify({"queue": "empty"})
+    for folder in folder_names[:]:
+        int_name = int(folder)
+        name = cursor.execute('SELECT name FROM artefacts WHERE id = ?', (int_name,)).fetchone()[0]
+        os.system(f'zip -r zips/{folder}.zip photos/{folder}')
+        print(console_log(f'{session["email"]} zipped {folder}. Now in zips/{folder}.zip. Awaiting post to server_url...', 'info'))
+        with open(f'zips/{folder}.zip', 'rb') as f:
+            files = {"file": f}
+            resp = requests.post(f'{server_url}/upload/', files=files)
+            time.sleep(1)
+            if resp.status_code == 200:
+                print(console_log(f'{session["email"]} successfully uploaded {folder}.zip to server_url {server_url}', 'success'))
+            elif resp.status_code == 500:
+                print(console_log(f'{session["email"]} hit an error when uploading {folder}.zip to server_url {server_url}', 'error'))
+
+            completion.append({'name': folder, 'status': resp.status_code})
+            shutil.rmtree(f'photos/{folder}')
+    return jsonify(completion)
+
+@app.route('/get_queue')
+def get_queue():
+    conn, cursor = init_conn()
+    folder_names = os.listdir('photos')
+    queue = []
+    if not folder_names:
+        return jsonify({"queue": "empty"})
+    
+    for folder in folder_names:
+        folder = int(folder)
+        name = cursor.execute('SELECT name FROM artefacts WHERE id = ?', (folder,)).fetchone()[0]
+        queue.append({"id": folder, "name": name})
+
+    return jsonify({"queue": queue})
+
+@app.route('/view_queue')
+def view_queue():
+    return render_template('view_queue.html')
+
+@app.route('/connect', methods=["GET"])
+def connect():    
+    error = None
+    status = None
+
+    try:
+        r = requests.get(server_url, timeout=10)
+        status = r.status_code
+    except Exception as e:
+        print("Error when connecting!", e)
+        error = f"{str(e)}"
+    return jsonify({"status": status, "error": error})
+
+
+@app.route('/download')
+def main_download():
+    return jsonify(download())
+
+def download():
+    conn, cursor = init_conn()
+
+    successes = {
+    }
+    for artefact_id in ready_downloads[:]:
+        path = None
+        name = None
+        try:
+            name = cursor.execute('SELECT name FROM artefacts WHERE id = ?', (artefact_id,)).fetchone()[0]
+            r = requests.get(server_url + '/download/' + artefact_id, timeout=10)
+            r.raise_for_status()
+
+            path = f'/models/{artefact_id}'
+            with open(path, 'wb') as f:
+                f.write(r.content)
+            print(console_log(f'Successfully downloaded 3d model of {name}', 'success'))
+            successes[artefact_id] = {'path': path, 'name': name}
+            ready_downloads.remove(artefact_id)
+        except Exception as e:
+            print(console_log(f"Failed to download {artefact_id}: {e}", 'error'))
+        finally:
+            time.sleep(.5)
+        
+    return successes
+
+
+@app.route('/check', methods=['POST'])
+def check():
+    try:
+        data = request.json
+        artefact_id = int(data.get('number'))
+        ready_downloads.append(artefact_id)
+        successes = download()
+        return jsonify(successes)
+    except Exception as e:
+        print(console_log('Error when server_url sending data', 'error'))
+
+
+#prototype
+# @app.route('/server_url', methods=['GET', 'POST'])
+# def server_url():
+#     url = '109.255.108.201'
+#     conn, cursor = init_conn()
+#     photos_dir = 'photos'
+#     queue = []
+#     status = False
+#     ready_to_download = False
+
+#     completion = []
+#     for folder in os.listdir(photos_dir):
+#         folder_path = os.path.join(photos_dir, folder)
+#         queue.append(folder)
+    
+    
+#     if request.method == 'POST':
+#         if 'connect' in request.form:
+#             try:
+#                 print(console_log(f'Connecting to {url}', 'info'))
+#                 r = requests.get('http//' +url, timeout=5)
+#                 if r.status == 200:
+#                     print(console_log('server_url is online!', 'info'))     
+                    
+#                 else:
+#                     print(console_log('server_url is offline!', 'info'))
+#             except Exception as e:
+#                 print(console_log(f'Error when connecting to server_url, {str(e)}', 'info'))
+
+#         elif 'upload' in request.form:
+#             #uploading
+#             if not queue:
+#                 flash('There are is nothing in queue!')
+#                 return redirect('/server_url')
+#             #zip and upload each folder individually
+#             for folder in queue:
+#                 os.system(f'zip -r {folder}.zip {folder}')
+#                 with open(f'{folder}.zip', 'rb') as f:
+#                     files = {"file": f}
+#                     resp = requests.post(f'{url}/upload/', files=files)
+#                     time.sleep(1)
+#                     completion.append(resp.status_code, folder)
+#                     return render_template('server_url.html', completion=completion, queue=queue)
+
+#         elif 'download' in request.form:
+#             check = requests.get('http://'+ url + '/check')
+#             ready_to_download = check.text
+#             if ready_to_download == 'nothing':
+#                 conn.close()
+#                 return render_template('server_url.html', ready_to_download=False)
+
+
+
 @app.route('/photos_list/<artefact_name>')
 def photos_list(artefact_name):
     # Resolve artefact id like other endpoints
@@ -886,17 +1074,9 @@ def save_artefact():
     return jsonify({'ok': True, 'redirect': url_for('log_artefact')})
 
 
-@app.route('/admin', methods=["GET", "POST"])
-def admin():
-    if not session['admin'] and request.method == 'POST':
-        email = request.form.get('email')
-        password = request.form.get('password')
-    if not session['admin']:
-        return render_template('admin_login.html')
-    
-
+print('SERVER' + server_url)
 
 if __name__ == '__main__':
-    print(console_log('Starting server', 'info'))
+    print(console_log('Starting server_url', 'info'))
     init_db()
     app.run(debug=False)
