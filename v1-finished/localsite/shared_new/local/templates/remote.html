@@ -47,10 +47,9 @@
 <body>
 <h1>Dashboard</h1>
 
-<!-- Server Connection -->
+<!-- Server Status -->
 <h2>Server Status</h2>
-<button onclick="checkServer()">Check Server</button>
-<div id="server-status">Unknown</div>
+<div id="server-status">Checking...</div>
 
 <!-- Upload Queue -->
 <h2>Upload Queue</h2>
@@ -65,6 +64,20 @@
     </thead>
     <tbody>
         <tr><td colspan="3">Loading queue...</td></tr>
+    </tbody>
+</table>
+
+<!-- Completed Uploads -->
+<h2>Completed Uploads</h2>
+<table id="completed-table">
+    <thead>
+        <tr>
+            <th>ID / Folder</th>
+            <th>Name</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr><td colspan="2">No uploads yet.</td></tr>
     </tbody>
 </table>
 
@@ -86,76 +99,131 @@
 </table>
 
 <script>
+/* ---------------------- Server Status ---------------------- */
 async function checkServer() {
-    const resp = await fetch('/connect');
-    const data = await resp.json();
     const div = document.getElementById('server-status');
-    if (data.status === 200) {
-        div.textContent = 'Server is ONLINE';
-        div.className = 'success';
-    } else {
-        div.textContent = 'Server offline: ' + (data.error || 'Unknown');
+    try {
+        const resp = await fetch('/connect');
+        const data = await resp.json();
+        if (data.status === 200) {
+            div.textContent = 'ONLINE';
+            div.className = 'success';
+        } else {
+            div.textContent = 'OFFLINE';
+            div.className = 'error';
+        }
+    } catch (err) {
+        div.textContent = 'OFFLINE';
         div.className = 'error';
     }
 }
+checkServer();
+setInterval(checkServer, 2000);
 
+/* ---------------------- Load Queue ---------------------- */
 async function loadQueue() {
-    const resp = await fetch('/get_queue');
-    const data = await resp.json();
-    const tbody = document.querySelector('#queue-table tbody');
-    tbody.innerHTML = '';
-    
-    if (data.queue === "empty") {
-        tbody.innerHTML = '<tr><td colspan="3">Queue is empty</td></tr>';
-        return;
-    }
-
-    data.queue.forEach(item => {
-        const tr = document.createElement('tr');
-        tr.innerHTML = `<td>${item.id}</td><td>${item.name}</td><td id="status-${item.id}">Pending</td>`;
-        tbody.appendChild(tr);
-    });
-}
-
-async function uploadQueue() {
-    const resp = await fetch('/upload_queue', {method: 'POST'});
-    const data = await resp.json();
-    
-    data.forEach(item => {
-        const statusCell = document.getElementById('status-' + item.name);
-        if (statusCell) {
-            statusCell.textContent = item.status === 200 ? 'Uploaded' : 'Failed';
-            statusCell.className = item.status === 200 ? 'success' : 'error';
+    try {
+        const resp = await fetch('/get_queue');
+        const data = await resp.json();
+        const tbody = document.querySelector('#queue-table tbody');
+        tbody.innerHTML = '';
+        if (!data.queue || data.queue.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="3">Queue is empty</td></tr>';
+            return;
         }
-    });
+        data.queue.forEach(item => {
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td>${item.id}</td>
+                <td>${item.name}</td>
+                <td id="status-${item.id}">${item.status || 'Pending'}</td>
+            `;
+            tbody.appendChild(tr);
+        });
+    } catch (err) {
+        console.error('Error loading queue:', err);
+    }
+}
+loadQueue();
+setInterval(loadQueue, 5000);
 
-    loadQueue();  // refresh queue after upload
+/* ---------------------- Upload Queue ---------------------- */
+async function uploadQueue() {
+    const btn = document.querySelector('button[onclick="uploadQueue()"]');
+    btn.disabled = true;
+    btn.textContent = 'Uploading...';
+
+    try {
+        const resp = await fetch('/upload_queue', { method: 'POST' });
+        const data = await resp.json();
+
+        // Update failed/pending queue table
+        const tbodyQueue = document.querySelector('#queue-table tbody');
+        tbodyQueue.innerHTML = '';
+        if (data.failed.length === 0) {
+            tbodyQueue.innerHTML = '<tr><td colspan="3">All uploads completed</td></tr>';
+        } else {
+            data.failed.forEach(item => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `<td>${item.id}</td><td>${item.name}</td><td class="error">Failed</td>`;
+                tbodyQueue.appendChild(tr);
+            });
+        }
+
+        // Update completed uploads table
+        const tbodyCompleted = document.querySelector('#completed-table tbody');
+        tbodyCompleted.innerHTML = '';
+        if (data.completed.length === 0) {
+            tbodyCompleted.innerHTML = '<tr><td colspan="2">No uploads yet.</td></tr>';
+        } else {
+            data.completed.forEach(item => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `<td>${item.id}</td><td>${item.name}</td>`;
+                tbodyCompleted.appendChild(tr);
+            });
+        }
+
+    } catch (err) {
+        console.error('Error uploading queue:', err);
+        alert('Failed to upload queue.');
+    } finally {
+        btn.disabled = false;
+        btn.textContent = 'Upload All Folders';
+    }
 }
 
+/* ---------------------- Check & Download Artefact ---------------------- */
 async function checkDownload() {
     const artefactId = document.getElementById('artefact-id').value;
     if (!artefactId) return alert('Enter an artefact ID');
-    
-    const resp = await fetch('/check', {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({number: artefactId})
-    });
-    const data = await resp.json();
-    const tbody = document.querySelector('#download-table tbody');
-    tbody.innerHTML = '';
-    
-    for (const id in data) {
-        const item = data[id];
-        const tr = document.createElement('tr');
-        tr.innerHTML = `<td>${id}</td><td>${item.name}</td><td>${item.path}</td>`;
-        tbody.appendChild(tr);
+
+    try {
+        const resp = await fetch('/check', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({ number: artefactId })
+        });
+        const data = await resp.json();
+
+        const tbody = document.querySelector('#download-table tbody');
+        tbody.innerHTML = '';
+
+        for (const id in data) {
+            const item = data[id];
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td>${id}</td>
+                <td>${item.name}</td>
+                <td>${item.path}</td>
+            `;
+            tbody.appendChild(tr);
+        }
+
+    } catch (err) {
+        console.error('Error checking download:', err);
+        alert('Failed to check download. See console.');
     }
 }
-
-// Load queue automatically
-loadQueue();
-setInterval(loadQueue, 5000);
 </script>
 </body>
 </html>

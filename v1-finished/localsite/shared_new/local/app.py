@@ -865,30 +865,92 @@ def remote():
 
 
 
-@app.route('/upload_queue', methods=["GET", "POST"])
-def upload_queue():
-    conn, cursor = init_conn()
-    completion = []
-    folder_names = os.listdir('photos')
-    if not folder_names:
-        return jsonify({"queue": "empty"})
-    for folder in folder_names[:]:
-        int_name = int(folder)
-        name = cursor.execute('SELECT name FROM artefacts WHERE id = ?', (int_name,)).fetchone()[0]
-        os.system(f'zip -r zips/{folder}.zip photos/{folder}')
-        print(console_log(f'{session["email"]} zipped {folder}. Now in zips/{folder}.zip. Awaiting post to server_url...', 'info'))
-        with open(f'zips/{folder}.zip', 'rb') as f:
-            files = {"file": f}
-            resp = requests.post(f'{server_url}/upload/', files=files)
-            time.sleep(1)
-            if resp.status_code == 200:
-                print(console_log(f'{session["email"]} successfully uploaded {folder}.zip to server_url {server_url}', 'success'))
-            elif resp.status_code == 500:
-                print(console_log(f'{session["email"]} hit an error when uploading {folder}.zip to server_url {server_url}', 'error'))
+# @app.route('/upload_queue', methods=["GET", "POST"])
+# def upload_queue():
 
-            completion.append({'name': folder, 'status': resp.status_code})
+#     os.makedirs('zips', exist_ok=True)
+#     os.makedirs('photos', exist_ok=True)
+
+#     conn, cursor = init_conn()
+#     completion = []
+    
+#     folder_names = os.listdir('photos')
+    
+#     if not folder_names:
+#         return jsonify({"queue": "empty"})
+#     for folder in folder_names[:]:
+#         int_name = int(folder)
+#         name = cursor.execute('SELECT name FROM artefacts WHERE id = ?', (int_name,)).fetchone()[0]
+#         os.system(f'zip -r zips/{folder}.zip photos/{folder}')
+#         print(console_log(f'{session["email"]} zipped {folder}. Now in zips/{folder}.zip. Awaiting post to server_url...', 'info'))
+#         with open(f'zips/{folder}.zip', 'rb') as f:
+#             files = {"files": f}
+#             resp = requests.post(f'{server_url}/upload/', files=files)
+#             time.sleep(1)
+#             if resp.status_code == 200:
+#                 print(console_log(f'{session["email"]} successfully uploaded {folder}.zip to server_url {server_url}', 'success'))
+
+#             elif resp.status_code == 500:
+#                 print(console_log(f'{session["email"]} hit an error when uploading {folder}.zip to server_url {server_url}', 'error'))
+    
+#             completion.append({'id': int_name, 'name': folder, 'status': resp.status_code})
+#             # shutil.rmtree(f'photos/{folder}')
+#     return jsonify(completion)
+
+
+
+@app.route('/upload_queue', methods=["POST"])
+def upload_queue():
+    try:
+        os.makedirs('zips', exist_ok=True)
+        os.makedirs('photos', exist_ok=True)
+        os.makedirs('backups', exist_ok=True)
+        conn, cursor = init_conn()
+        
+        completed = []
+        failed = []
+        folder_names = os.listdir('photos')
+        
+        if not folder_names:
+            return jsonify({"completed": [], "failed": []})
+        
+        for folder in folder_names:
+            try:
+                int_name = int(folder)
+                name = cursor.execute('SELECT name FROM artefacts WHERE id = ?', (int_name,)).fetchone()[0]
+                
+                os.system(f'cd photos && zip -r ../zips/{folder}.zip {folder}')
+                os.system(f'cp zips/{folder}.zip backups/{folder}')
+                
+                with open(f'zips/{folder}.zip', 'rb') as f:
+                    files = {"files": f}
+                    resp = requests.post(f'{server_url}/upload/', files=files, timeout=10)
+                
+                status = resp.status_code if resp else 500
+
+                if status == 200:
+                    completed.append({'id': int_name, 'name': folder})
+                else:
+                    failed.append({'id': int_name, 'name': folder})
+                    
+            except Exception as e:
+                failed.append({'id': folder, 'name': folder})
+                print(f"Error uploading {folder}: {e}")
+
             shutil.rmtree(f'photos/{folder}')
-    return jsonify(completion)
+            
+        return jsonify({"completed": completed, "failed": failed})
+    
+    except Exception as e:
+        print("Upload queue failed:", e)
+        return jsonify({"completed": [], "failed": []}), 500
+
+
+
+
+
+
+
 
 @app.route('/get_queue')
 def get_queue():
