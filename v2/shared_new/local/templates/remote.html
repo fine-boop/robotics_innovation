@@ -1,0 +1,207 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Remote / Upload Dashboard</title>
+  <style>
+    :root{--bg:#0f172a;--panel:#0b1220;--muted:#94a3b8;--th:#1e293b;--info:#60a5fa;--success:#4ade80;--error:#f87171;--border:#334155;--accent:#1e293b}
+    html,body{height:100%;margin:0;background:var(--bg);color:#fff;font-family:system-ui,Segoe UI,Roboto,Arial}
+    .wrap{max-width:1100px;margin:20px auto;padding:18px;background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.00));border-radius:10px}
+    h1{margin:0 0 6px;font-size:1.6rem}
+    h2{margin:18px 0 8px;font-size:1.05rem;color:var(--muted)}
+    .row{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+    button,a.btn{margin:6px 0;padding:8px 14px;border-radius:8px;border:0;background:var(--accent);color:#fff;cursor:pointer;text-decoration:none;display:inline-block}
+    button[disabled]{opacity:.5;cursor:not-allowed}
+    .card{background:rgba(255,255,255,0.02);padding:12px;border-radius:8px;border:1px solid rgba(255,255,255,0.02)}
+    .status-inline{display:inline-block;padding:6px 10px;border-radius:999px;font-weight:600}
+    .info{color:var(--info)}.success{color:var(--success)}.error{color:var(--error)}.muted{color:var(--muted)}.small{font-size:0.85rem}
+    table{width:100%;border-collapse:collapse;margin-top:10px}
+    th,td{border:1px solid var(--border);padding:8px;text-align:left;vertical-align:middle}
+    th{background:var(--th)}
+    tbody tr:nth-child(even){background:rgba(255,255,255,0.01)}
+    .debug{white-space:pre-wrap;word-break:break-word;background:rgba(0,0,0,0.2);padding:8px;border-radius:6px;margin-top:8px;color:var(--muted);font-size:0.85rem;max-height:160px;overflow:auto}
+    .tiny{font-size:0.8rem;color:var(--muted)}.btn-small{padding:6px 10px;font-size:0.9rem;border-radius:6px}
+    @media (max-width:700px){.row{flex-direction:column;align-items:flex-start}th,td{font-size:0.95rem}}
+  </style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Remote / Upload Dashboard</h1>
+
+  <h2>Server Status</h2>
+  <div class="row">
+    <div id="server-status" class="status-inline info">Checking...</div>
+    <div id="server-debug" class="tiny muted" aria-live="polite">server debug output will appear here</div>
+  </div>
+  <div id="server-debug-full" class="debug">Raw server responses shown here for debugging.</div>
+
+  <h2>Upload Queue</h2>
+  <div class="row">
+    <button id="upload-btn">Upload All Folders</button>
+    <div class="tiny muted">Calls <code>/upload_queue</code> on this server which will POST to the remote server.</div>
+  </div>
+  <div class="card" role="region" aria-label="Upload queue">
+    <table id="queue-table" aria-live="polite">
+      <thead><tr><th>ID / Folder</th><th>Name</th><th>Status</th></tr></thead>
+      <tbody><tr><td colspan="3" class="muted">Loading queue...</td></tr></tbody>
+    </table>
+  </div>
+
+  <h2>Ready Downloads (remote)</h2>
+  <div class="row">
+    <button id="download-check-btn">Check Ready Files</button>
+    <button id="server-download-btn">Ask Server to Fetch All</button>
+    <div class="tiny muted">Step 1: server fetch via <code>/download/&lt;id&gt;</code>. Step 2: user download via <code>/fetch_download/&lt;id&gt;</code>.</div>
+  </div>
+  <div class="card" role="region" aria-label="Ready downloads">
+    <table id="download-table" aria-live="polite">
+      <thead><tr><th>ID</th><th>File</th><th>Result / Action</th></tr></thead>
+      <tbody><tr><td colspan="3" class="muted">No data yet.</td></tr></tbody>
+    </table>
+  </div>
+</div>
+
+<script>
+/* utilities */
+function setStatus(text, cls, debugShort=''){
+  const s = document.getElementById('server-status'); s.textContent = text; s.className = 'status-inline ' + (cls||'');
+  const dbgShort = document.getElementById('server-debug'); dbgShort.textContent = debugShort || '';
+}
+function appendDebug(text){ const el = document.getElementById('server-debug-full'); const now = new Date().toISOString(); el.textContent = now + ' — ' + text + '\n\n' + el.textContent; }
+
+/* check /connect */
+async function checkServer(){
+  try{
+    const resp = await fetch('/connect');
+    let data = null; try { data = await resp.json(); } catch(e){ data = null; }
+    if (data && data.status === 'ONLINE') setStatus('ONLINE','success','connect OK');
+    else if (resp.ok) setStatus('ONLINE','success','connect OK');
+    else setStatus('OFFLINE','error', 'connect HTTP not OK');
+  } catch(err){ setStatus('OFFLINE','error', String(err)); appendDebug('checkServer error: '+String(err)); }
+}
+checkServer(); setInterval(checkServer, 3000);
+
+/* load queue */
+async function loadQueue(){
+  const tbody = document.querySelector('#queue-table tbody'); tbody.innerHTML = '<tr><td colspan="3" class="muted">Loading queue...</td></tr>';
+  try{
+    const resp = await fetch('/get_queue'); const data = await resp.json(); tbody.innerHTML = '';
+    if (!data || data.queue === undefined){ tbody.innerHTML = '<tr><td colspan="3">Unexpected response from /get_queue</td></tr>'; appendDebug('get_queue returned: '+JSON.stringify(data,null,2)); return; }
+    if (data.queue === 'empty' || (Array.isArray(data.queue) && data.queue.length === 0)){
+      tbody.innerHTML = '<tr><td colspan="3" class="muted">Queue is empty</td></tr>'; return;
+    }
+    if (Array.isArray(data.queue)){
+      data.queue.forEach(item => {
+        const tr = document.createElement('tr');
+        const id = document.createElement('td'); id.textContent = item.id || '';
+        const name = document.createElement('td'); name.textContent = item.name || '';
+        const status = document.createElement('td'); status.textContent = 'Pending'; status.className = 'info';
+        tr.appendChild(id); tr.appendChild(name); tr.appendChild(status); tbody.appendChild(tr);
+      });
+      return;
+    }
+    tbody.innerHTML = '<tr><td colspan="3" class="muted">No queue items</td></tr>';
+  } catch(err){ tbody.innerHTML = '<tr><td colspan="3">Failed to load queue</td></tr>'; appendDebug('loadQueue error: '+String(err)); }
+}
+loadQueue(); setInterval(loadQueue, 5000);
+
+/* upload queue */
+document.getElementById('upload-btn').addEventListener('click', async ()=>{
+  const btn = document.getElementById('upload-btn'); btn.disabled = true; const old = btn.textContent; btn.textContent = 'Uploading...';
+  try{
+    const resp = await fetch('/upload_queue', { method: 'POST' }); const data = await resp.json();
+    const qbody = document.querySelector('#queue-table tbody'); qbody.innerHTML = '';
+    if (data && Array.isArray(data.failed) && data.failed.length > 0){
+      data.failed.forEach(it=>{ const tr=document.createElement('tr'); const td1=document.createElement('td'); td1.textContent=it.id||''; const td2=document.createElement('td'); td2.textContent=it.name||''; const td3=document.createElement('td'); td3.textContent='Failed'; td3.className='error'; tr.appendChild(td1);tr.appendChild(td2);tr.appendChild(td3); qbody.appendChild(tr); });
+    } else { qbody.innerHTML = '<tr><td colspan="3" class="success">All uploads completed</td></tr>'; }
+  } catch(err){ alert('Upload failed; see console.'); appendDebug('upload_queue error: '+String(err)); }
+  finally{ btn.disabled = false; btn.textContent = old; }
+});
+
+/* check ready downloads (/check) */
+async function checkReadyDownloads(){
+  const tbody = document.querySelector('#download-table tbody'); tbody.innerHTML = '<tr><td colspan="3" class="muted">Checking...</td></tr>';
+  try{
+    const resp = await fetch('/check', { method: 'POST' }); const text = await resp.text(); appendDebug('/check returned: '+text);
+    let parsed = null; try{ parsed = JSON.parse(text); }catch(e){ parsed = null; }
+    let list = null;
+    if (Array.isArray(parsed)) list = parsed;
+    else if (parsed && typeof parsed === 'object'){
+      if ('ready_downloads' in parsed) list = parsed.ready_downloads;
+      else { const vals = Object.values(parsed).flat(); if (Array.isArray(vals) && vals.length) list = vals; }
+    } else if (typeof text === 'string' && text.trim()){ const lines = text.split(/\r?\n/).map(s=>s.trim()).filter(Boolean); if (lines.length) list = lines; }
+    if (!list || !Array.isArray(list) || list.length === 0){ tbody.innerHTML = '<tr><td colspan="3" class="muted">No downloads ready.</td></tr>'; return; }
+    populateDownloadRows(list, tbody);
+  } catch(err){ tbody.innerHTML = '<tr><td colspan="3" class="error">Failed to check downloads</td></tr>'; appendDebug('checkReadyDownloads error: '+String(err)); }
+}
+
+function populateDownloadRows(list, tbody){ tbody.innerHTML = ''; if (!Array.isArray(list)||list.length===0){ tbody.innerHTML = '<tr><td colspan="3" class="muted">No downloads ready.</td></tr>'; return; }
+  list.forEach(rawItem=>{
+    let name=''; let id='';
+    if (typeof rawItem === 'string'){ name = rawItem; id = (rawItem.split('.')[0] || rawItem).slice(0,80); }
+    else if (rawItem && typeof rawItem === 'object'){ if (rawItem.name) name = String(rawItem.name); else if (rawItem.filename) name = String(rawItem.filename); else try{ name = JSON.stringify(rawItem); }catch(e){ name = String(rawItem);} if (rawItem.id !== undefined) id = String(rawItem.id); else if (rawItem.artifact_id !== undefined) id = String(rawItem.artifact_id); else id = (name.split('.')[0]||name).slice(0,80); }
+    else { name = String(rawItem); id = (name.split('.')[0]||name).slice(0,80); }
+
+    const tr = document.createElement('tr'); tr.dataset.downloadId = id;
+    const td1 = document.createElement('td'); td1.textContent = id;
+    const td2 = document.createElement('td'); const span = document.createElement('span'); span.className='info'; span.textContent=name; const hint = document.createElement('div'); hint.className='small muted'; hint.textContent='Ready on remote'; td2.appendChild(span); td2.appendChild(hint);
+    const td3 = document.createElement('td'); const status = document.createElement('span'); status.className='muted'; status.textContent='Queued';
+    const fetchBtn = document.createElement('button'); fetchBtn.className='btn-small'; fetchBtn.textContent='Fetch to Server'; fetchBtn.title = `Ask server to fetch artefact ${id}`;
+
+    fetchBtn.addEventListener('click', async ()=>{
+      fetchBtn.disabled=true; const oldText = fetchBtn.textContent; fetchBtn.textContent='Fetching...'; setRowStatus(tr,'Fetching...','info');
+      try{
+        const result = await fetchSingleDownload(id);
+        if (result && typeof result === 'object' && Object.keys(result).length){
+          setRowStatus(tr,'Ready','success');
+          // replace fetch button with real download link
+          const link = document.createElement('a');
+          link.href = '/fetch_download/' + encodeURIComponent(id);
+          link.textContent = 'Download';
+          link.className = 'btn btn-small';
+          link.style.marginLeft = '8px';
+          fetchBtn.remove();
+          td3.appendChild(link);
+        } else if (typeof result === 'string'){
+          setRowStatus(tr, result.slice(0,200), 'success');
+        } else {
+          setRowStatus(tr, 'Unknown server response', 'error');
+        }
+      } catch(err){ setRowStatus(tr, String(err), 'error'); appendDebug('fetchSingleDownload error: '+String(err)); }
+      finally{ if (fetchBtn.isConnected){ fetchBtn.disabled=false; fetchBtn.textContent=oldText; } }
+    });
+
+    td3.appendChild(status); td3.appendChild(document.createTextNode(' ')); td3.appendChild(fetchBtn);
+    tr.appendChild(td1); tr.appendChild(td2); tr.appendChild(td3); tbody.appendChild(tr);
+  });
+}
+function setRowStatus(tr,text,cls){ const td3 = tr.children[2]; if (!td3) return; const statusSpan = td3.querySelector('span'); if (statusSpan){ statusSpan.textContent=text; statusSpan.className = (cls==='success')?'success':(cls==='error'?'error':'info'); } }
+
+async function fetchSingleDownload(id){ const safeId = encodeURIComponent(String(id)); const resp = await fetch('/download/' + safeId); const text = await resp.text(); appendDebug(`/download/${safeId} returned: ${text}`); try{ return JSON.parse(text); }catch(e){ return text; } }
+
+/* bulk fetch: step through each and convert to Download links */
+document.getElementById('server-download-btn').addEventListener('click', async ()=>{
+  const tbody = document.querySelector('#download-table tbody'); const rows = Array.from(tbody.querySelectorAll('tr')).filter(r=>r.dataset&&r.dataset.downloadId);
+  if (!rows.length){ appendDebug('server-download: no rows to fetch'); return; }
+  const btn = document.getElementById('server-download-btn'); btn.disabled = true; const old = btn.textContent; btn.textContent='Fetching...';
+  for (const tr of rows){ const id = tr.dataset.downloadId; setRowStatus(tr,'Fetching (bulk)...','info'); try{
+      const result = await fetchSingleDownload(id);
+      if (result && typeof result === 'object' && Object.keys(result).length){
+        setRowStatus(tr,'Ready','success');
+        const td3 = tr.children[2];
+        const oldBtn = td3.querySelector('button'); if (oldBtn) oldBtn.remove();
+        const link = document.createElement('a'); link.href = '/fetch_download/' + encodeURIComponent(id); link.textContent = 'Download'; link.className = 'btn btn-small'; td3.appendChild(link);
+      } else if (typeof result === 'string'){ setRowStatus(tr, result.slice(0,200), 'success'); }
+      else { setRowStatus(tr,'Unknown server response','error'); }
+    } catch(err){ setRowStatus(tr,'Failed: '+String(err),'error'); appendDebug('server-download bulk error for '+id+': '+String(err)); }
+    await new Promise(r=>setTimeout(r,350)); }
+  btn.disabled=false; btn.textContent=old;
+});
+
+/* bind check button and initial load */
+document.getElementById('download-check-btn').addEventListener('click', checkReadyDownloads);
+checkReadyDownloads();
+</script>
+</body>
+</html>

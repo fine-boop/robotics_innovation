@@ -1,0 +1,569 @@
+2026-01-12T16:19:20.004103 [INFO] Starting server
+2026-01-12T16:19:50.940365 [SUCCESS] Created account: Julian
+2026-01-12T16:20:04.064862 [SUCCESS] User jb@jb sucessfully logged in
+2026-01-12T16:20:51.142165 [INFO] Starting server
+2026-01-12T16:21:07.782067 [SUCCESS] User jb@jb sucessfully logged in
+2026-01-12T16:21:49.024320 [INFO] Starting server
+<<<<<<< HEAD
+2026-01-12T17:17:12.814588 [INFO] Starting server
+=======
+2026-01-12T16:23:43.096349 [INFO] Starting server
+2026-01-12T16:23:52.942929 [SUCCESS] User jb@jb sucessfully logged in
+2026-01-12T16:24:15.668136 [SUCCESS] User jb@jb successfully created dublin and added 0 members!
+2026-01-12T17:18:50.299596 [INFO] Starting server
+2026-01-12T17:20:08.569693 [INFO] Starting server
+2026-01-12T17:21:02.752777 [INFO] Starting server
+2026-01-12T17:23:02.067378 [INFO] Starting server
+2026-01-12T17:23:44.284027 [INFO] Starting server
+2026-01-12T17:24:48.635296 [INFO] Starting server
+2026-01-12T17:26:35.490013 [INFO] Starting server
+2026-01-12T17:26:49.553864 [INFO] Starting server
+2026-01-12T17:31:22.598016 [INFO] Starting server
+2026-01-12T17:33:01.322034 [INFO] Starting server
+2026-01-12T17:33:04.944772 [INFO] Starting server
+2026-01-12T17:34:48.202572 [INFO] Starting server
+2026-01-12T17:35:30.352942 [INFO] Starting server
+>>>>>>> 261b40b0791ef2b747c11acf464c725173c367e7
+2026-01-12T22:57:29.301164 [INFO] Starting server
+2026-01-12T23:08:28.195756 [INFO] Starting server
+2026-01-29T16:54:27.099811 [INFO] Starting server
+2026-01-29T16:58:54.178835 [SUCCESS] Created account: hugo
+2026-01-29T17:00:03.222851 [INFO] h@h tried to create the site dublin, already exists
+2026-01-29T17:01:11.040014 [INFO] Starting server
+2026-01-29T17:01:19.450755 [WARN] User not logged in tried to access /log_artefact endpoint
+2026-01-29T17:02:54.059565 [SUCCESS] Created account: x
+2026-01-29T17:03:37.420259 [INFO] User x@x has logged out
+2026-01-29T17:08:11.582472 [INFO] User c@f tried to log into a nonexistent account
+2026-01-29T17:08:50.498929 [SUCCESS] Created account: x
+2026-01-29T17:09:49.589842 [INFO] xz@f entered the wrong password to join dublin
+2026-01-29T17:10:01.706869 [INFO] xz@f entered the wrong password to join dublin
+2026-01-29T17:10:32.783232 [INFO] xz@f entered the wrong password to join dublin
+2026-01-29T17:10:53.181547 [INFO] xz@f entered the wrong password to join dublin
+2026-01-29T17:19:08.331223 [INFO] Starting server
+2026-01-29T17:19:16.506314 [INFO] User t@t tried to log into a nonexistent account
+2026-01-29T17:19:30.077442 [SUCCESS] Created account: t
+2026-01-29T17:23:07.289529 [INFO] Starting server
+2026-01-29T17:23:16.163919 [SUCCESS] User t@t sucessfully logged in
+2026-01-29T17:24:21.301637 [INFO] Starting server
+2026-01-29T17:24:30.535550 [SUCCESS] User t@t sucessfully logged in
+2026-01-29T17:24:40.171155 [INFO] t@t entered the wrong password to join dublin
+2026-01-29T17:24:55.499963 [ERROR] t@t hit the error table sites has no column named location when making a new site
+2026-01-29T17:25:16.336161 [INFO] Starting server
+2026-01-29T17:25:23.176193 [INFO] User t@t tried to log into a nonexistent account
+2026-01-29T17:25:34.325715 [SUCCESS] Created account: t
+2026-01-29T17:25:44.523370 [SUCCESS] User t@t successfully created a and added 0 members!
+2026-01-29T17:29:15.741351 [INFO] Starting server
+2026-01-29T17:29:26.105916 [SUCCESS] User t@t sucessfully logged in
+2026-01-29T17:37:44.083480 [INFO] Starting server
+2026-01-29T18:47:15.381052 [INFO] Starting server
+2026-01-29T18:47:32.471909 [ERROR] UNIQUE constraint failed: users.email
+2026-01-29T18:50:30.593638 [INFO] Starting server
+2026-01-29T18:50:38.632453 [ERROR] table users has no column named name
+2026-01-29T18:54:49.269799 [INFO] Starting server
+2026-01-29T18:54:58.574851 [ERROR] table users has no column named name
+2026-01-29T18:55:11.597683 [INFO] Starting server
+2026-01-29T18:55:21.193758 [SUCCESS] Created account: t
+2026-01-29T18:57:23.938128 [INFO] Starting server
+2026-01-29T18:57:34.707976 [ERROR] UNIQUE constraint failed: users.email
+2026-01-29T18:58:05.464551 [ERROR] UNIQUE constraint failed: users.email
+2026-01-29T19:04:19.877263 [INFO] Starting server
+2026-01-29T19:04:36.092859 [ERROR] UNIQUE constraint failed: users.email
+2026-01-29T19:05:42.530165 [INFO] Starting server
+2026-01-29T19:05:52.490803 [INFO] Starting server
+2026-01-29T19:06:01.071838 [SUCCESS] Created account: t
+2026-01-29T19:06:23.638611 [INFO] User t@t has logged out
+2026-01-29T19:06:28.605782 [SUCCESS] User t@t sucessfully logged in
+2026-01-29T19:06:45.190277 [SUCCESS] User t@t successfully created t and added 0 members!
+2026-01-29T19:06:53.588104 [SUCCESS] t@t successfully left the site t
+2026-01-29T19:29:53.831428 [INFO] Starting server
+2026-01-29T19:30:06.391180 [INFO] Starting server
+2026-01-29T19:30:12.812898 [SUCCESS] User t@t sucessfully logged in
+2026-01-29T19:33:19.702330 [INFO] Starting server
+2026-01-29T19:33:47.314557 [INFO] Starting server
+2026-01-29T19:33:54.759607 [SUCCESS] User t@t sucessfully logged in
+2026-01-30T17:59:31.959955 [INFO] Starting server
+2026-01-30T17:59:40.617358 [SUCCESS] User t@t sucessfully logged in
+2026-01-30T18:00:20.669172 [INFO] Starting server
+2026-01-30T18:00:27.187648 [SUCCESS] User t@t sucessfully logged in
+2026-01-30T18:00:37.061575 [INFO] t@t tried to create the site t, already exists
+2026-01-30T18:00:46.599183 [INFO] t@t entered the wrong password to join t
+2026-01-30T18:00:49.848376 [INFO] t@t entered the wrong password to join t
+2026-01-30T18:01:00.439297 [SUCCESS] User t@t successfully created tt and added 0 members!
+2026-01-30T18:01:58.758520 [INFO] Starting server
+2026-01-30T18:02:03.906470 [SUCCESS] User t@t sucessfully logged in
+2026-01-30T18:04:03.697181 [INFO] Starting server
+2026-01-30T18:04:08.881667 [SUCCESS] User t@t sucessfully logged in
+2026-01-30T18:06:02.805099 [INFO] Starting server
+2026-01-30T18:06:10.082085 [SUCCESS] User t@t sucessfully logged in
+2026-01-30T18:06:35.553277 [INFO] Starting server
+2026-01-30T18:06:42.990286 [SUCCESS] User t@t sucessfully logged in
+2026-01-30T18:07:42.936886 [INFO] Starting server
+2026-01-30T18:07:48.687204 [SUCCESS] User t@t sucessfully logged in
+2026-01-30T18:09:36.322572 [INFO] Starting server
+2026-01-30T18:09:49.427946 [INFO] Starting server
+2026-01-30T18:10:48.747377 [INFO] Starting server
+2026-01-30T18:12:11.844727 [INFO] Starting server
+2026-01-30T18:12:23.298879 [INFO] Starting server
+2026-01-30T18:12:49.794020 [INFO] Starting server
+2026-01-30T18:13:22.120944 [INFO] Starting server
+2026-01-30T18:13:51.082534 [INFO] Starting server
+2026-01-30T18:13:56.893432 [SUCCESS] User t@t sucessfully logged in
+2026-01-30T18:14:12.985125 [INFO] Starting server
+2026-01-30T18:14:43.395827 [INFO] Starting server
+2026-01-30T18:15:01.124267 [INFO] Starting server
+2026-01-30T18:18:39.912508 [INFO] Starting server
+2026-01-30T18:20:16.130948 [INFO] Starting server
+2026-01-30T18:24:24.031370 [INFO] Starting server
+2026-01-30T18:24:26.492366 [INFO] Starting server
+2026-01-30T18:24:32.135443 [SUCCESS] t@t logged in
+2026-01-30T18:24:44.445168 [SUCCESS] Artefact Zerodays logged by t@t
+2026-01-30T18:25:01.254382 [INFO] Starting server
+2026-01-30T18:25:03.748651 [INFO] Starting server
+2026-01-30T18:25:07.912460 [SUCCESS] t@t logged in
+2026-01-30T18:25:15.712554 [SUCCESS] Artefact sadasd logged by t@t
+2026-01-30T18:30:13.242826 [INFO] Starting server
+2026-01-30T18:30:17.799506 [INFO] Starting server
+2026-01-30T18:30:23.677672 [SUCCESS] t@t logged in
+2026-01-30T18:30:31.832731 [SUCCESS] Artefact aaa logged by t@t
+2026-01-30T18:31:05.827969 [INFO] Starting server
+2026-01-30T18:31:08.277891 [INFO] Starting server
+2026-01-30T18:31:16.456253 [SUCCESS] t@t logged in
+2026-01-30T18:31:24.818466 [SUCCESS] Artefact 21323 logged by t@t
+2026-01-30T18:32:22.745541 [INFO] Starting server
+2026-01-30T18:32:25.206685 [INFO] Starting server
+2026-01-30T18:32:37.070028 [SUCCESS] t@t logged in
+2026-01-30T18:32:46.466037 [SUCCESS] Artefact 12312 logged by t@t
+2026-01-30T18:33:13.583525 [INFO] Starting server
+2026-01-30T18:33:16.108156 [INFO] Starting server
+2026-01-30T18:33:21.425916 [SUCCESS] t@t logged in
+2026-01-30T18:33:37.665505 [SUCCESS] Artefact 555as logged by t@t
+2026-01-30T18:34:38.586761 [INFO] Starting server
+2026-01-30T18:34:41.087446 [INFO] Starting server
+2026-01-30T18:34:45.850000 [SUCCESS] t@t logged in
+2026-01-30T18:34:53.308509 [SUCCESS] Artefact aaaaaa logged by t@t
+2026-01-30T19:22:25.544233 [INFO] Starting server
+2026-01-30T19:22:30.991739 [SUCCESS] User t@t sucessfully logged in
+2026-01-30T19:22:49.221206 [INFO] Starting server
+2026-01-30T19:22:53.655278 [SUCCESS] User t@t sucessfully logged in
+2026-01-30T19:41:33.979629 [INFO] Starting server
+2026-01-30T19:41:43.049209 [SUCCESS] User t@t sucessfully logged in
+2026-01-30T19:41:54.670691 [SUCCESS] t@t just logged an artefact
+2026-01-30T19:41:54.681502 [INFO] Starting camera for live preview
+2026-01-30T19:41:55.744873 [INFO] Video stream generator started
+2026-01-30T19:42:04.648653 [INFO] Starting capture for t232
+2026-01-30T19:42:10.230005 [INFO] Starting capture for t232
+2026-01-30T19:42:21.561518 [INFO] Starting capture for t232
+2026-01-30T19:42:21.902965 [INFO] Starting capture for t232
+2026-01-30T19:42:22.047846 [INFO] Starting capture for t232
+2026-01-30T19:42:25.218187 [INFO] Stopping camera
+2026-01-30T19:42:25.218965 [ERROR] Failed to read frame
+2026-01-30T19:42:25.219173 [INFO] Video stream generator stopped
+2026-01-30T19:42:25.305086 [INFO] Starting capture for t232
+2026-01-30T19:42:25.305335 [ERROR] Camera not initialized for capture
+2026-01-30T19:42:25.369582 [INFO] Starting capture for t232
+2026-01-30T19:42:25.369831 [ERROR] Camera not initialized for capture
+2026-01-30T19:42:28.359753 [INFO] Starting capture for t232
+2026-01-30T19:42:28.360012 [ERROR] Camera not initialized for capture
+2026-01-30T19:42:28.735297 [INFO] Starting capture for t232
+2026-01-30T19:42:28.735600 [ERROR] Camera not initialized for capture
+2026-01-30T19:42:29.105657 [INFO] Starting capture for t232
+2026-01-30T19:42:29.105904 [ERROR] Camera not initialized for capture
+2026-01-30T19:42:29.194988 [INFO] Starting capture for t232
+2026-01-30T19:42:29.195236 [ERROR] Camera not initialized for capture
+2026-01-30T19:42:29.201001 [INFO] Starting capture for t232
+2026-01-30T19:42:29.201291 [ERROR] Camera not initialized for capture
+2026-01-30T19:45:03.765530 [INFO] Starting server
+2026-01-30T19:45:08.474798 [SUCCESS] User t@t sucessfully logged in
+2026-01-30T19:45:20.337746 [SUCCESS] t@t just logged an artefact
+2026-01-30T19:45:20.349671 [INFO] Starting camera for live preview
+2026-01-30T19:45:21.453390 [INFO] Video stream generator started
+2026-01-30T19:45:26.671131 [INFO] Starting capture for golden cup
+2026-01-30T19:45:39.987574 [INFO] Starting capture for golden cup
+2026-01-30T19:45:41.718088 [INFO] Starting capture for golden cup
+2026-01-30T19:45:41.928633 [INFO] Starting capture for golden cup
+2026-01-30T19:45:42.079472 [INFO] Starting capture for golden cup
+2026-01-30T19:45:47.222356 [INFO] Stopping camera
+2026-01-30T19:45:47.223223 [ERROR] Failed to read frame
+2026-01-30T19:45:47.223619 [INFO] Video stream generator stopped
+2026-01-30T19:45:47.324524 [INFO] Starting capture for golden cup
+2026-01-30T19:45:47.324804 [INFO] Camera not initialized, attempting to start it...
+2026-01-30T19:45:47.324899 [INFO] Starting camera for live preview
+2026-01-30T19:45:47.331676 [INFO] Starting capture for golden cup
+2026-01-30T19:45:47.331945 [INFO] Camera not initialized, attempting to start it...
+2026-01-30T19:45:47.332037 [INFO] Starting camera for live preview
+2026-01-30T19:45:48.021739 [INFO] Starting capture for golden cup
+2026-01-30T19:45:48.021975 [INFO] Camera not initialized, attempting to start it...
+2026-01-30T19:45:48.022058 [INFO] Starting camera for live preview
+2026-01-30T19:45:48.155612 [ERROR] Camera failed to open
+2026-01-30T19:47:16.886850 [INFO] Starting server
+2026-01-30T19:47:17.605281 [INFO] Starting server
+2026-01-30T19:47:44.039157 [INFO] Starting server
+2026-01-30T19:47:56.735892 [SUCCESS] User t@t sucessfully logged in
+2026-01-30T19:48:11.166519 [SUCCESS] t@t just logged an artefact
+2026-01-30T19:48:11.179971 [INFO] Starting camera for live preview
+2026-01-30T19:48:12.347265 [INFO] Video stream generator started
+2026-01-30T19:48:17.821880 [INFO] Request to capture for Zerodays
+2026-01-30T19:48:38.418483 [INFO] Stopping camera
+2026-01-30T19:48:38.426462 [INFO] Video stream generator stopped
+2026-01-30T19:50:29.723918 [INFO] Starting server
+2026-01-30T19:50:42.512602 [INFO] Starting server
+2026-01-30T19:50:48.687616 [SUCCESS] User t@t sucessfully logged in
+2026-01-30T19:50:56.643010 [SUCCESS] t@t just logged an artefact
+2026-01-30T19:50:56.653840 [INFO] Starting camera for live preview
+2026-01-30T19:50:57.772898 [INFO] Video stream generator started
+2026-01-30T19:51:05.592415 [INFO] Request to capture for 20_1212
+2026-01-30T19:51:26.188912 [INFO] Stopping camera
+2026-01-30T19:51:26.205038 [INFO] Video stream generator stopped
+2026-01-30T19:53:38.278503 [INFO] Starting server
+2026-01-30T19:53:43.188694 [SUCCESS] User t@t sucessfully logged in
+2026-01-30T19:54:08.347362 [SUCCESS] t@t just logged an artefact
+2026-01-30T19:54:08.358526 [INFO] Starting camera for live preview
+2026-01-30T19:54:09.433731 [INFO] Video stream generator started
+2026-01-30T19:54:15.632331 [INFO] Request to capture for t
+2026-01-30T19:54:36.251095 [INFO] Stopping camera
+2026-01-30T19:54:36.253097 [ERROR] Failed to read frame
+2026-01-30T19:54:36.256050 [INFO] Video stream generator stopped
+2026-01-31T10:22:46.185199 [INFO] Starting server
+2026-01-31T10:25:52.294137 [INFO] Starting server
+2026-01-31T10:26:01.426950 [SUCCESS] User t@t sucessfully logged in
+2026-01-31T10:26:10.641334 [SUCCESS] t@t just logged an artefact
+2026-01-31T10:26:10.658206 [INFO] Starting camera for live preview
+2026-01-31T10:26:11.940895 [INFO] Video stream generator started
+2026-01-31T10:27:05.772950 [INFO] Request to capture for cup
+2026-01-31T10:27:26.518536 [INFO] Stopping camera
+2026-01-31T10:27:26.519451 [ERROR] Failed to read frame
+2026-01-31T10:27:26.519750 [INFO] Video stream generator stopped
+2026-01-31T10:53:08.885881 [INFO] Starting server
+2026-01-31T10:53:15.434531 [INFO] Starting server
+2026-01-31T10:53:22.823500 [SUCCESS] User t@t sucessfully logged in
+2026-01-31T10:56:07.963919 [INFO] Starting server
+2026-01-31T10:56:13.759267 [SUCCESS] User t@t sucessfully logged in
+2026-01-31T10:56:25.661572 [WARN] HX711 import failed: No module named 'hx711'
+2026-01-31T10:56:25.662442 [WARN] t@t could not measure weight; using form value: 32.0
+2026-01-31T10:56:25.664443 [SUCCESS] t@t just logged an artefact
+2026-01-31T10:56:25.677497 [INFO] Starting camera for live preview
+2026-01-31T10:56:26.805160 [INFO] Video stream generator started
+2026-01-31T10:59:05.873805 [INFO] Starting server
+2026-01-31T10:59:11.553245 [SUCCESS] User t@t sucessfully logged in
+2026-01-31T10:59:25.328376 [WARN] HX711 import failed: No module named 'hx711'
+2026-01-31T10:59:25.328769 [WARN] t@t could not measure weight; using form value: None
+2026-01-31T10:59:25.330057 [SUCCESS] t@t just logged an artefact
+2026-01-31T10:59:25.341548 [INFO] Starting camera for live preview
+2026-01-31T10:59:26.431019 [INFO] Video stream generator started
+2026-01-31T10:59:32.264938 [INFO] Request to capture for Gold cup
+2026-01-31T10:59:52.963209 [INFO] Stopping camera
+2026-01-31T10:59:52.979941 [INFO] Video stream generator stopped
+2026-01-31T11:01:58.067797 [INFO] Starting server
+2026-01-31T11:02:04.802637 [SUCCESS] User t@t sucessfully logged in
+2026-01-31T11:02:10.636862 [WARN] HX711 import failed: No module named 'hx711'
+2026-01-31T11:02:10.637415 [WARN] t@t could not measure weight; using form value: None
+2026-01-31T11:02:10.638696 [SUCCESS] t@t just logged an artefact
+2026-01-31T11:02:10.649278 [INFO] Starting camera for live preview
+2026-01-31T11:02:11.721797 [INFO] Video stream generator started
+2026-01-31T11:05:18.089751 [INFO] Starting server
+2026-01-31T11:05:23.987806 [SUCCESS] User t@t sucessfully logged in
+2026-01-31T11:05:33.598242 [WARN] HX711 import failed: No module named 'hx711'
+2026-01-31T11:05:33.600142 [WARN] t@t could not measure weight; using form value: None
+2026-01-31T11:05:33.601937 [SUCCESS] t@t just logged an artefact
+2026-01-31T11:05:33.614243 [INFO] Starting camera for live preview
+2026-01-31T11:05:34.773260 [INFO] Video stream generator started
+2026-01-31T11:09:50.302415 [INFO] Starting server
+2026-01-31T11:09:56.038841 [SUCCESS] User t@t sucessfully logged in
+2026-01-31T11:10:21.360670 [WARN] HX711 measurement timed out
+2026-01-31T11:10:21.361180 [WARN] t@t could not measure weight; using form value: None
+2026-01-31T11:10:21.362218 [SUCCESS] t@t just logged an artefact
+2026-01-31T11:10:21.372828 [INFO] Starting camera for live preview
+2026-01-31T11:10:27.846286 [WARN] HX711 measurement timed out
+2026-01-31T11:10:27.846873 [WARN] t@t could not measure weight; using form value: None
+2026-01-31T11:10:27.848795 [SUCCESS] t@t just logged an artefact
+2026-01-31T11:10:28.096325 [INFO] Video stream generator started
+2026-01-31T11:11:14.048237 [INFO] Starting server
+2026-01-31T11:11:20.147028 [SUCCESS] User t@t sucessfully logged in
+2026-01-31T11:11:28.512677 [WARN] HX711 import failed: No module named 'hx711'
+2026-01-31T11:11:28.513198 [WARN] t@t could not measure weight; using form value: 3213.0
+2026-01-31T11:11:28.513856 [SUCCESS] t@t just logged an artefact
+2026-01-31T11:11:28.524326 [INFO] Starting camera for live preview
+2026-01-31T11:11:29.600669 [INFO] Video stream generator started
+2026-01-31T11:13:31.979424 [INFO] Starting server
+2026-01-31T11:13:45.041287 [INFO] User aa@aaa tried to log into a nonexistent account
+2026-01-31T11:13:48.420287 [SUCCESS] User t@t sucessfully logged in
+2026-01-31T11:14:32.880628 [INFO] Starting server
+2026-01-31T11:14:38.038423 [SUCCESS] User t@t sucessfully logged in
+2026-01-31T11:16:28.273896 [INFO] Starting server
+2026-01-31T11:16:32.639320 [SUCCESS] User t@t sucessfully logged in
+2026-01-31T11:16:40.753375 [WARN] HX711 import failed: No module named 'hx711'
+2026-01-31T11:16:40.754574 [WARN] t@t could not measure weight; using form value: None
+2026-01-31T11:16:40.756819 [SUCCESS] t@t just logged an artefact
+2026-01-31T11:16:40.769719 [INFO] Starting camera for live preview
+2026-01-31T11:16:41.921750 [INFO] Video stream generator started
+2026-01-31T11:18:14.140912 [INFO] Starting server
+2026-01-31T11:18:19.194208 [SUCCESS] User t@t sucessfully logged in
+2026-01-31T11:18:29.035126 [WARN] HX711 import failed: No module named 'hx711'
+2026-01-31T11:18:29.035964 [WARN] t@t could not measure weight; using form value: 32.0
+2026-01-31T11:18:29.037862 [SUCCESS] t@t just logged an artefact
+2026-01-31T11:18:29.050379 [INFO] Starting camera for live preview
+2026-01-31T11:18:30.134669 [INFO] Video stream generator started
+2026-01-31T11:29:18.485583 [INFO] Starting server
+2026-01-31T11:29:24.676548 [SUCCESS] User t@t sucessfully logged in
+2026-01-31T11:30:32.157140 [INFO] Starting server
+2026-01-31T11:31:02.155173 [SUCCESS] User t@t sucessfully logged in
+2026-01-31T11:31:09.196527 [WARN] t@t could not measure weight; using form value: 32.0
+2026-01-31T11:31:09.198873 [SUCCESS] t@t just logged an artefact
+2026-01-31T11:31:09.210992 [INFO] Starting camera for live preview
+2026-01-31T11:31:10.315432 [INFO] Video stream generator started
+2026-01-31T11:31:46.019163 [INFO] Starting server
+2026-01-31T11:31:53.148052 [SUCCESS] User t@t sucessfully logged in
+2026-01-31T11:32:07.011747 [INFO] t@t measured artefact weight: 7338.72kg
+2026-01-31T11:32:07.012841 [SUCCESS] t@t just logged an artefact
+2026-01-31T11:32:07.023534 [INFO] Starting camera for live preview
+2026-01-31T11:32:08.140788 [INFO] Video stream generator started
+2026-01-31T11:32:42.640549 [INFO] Starting server
+2026-01-31T11:32:49.254648 [SUCCESS] User t@t sucessfully logged in
+2026-01-31T11:33:01.854436 [INFO] t@t measured artefact weight: 7341.28kg
+2026-01-31T11:33:01.855603 [SUCCESS] t@t just logged an artefact
+2026-01-31T11:33:01.866223 [INFO] Starting camera for live preview
+2026-01-31T11:33:02.935185 [INFO] Video stream generator started
+2026-01-31T11:36:11.561631 [INFO] Starting server
+2026-01-31T11:36:16.083429 [SUCCESS] User t@t sucessfully logged in
+2026-01-31T11:36:23.260728 [WARN] t@t could not measure weight; using form value: 23.0
+2026-01-31T11:36:23.262288 [SUCCESS] t@t just logged an artefact
+2026-01-31T11:36:23.275294 [INFO] Starting camera for live preview
+2026-01-31T11:36:24.355330 [INFO] Video stream generator started
+2026-01-31T11:37:33.371852 [INFO] Starting server
+2026-01-31T11:37:37.800665 [SUCCESS] User t@t sucessfully logged in
+2026-01-31T11:37:51.573164 [INFO] t@t measured artefact weight: 7343.32kg
+2026-01-31T11:37:51.574166 [SUCCESS] t@t just logged an artefact
+2026-01-31T11:37:51.584711 [INFO] Starting camera for live preview
+2026-01-31T11:37:52.705572 [INFO] Video stream generator started
+2026-01-31T11:38:16.382984 [INFO] t@t measured artefact weight: 7346.57kg
+2026-01-31T11:38:16.384191 [SUCCESS] t@t just logged an artefact
+2026-01-31T11:38:16.604958 [INFO] Video stream generator started
+2026-01-31T11:38:37.897628 [INFO] t@t measured artefact weight: 7342.81kg
+2026-01-31T11:38:37.898877 [SUCCESS] t@t just logged an artefact
+2026-01-31T11:38:38.116071 [INFO] Video stream generator started
+2026-01-31T11:40:05.399606 [INFO] Starting server
+2026-01-31T11:40:11.197020 [SUCCESS] User t@t sucessfully logged in
+2026-01-31T11:40:26.355827 [INFO] t@t measured artefact weight: 7369.93kg
+2026-01-31T11:40:26.356746 [SUCCESS] t@t just logged an artefact
+2026-01-31T11:40:26.367942 [INFO] Starting camera for live preview
+2026-01-31T11:40:27.467784 [INFO] Video stream generator started
+2026-01-31T12:40:27.789048 [INFO] Starting server
+2026-01-31T12:40:58.522848 [INFO] Starting server
+2026-01-31T12:41:03.764247 [SUCCESS] User t@t sucessfully logged in
+2026-01-31T12:41:31.139434 [INFO] t@t measured artefact weight: 7355.3kg
+2026-01-31T12:41:31.140644 [SUCCESS] t@t just logged an artefact
+2026-01-31T12:41:31.152215 [INFO] Starting camera for live preview
+2026-01-31T12:41:32.277682 [INFO] Video stream generator started
+2026-02-01T16:59:18.208067 [INFO] Starting server
+2026-02-01T16:59:22.147790 [INFO] User t@t failed login with incorrect password: ty
+2026-02-01T16:59:24.573102 [SUCCESS] User t@t sucessfully logged in
+2026-02-01T16:59:46.202355 [INFO] Starting server
+2026-02-01T16:59:50.156077 [SUCCESS] User t@t sucessfully logged in
+2026-02-01T17:02:48.454521 [INFO] Starting server
+2026-02-01T17:02:57.740644 [SUCCESS] User t@t sucessfully logged in
+2026-02-01T17:07:40.273384 [INFO] Starting server
+2026-02-01T17:07:52.957530 [INFO] Starting server
+2026-02-01T17:08:07.261528 [INFO] Starting server
+2026-02-01T17:08:12.924482 [SUCCESS] User t@t sucessfully logged in
+2026-02-01T17:09:53.593270 [INFO] Starting server
+2026-02-01T17:09:57.820036 [SUCCESS] User t@t sucessfully logged in
+2026-02-01T17:12:23.073109 [INFO] Starting server
+2026-02-01T17:12:27.860072 [SUCCESS] User t@t sucessfully logged in
+2026-02-01T17:13:58.433806 [INFO] Starting server
+2026-02-01T17:14:02.803773 [SUCCESS] User t@t sucessfully logged in
+2026-02-01T17:15:08.007029 [INFO] Starting server
+2026-02-01T17:15:11.771683 [SUCCESS] User t@t sucessfully logged in
+2026-02-01T17:15:36.467028 [INFO] Starting server
+2026-02-01T17:15:40.421624 [SUCCESS] User t@t sucessfully logged in
+2026-02-01T17:16:52.807453 [INFO] Starting server
+2026-02-01T17:16:57.435650 [SUCCESS] User t@t sucessfully logged in
+2026-02-01T17:17:16.153960 [INFO] User t@t has logged out
+2026-02-01T17:17:37.887164 [SUCCESS] User t@t sucessfully logged in
+2026-02-01T23:04:34.774700 [INFO] Starting server
+2026-02-01T23:04:38.602241 [SUCCESS] User t@t sucessfully logged in
+2026-02-01T23:45:46.091691 [INFO] Starting server
+2026-02-01T23:45:51.418021 [SUCCESS] User t@t sucessfully logged in
+2026-02-01T23:46:53.041366 [INFO] Starting server
+2026-02-01T23:46:56.606949 [SUCCESS] User t@t sucessfully logged in
+2026-02-01T23:47:17.141973 [INFO] Starting server
+2026-02-01T23:48:25.185737 [INFO] Starting server
+2026-02-01T23:50:18.015339 [INFO] Starting server
+2026-02-01T23:52:52.992986 [INFO] Starting server
+2026-02-01T23:54:29.622687 [INFO] Starting SERVER_URL_URL
+2026-02-01T23:55:14.049023 [INFO] Starting server_url
+2026-02-01T23:56:48.757148 [INFO] Starting server_url
+2026-02-02T00:13:22.053318 [INFO] Starting server_url
+2026-02-02T00:14:59.357310 [INFO] Starting server_url
+2026-02-02T00:16:46.613354 [INFO] Starting server_url
+2026-02-02T00:35:45.712731 [INFO] Starting server_url
+2026-02-02T00:35:49.575831 [SUCCESS] User t@t sucessfully logged in
+2026-02-02T00:36:16.688160 [INFO] t@t zipped 22. Now in zips/22.zip. Awaiting post to server_url...
+2026-02-02T00:36:18.507903 [INFO] t@t zipped 24. Now in zips/24.zip. Awaiting post to server_url...
+2026-02-02T00:37:40.534084 [INFO] Starting server_url
+2026-02-02T00:37:55.217164 [INFO] Starting server_url
+2026-02-02T00:37:58.764468 [SUCCESS] User t@t sucessfully logged in
+2026-02-02T00:38:03.464668 [INFO] t@t zipped 22. Now in zips/22.zip. Awaiting post to server_url...
+2026-02-02T00:38:04.980432 [INFO] t@t zipped 24. Now in zips/24.zip. Awaiting post to server_url...
+2026-02-02T00:38:34.363585 [INFO] Starting server_url
+2026-02-02T00:38:38.158403 [SUCCESS] User t@t sucessfully logged in
+2026-02-02T00:38:46.980628 [INFO] t@t zipped 22. Now in zips/22.zip. Awaiting post to server_url...
+2026-02-02T00:38:48.959328 [ERROR] t@t hit an error when uploading 22.zip to server_url http://109.255.108.201
+2026-02-02T00:38:49.023806 [INFO] t@t zipped 24. Now in zips/24.zip. Awaiting post to server_url...
+2026-02-02T00:38:50.887854 [ERROR] t@t hit an error when uploading 24.zip to server_url http://109.255.108.201
+2026-02-02T00:39:46.162748 [INFO] Starting server_url
+2026-02-02T00:39:53.042941 [SUCCESS] User t@t sucessfully logged in
+2026-02-02T00:40:05.084229 [INFO] t@t zipped 22. Now in zips/22.zip. Awaiting post to server_url...
+2026-02-02T00:40:07.282799 [ERROR] t@t hit an error when uploading 22.zip to server_url http://109.255.108.201
+2026-02-02T00:40:07.348342 [INFO] t@t zipped 24. Now in zips/24.zip. Awaiting post to server_url...
+2026-02-02T00:40:08.977695 [ERROR] t@t hit an error when uploading 24.zip to server_url http://109.255.108.201
+2026-02-02T00:40:43.758324 [INFO] Starting server_url
+2026-02-02T00:40:50.720631 [SUCCESS] User t@t sucessfully logged in
+2026-02-02T00:40:56.721308 [INFO] t@t zipped 22. Now in zips/22.zip. Awaiting post to server_url...
+2026-02-02T00:40:58.682105 [SUCCESS] t@t successfully uploaded 22.zip to server_url http://109.255.108.201
+2026-02-02T00:40:58.746654 [INFO] t@t zipped 24. Now in zips/24.zip. Awaiting post to server_url...
+2026-02-02T00:41:00.400618 [SUCCESS] t@t successfully uploaded 24.zip to server_url http://109.255.108.201
+2026-02-02T00:41:21.224211 [INFO] t@t zipped 22. Now in zips/22.zip. Awaiting post to server_url...
+2026-02-02T00:41:23.252276 [SUCCESS] t@t successfully uploaded 22.zip to server_url http://109.255.108.201
+2026-02-02T00:41:23.318310 [INFO] t@t zipped 24. Now in zips/24.zip. Awaiting post to server_url...
+2026-02-02T00:41:24.991357 [SUCCESS] t@t successfully uploaded 24.zip to server_url http://109.255.108.201
+2026-02-02T00:48:12.036492 [INFO] Starting server_url
+2026-02-02T00:48:16.246791 [SUCCESS] User t@t sucessfully logged in
+2026-02-02T00:48:53.830131 [INFO] t@t zipped 22. Now in zips/22.zip. Awaiting post to server_url...
+2026-02-02T00:49:03.846592 [SUCCESS] t@t successfully uploaded 22.zip to server_url http://109.255.108.201
+2026-02-02T00:49:03.910354 [INFO] t@t zipped 24. Now in zips/24.zip. Awaiting post to server_url...
+2026-02-02T00:49:08.141774 [SUCCESS] t@t successfully uploaded 24.zip to server_url http://109.255.108.201
+2026-02-02T00:55:20.377350 [INFO] Starting server_url
+2026-02-02T00:55:25.858190 [SUCCESS] User t@t sucessfully logged in
+2026-02-02T00:55:33.299729 [INFO] t@t zipped 22. Now in zips/22.zip. Awaiting post to server_url...
+2026-02-02T00:55:54.042398 [SUCCESS] t@t successfully uploaded 22.zip to server_url http://109.255.108.201
+2026-02-02T00:55:54.105808 [INFO] t@t zipped 24. Now in zips/24.zip. Awaiting post to server_url...
+2026-02-02T00:55:59.744886 [SUCCESS] t@t successfully uploaded 24.zip to server_url http://109.255.108.201
+2026-02-02T00:57:38.128445 [INFO] t@t zipped 22. Now in zips/22.zip. Awaiting post to server_url...
+2026-02-02T00:57:39.981487 [SUCCESS] t@t successfully uploaded 22.zip to server_url http://109.255.108.201
+2026-02-02T00:57:40.044962 [INFO] t@t zipped 24. Now in zips/24.zip. Awaiting post to server_url...
+2026-02-02T00:57:42.117278 [SUCCESS] t@t successfully uploaded 24.zip to server_url http://109.255.108.201
+2026-02-02T00:59:09.367520 [INFO] Starting server_url
+2026-02-02T00:59:13.382466 [SUCCESS] User t@t sucessfully logged in
+2026-02-02T00:59:21.195848 [INFO] t@t zipped 22. Now in zips/22.zip. Awaiting post to server_url...
+2026-02-02T00:59:23.130700 [SUCCESS] t@t successfully uploaded 22.zip to server_url http://109.255.108.201
+2026-02-02T00:59:23.191049 [INFO] t@t zipped 24. Now in zips/24.zip. Awaiting post to server_url...
+2026-02-02T00:59:24.949392 [SUCCESS] t@t successfully uploaded 24.zip to server_url http://109.255.108.201
+2026-02-02T01:01:23.413540 [INFO] Starting server_url
+2026-02-02T01:01:27.160019 [SUCCESS] User t@t sucessfully logged in
+2026-02-02T01:01:41.902390 [INFO] t@t zipped 22. Now in zips/22.zip. Awaiting post to server_url...
+2026-02-02T01:01:43.846861 [SUCCESS] t@t successfully uploaded 22.zip to server_url http://109.255.108.201
+2026-02-02T01:01:43.907400 [INFO] t@t zipped 24. Now in zips/24.zip. Awaiting post to server_url...
+2026-02-02T01:01:45.704672 [SUCCESS] t@t successfully uploaded 24.zip to server_url http://109.255.108.201
+2026-02-02T01:03:30.961282 [INFO] Starting server_url
+2026-02-02T01:03:35.102570 [SUCCESS] User t@t sucessfully logged in
+2026-02-02T01:07:03.097135 [INFO] Starting server_url
+2026-02-02T01:07:08.865314 [SUCCESS] User t@t sucessfully logged in
+2026-02-02T01:11:43.473465 [INFO] Starting server_url
+2026-02-02T01:11:50.063407 [SUCCESS] User t@t sucessfully logged in
+2026-02-02T01:13:58.921485 [INFO] Starting server_url
+2026-02-02T01:14:02.842243 [SUCCESS] User t@t sucessfully logged in
+2026-02-02T01:19:50.084094 [INFO] Starting server_url
+2026-02-02T01:19:56.601452 [SUCCESS] User t@t sucessfully logged in
+2026-02-02T01:20:34.364547 [ERROR] Failed to download 0: 'NoneType' object is not subscriptable
+2026-02-02T15:23:40.255410 [INFO] Starting server_url
+2026-02-02T15:23:44.397820 [SUCCESS] User t@t sucessfully logged in
+2026-02-02T15:41:06.448334 [INFO] Starting server_url
+2026-02-02T15:41:11.875154 [INFO] Starting server_url
+2026-02-02T15:41:21.705135 [SUCCESS] User t@t sucessfully logged in
+2026-02-02T15:42:58.591327 [INFO] Starting server_url
+2026-02-02T15:44:50.932263 [INFO] Starting server_url
+2026-02-02T15:44:55.671443 [SUCCESS] User t@t sucessfully logged in
+2026-02-02T15:47:13.543555 [INFO] Starting server_url
+2026-02-02T15:47:19.937870 [SUCCESS] User t@t sucessfully logged in
+2026-02-02T15:51:01.799957 [INFO] Starting server_url
+2026-02-02T15:51:07.426678 [SUCCESS] User t@t sucessfully logged in
+2026-02-02T15:52:40.823106 [INFO] Starting server_url
+2026-02-02T15:52:44.667298 [SUCCESS] User t@t sucessfully logged in
+2026-02-02T15:52:59.202468 [ERROR] Error when server_url sending data
+2026-02-02T15:53:01.201776 [ERROR] Error when server_url sending data
+2026-02-02T15:53:01.772123 [ERROR] Error when server_url sending data
+2026-02-02T15:53:01.960145 [ERROR] Error when server_url sending data
+2026-02-02T15:53:02.149153 [ERROR] Error when server_url sending data
+2026-02-02T15:53:06.389741 [ERROR] Error when server_url sending data
+2026-02-02T15:53:06.829101 [ERROR] Error when server_url sending data
+2026-02-02T15:53:06.950445 [ERROR] Error when server_url sending data
+2026-02-02T15:53:07.109800 [ERROR] Error when server_url sending data
+2026-02-02T15:53:07.270698 [ERROR] Error when server_url sending data
+2026-02-02T15:53:11.459750 [ERROR] Error when server_url sending data
+2026-02-02T15:53:22.712518 [INFO] Starting server_url
+2026-02-02T15:53:29.046261 [SUCCESS] User t@t sucessfully logged in
+2026-02-02T15:53:33.711864 [ERROR] Error when server_url sending data
+2026-02-02T15:53:43.388353 [ERROR] Error when server_url sending data
+2026-02-03T04:25:51.151140 [INFO] Starting server_url
+2026-02-03T04:25:59.137881 [INFO] Starting server_url
+2026-02-03T04:26:03.914766 [SUCCESS] User t@t sucessfully logged in
+2026-02-03T04:27:51.904369 [INFO] Starting server_url
+2026-02-03T04:27:55.679400 [SUCCESS] User t@t sucessfully logged in
+2026-02-03T04:28:59.869761 [INFO] Starting server_url
+2026-02-03T04:29:04.490570 [SUCCESS] User t@t sucessfully logged in
+2026-02-03T04:29:59.430706 [INFO] Starting server_url
+2026-02-03T04:30:03.322152 [SUCCESS] User t@t sucessfully logged in
+2026-02-03T04:31:09.755620 [INFO] Starting server_url
+2026-02-03T04:31:14.823711 [SUCCESS] User t@t sucessfully logged in
+2026-02-03T04:31:40.922940 [INFO] Starting server_url
+2026-02-03T04:31:45.604740 [SUCCESS] User t@t sucessfully logged in
+2026-02-03T04:34:47.905184 [INFO] Starting server_url
+2026-02-03T04:34:51.605980 [SUCCESS] User t@t sucessfully logged in
+2026-02-03T04:34:56.614473 [ERROR] Error when server_url sending data
+2026-02-03T04:35:00.756248 [ERROR] Error when server_url sending data
+2026-02-03T04:36:54.345127 [INFO] Starting server_url
+2026-02-03T04:36:59.186667 [SUCCESS] User t@t sucessfully logged in
+2026-02-03T04:37:12.823575 [INFO] User t@t has logged out
+2026-02-03T04:37:15.683580 [SUCCESS] User t@t sucessfully logged in
+2026-02-03T04:42:59.951061 [INFO] Starting server_url
+2026-02-03T04:43:04.065935 [SUCCESS] User t@t sucessfully logged in
+2026-02-03T04:44:43.589482 [INFO] Starting server_url
+2026-02-03T04:44:47.472841 [SUCCESS] User t@t sucessfully logged in
+2026-02-03T04:45:42.894762 [INFO] Starting server_url
+2026-02-03T04:47:35.091601 [INFO] Starting server_url
+2026-02-03T04:47:42.447768 [SUCCESS] User t@t sucessfully logged in
+2026-02-03T04:48:34.430376 [INFO] Starting server_url
+2026-02-03T04:48:40.310824 [SUCCESS] User t@t sucessfully logged in
+2026-02-03T04:49:48.884201 [INFO] Starting server_url
+2026-02-03T04:52:53.984518 [INFO] Starting server_url
+2026-02-03T04:52:58.565074 [SUCCESS] User t@t sucessfully logged in
+2026-02-03T04:57:39.841560 [INFO] Starting server_url
+2026-02-03T04:57:44.779936 [SUCCESS] User t@t sucessfully logged in
+2026-02-03T04:59:10.798042 [INFO] Starting server_url
+2026-02-03T04:59:15.691146 [SUCCESS] User t@t sucessfully logged in
+2026-02-03T04:59:49.457988 [INFO] Starting server_url
+2026-02-03T04:59:53.049219 [SUCCESS] User t@t sucessfully logged in
+2026-02-03T05:02:44.351645 [INFO] Starting server_url
+2026-02-03T05:02:48.280440 [SUCCESS] User t@t sucessfully logged in
+2026-02-03T05:04:07.791043 [INFO] Starting server_url
+2026-02-03T05:04:11.388407 [SUCCESS] User t@t sucessfully logged in
+2026-02-03T05:06:35.843195 [INFO] Starting server_url
+2026-02-03T05:06:39.569349 [INFO] Starting server_url
+2026-02-03T05:06:43.003150 [SUCCESS] User t@t sucessfully logged in
+2026-02-03T05:06:50.333529 [ERROR] Failed to download 22: 404 Client Error: NOT FOUND for url: http://109.255.108.201/downloads/22.zip
+2026-02-03T05:07:12.174310 [INFO] Starting server_url
+2026-02-03T05:07:17.154504 [SUCCESS] User t@t sucessfully logged in
+2026-02-03T05:07:26.919996 [SUCCESS] Successfully downloaded 3d model of cup
+2026-02-03T05:07:31.765261 [SUCCESS] Successfully downloaded 3d model of cup
+2026-02-03T05:12:31.564014 [INFO] Starting server_url
+2026-02-03T05:12:35.951949 [SUCCESS] User t@t sucessfully logged in
+2026-02-03T05:12:54.117511 [SUCCESS] Successfully downloaded 3d model of cup
+2026-02-03T05:13:51.197228 [INFO] Starting server_url
+2026-02-03T05:14:20.172876 [SUCCESS] Successfully downloaded 3d model of cup
+2026-02-03T05:16:18.706158 [INFO] Starting server_url
+2026-02-03T05:16:23.310216 [INFO] User t!@t tried to log into a nonexistent account
+2026-02-03T05:16:25.833756 [SUCCESS] User t@t sucessfully logged in
+2026-02-03T05:16:39.198907 [SUCCESS] Successfully downloaded 3d model of cup
+2026-02-03T05:18:55.135995 [INFO] Starting server_url
+2026-02-03T05:21:18.766061 [INFO] Starting server_url
+2026-02-03T05:21:23.397852 [SUCCESS] User t@t sucessfully logged in
+2026-02-03T05:23:23.419315 [INFO] Starting server_url
+2026-02-03T05:23:26.943621 [INFO] User t@t failed login with incorrect password: rt
+2026-02-03T05:23:29.505206 [SUCCESS] User t@t sucessfully logged in
+2026-02-03T05:23:53.250796 [INFO] Starting server_url
+2026-02-03T05:24:02.172651 [SUCCESS] User t@t sucessfully logged in
+2026-02-03T05:24:27.847586 [INFO] Starting server_url
+2026-02-03T05:24:47.543328 [INFO] Starting server_url
+2026-02-03T05:25:07.581988 [SUCCESS] User t@t sucessfully logged in
+2026-02-03T05:27:24.933018 [INFO] Starting server_url
+2026-02-03T05:27:28.939598 [SUCCESS] User t@t sucessfully logged in

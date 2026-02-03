@@ -1,0 +1,63 @@
+from flask import Flask, request, session, Response, jsonify, send_from_directory, render_template
+import time
+import os
+import requests
+
+app = Flask(__name__)
+
+
+
+
+@app.route('/')
+def browse():
+    return """<h1>HI</h1>"""
+
+@app.route('/status')
+def status():
+    return "OK", 200
+
+
+@app.route('/upload/', methods=['POST'])
+def upload_file():
+    file = request.files['files']
+    file.save('uploads/' + file.filename)
+    proccess_file(file.filename)
+    return "OK", 200
+
+
+
+@app.route('/downloads/<int:model_id>')
+def download(model_id):
+    filename = f'{model_id}.zip'
+    directory = 'downloads'
+    print(os.path.join(directory, filename))
+    if os.path.exists(os.path.join(directory, filename)):
+        return send_from_directory(directory, filename, as_attachment=True)
+    else:
+        return "nonexistent", 400
+
+
+
+
+@app.route('/download_list')
+def ready_downloads():
+    ready = os.listdir('downloads')
+    return jsonify({
+        "ready_downloads": ready
+    })
+
+
+
+
+
+def proccess_file(file):
+    #simulate proccessing will be coded later
+    os.system(f'cp uploads/{file} downloads/{file}')
+    os.system(f'unzip -o uploads/{file} -d uploads')
+    os.system(f'rm uploads/{file}')
+    
+    
+
+
+if __name__ == '__main__':
+    app.run('0.0.0.0', port=80)
