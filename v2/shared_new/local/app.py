@@ -17,7 +17,7 @@ import subprocess
 import requests
 import shutil
 # from rotate20 import rotate_20_degrees
-
+import re
 
 init(autoreset=True)
 app = Flask(__name__)
@@ -837,6 +837,13 @@ def serve_photo(artefact_name, filename):
 # REMOTE INTERACTIONS
 ####################################################################################################################################################################################
 
+def extract_id_from_filename(filename):
+    """Extract numeric ID from filename (e.g., '22.zip' -> 22)"""
+    match = re.search(r'(\d+)', filename)
+    if match:
+        return int(match.group(1))
+    return None
+
 @app.route('/remote', methods=["GET", "POST"])
 def remote():
     return render_template('remote.html')
@@ -886,8 +893,8 @@ def upload_queue():
     except Exception as e:
         print("Upload queue failed:", e)
         return jsonify({"completed": [], "failed": []}), 500
-
-
+    finally:
+        conn.close()
 
 @app.route('/get_queue')
 def get_queue():
@@ -899,42 +906,81 @@ def get_queue():
         return jsonify({"queue": "empty"})
     
     for folder in folder_names:
-        folder = int(folder)
-        name = cursor.execute('SELECT name FROM artefacts WHERE id = ?', (folder,)).fetchone()[0]
-        queue.append({"id": folder, "name": name})
+        try:
+            folder_id = int(folder)
+            name = cursor.execute('SELECT name FROM artefacts WHERE id = ?', (folder_id,)).fetchone()[0]
+            queue.append({"id": folder_id, "name": name})
+        except Exception as e:
+            print(f"Error processing folder {folder}: {e}")
+            queue.append({"id": folder, "name": folder})
     conn.close()
     return jsonify({"queue": queue})
-
 
 @app.route('/connect', methods=["GET"])
 def connect():    
     try:
         r = requests.get(f'{server_url}/status', timeout=5)
-        return jsonify({"status": "ONLINE"}), 200
+        if r.status_code == 200:
+            return jsonify({"status": "ONLINE"}), 200
+        else:
+            return jsonify({"status": "OFFLINE", "error": f"Server returned {r.status_code}"}), 503
     except Exception as e:
         print("Error connecting to server:", e)
         return jsonify({"status": "OFFLINE", "error": str(e)}), 503
 
-
-
-
-@app.route('/download/<int:id>')
-def download(id):
-    conn, cursor = init_conn()
-    successes = {}
-
+@app.route('/check', methods=['POST'])
+def check():
     try:
-        artefact_id = id
-        name = cursor.execute(
-            'SELECT name FROM artefacts WHERE id = ?',
-            (artefact_id,)
-        ).fetchone()
-        if not name:
-            return jsonify({"error": "Unknown artefact id"}), 404
+        time.sleep(1)  # Small delay to prevent overwhelming the server
+        r = requests.get(server_url + '/download_list', timeout=10)
+        
+        if r.status_code != 200:
+            return jsonify({'ready_downloads': None, 'error': f'Remote server returned {r.status_code}'}), 500
+        
+        data = r.json()
+        
+        # Your remote server returns: {"ready_downloads": ["22.zip", "23.zip", etc.]}
+        if 'ready_downloads' in data and isinstance(data['ready_downloads'], list):
+            download_list = data['ready_downloads']
+            
+            # Store the full filenames
+            global ready_downloads
+            ready_downloads = set(download_list)
+            
+            # Return the full filenames to frontend
+            return jsonify({'ready_downloads': download_list})
+        else:
+            return jsonify({'ready_downloads': None})
+            
+    except Exception as e:
+        print(f"Error checking downloads: {e}")
+        return jsonify({'ready_downloads': None, 'error': str(e)}), 500
 
-        name = name[0]
+@app.route('/download/<string:filename>')
+def download(filename):
+    """Download endpoint that accepts both IDs (22) and filenames (22.zip)"""
+    conn, cursor = init_conn()
     
-        r = requests.get(f"{server_url}/downloads/{artefact_id}", timeout=10)
+    try:
+        # Extract numeric ID from filename
+        artefact_id = extract_id_from_filename(filename)
+        if not artefact_id:
+            return jsonify({"error": f"Invalid filename format: {filename}"}), 400
+        
+        # Get artefact name from database
+        name = None
+        try:
+            result = cursor.execute(
+                'SELECT name FROM artefacts WHERE id = ?',
+                (artefact_id,)
+            ).fetchone()
+            if result:
+                name = result[0]
+        except:
+            pass  # Database error, continue without name
+
+        # Download from remote server - remote expects /downloads/<id> without .zip
+        r = requests.get(f"{server_url}/downloads/{artefact_id}", timeout=30)
         r.raise_for_status()
 
         os.makedirs('models', exist_ok=True)
@@ -943,170 +989,99 @@ def download(id):
         with open(path, 'wb') as f:
             f.write(r.content)
 
-        print(console_log(f'Successfully downloaded 3d model of {name}', 'success'))
+        print(console_log(f'Successfully downloaded 3d model of {name or artefact_id}', 'success'))
 
-        successes[artefact_id] = {'path': path, 'name': name}
+        # Return success response
+        return jsonify({
+            'id': artefact_id,
+            'filename': f'{artefact_id}.zip',
+            'name': name or f'Model {artefact_id}',
+            'path': path,
+            'size': os.path.getsize(path),
+            'status': 'downloaded'
+        })
 
-        if artefact_id in ready_downloads:
-            ready_downloads.remove(artefact_id)
-
-        return jsonify(successes)
-
+    except requests.exceptions.RequestException as e:
+        print(console_log(f"Failed to download {filename} from remote: {e}", 'error'))
+        return jsonify({"error": f"Remote server error: {str(e)}"}), 500
     except Exception as e:
-        print(console_log(f"Failed to download {id}: {e}", 'error'))
+        print(console_log(f"Failed to download {filename}: {e}", 'error'))
         return jsonify({"error": str(e)}), 500
-
     finally:
         conn.close()
 
-
-@app.route('/fetch_download/<int:id>')
-def fetch_download(id):
-    filename = f'{id}.zip'
+@app.route('/fetch_download/<string:filename>')
+def fetch_download(filename):
+    """Serve downloaded file, accepts both IDs and filenames"""
+    # Extract numeric ID from filename
+    artefact_id = extract_id_from_filename(filename)
+    if not artefact_id:
+        return "Invalid filename", 400
+    
     directory = 'models'
-    print(os.path.join(directory, filename))
-    if os.path.exists(os.path.join(directory, filename)):
-        return send_from_directory(directory, filename, as_attachment=True)
+    actual_filename = f'{artefact_id}.zip'
+    filepath = os.path.join(directory, actual_filename)
+    
+    if os.path.exists(filepath):
+        # Check if file exists and is not empty
+        if os.path.getsize(filepath) > 0:
+            return send_from_directory(directory, actual_filename, as_attachment=True)
+        else:
+            return "File is empty", 400
     else:
-        return "nonexistent", 400
+        return "File not found", 404
 
-
-
-
-@app.route('/check', methods=['POST'])
-def check():
+@app.route('/list_downloads', methods=['GET'])
+def list_downloads():
+    """List all downloaded files in the models directory"""
     try:
-        time.sleep(1)
-        r = requests.get(server_url + '/download_list', timeout=10)
-        text = (r.text or '').strip()
-
-        # Log raw remote output for debugging
-        app.logger.debug("remote /download_list returned (status=%s): %s", r.status_code, text)
-
-        # Attempt to decode JSON first (covers arrays, objects, or simple JSON strings)
-        download_list = None
-        try:
-            remote_json = r.json()
-            # remote_json may be list, dict, or simple string
-            if isinstance(remote_json, list):
-                download_list = [str(x) for x in remote_json]
-            elif isinstance(remote_json, dict):
-                # common keys that might contain the list
-                if 'ready_downloads' in remote_json:
-                    val = remote_json['ready_downloads']
-                    download_list = [str(x) for x in val] if isinstance(val, list) else None
-                elif 'download_list' in remote_json:
-                    val = remote_json['download_list']
-                    download_list = [str(x) for x in val] if isinstance(val, list) else None
-                else:
-                    # Try to extract any list-like values from the dict
-                    flattened = []
-                    for v in remote_json.values():
-                        if isinstance(v, list):
-                            flattened.extend(v)
-                        elif isinstance(v, str):
-                            flattened.append(v)
-                    download_list = [str(x) for x in flattened] if flattened else None
-            elif isinstance(remote_json, str):
-                if remote_json.strip().lower() == 'nothing':
-                    download_list = None
-                else:
-                    download_list = [remote_json]
-        except ValueError:
-            # Not JSON — fall back to text parsing
-            if text.lower() == 'nothing':
-                download_list = None
-            else:
-                lines = [ln.strip() for ln in text.splitlines() if ln.strip()]
-                if len(lines) == 1:
-                    # single-line answer might itself be stringified JSON -> try parse
-                    try:
-                        inner = json.loads(lines[0])
-                        if isinstance(inner, list):
-                            download_list = [str(x) for x in inner]
-                        elif isinstance(inner, dict) and 'ready_downloads' in inner:
-                            val = inner['ready_downloads']
-                            download_list = [str(x) for x in val] if isinstance(val, list) else None
-                        else:
-                            download_list = [lines[0]]
-                    except (ValueError, TypeError):
-                        download_list = lines
-                else:
-                    download_list = lines if lines else None
-
-        # Normalize result: treat empty list as "no downloads"
-        if not download_list:
-            return jsonify({'ready_downloads': None})
-
-        # Ensure all items are strings (safe JSON)
-        download_list = [str(x) for x in download_list]
-
-        return jsonify({'ready_downloads': download_list})
-
+        directory = 'models'
+        if not os.path.exists(directory):
+            return jsonify([])
+        
+        files = []
+        for filename in os.listdir(directory):
+            if filename.endswith('.zip'):
+                filepath = os.path.join(directory, filename)
+                try:
+                    # Extract ID from filename
+                    artefact_id = extract_id_from_filename(filename)
+                    if artefact_id:
+                        stat = os.stat(filepath)
+                        files.append({
+                            'id': artefact_id,
+                            'filename': filename,
+                            'size': stat.st_size,
+                            'modified': stat.st_mtime,
+                            'status': 'downloaded'
+                        })
+                except Exception as e:
+                    print(f"Error processing file {filename}: {e}")
+        
+        # Sort by modification time (newest first)
+        files.sort(key=lambda x: x['modified'], reverse=True)
+        
+        return jsonify(files)
     except Exception as e:
-        app.logger.exception("Error while contacting remote download_list")
-        # Return consistent shape on error; client will show "No downloads ready" and server-debug can show logs
-        return jsonify({'ready_downloads': None, 'error': str(e)}), 500
+        print(f"Error listing downloads: {e}")
+        return jsonify([])
 
-    # data = request.json
-    # artefact_id = int(data.get('number'))
-    # ready_downloads.append(artefact_id)
-    # successes = download()
-
-#prototype
-# @app.route('/server_url', methods=['GET', 'POST'])
-# def server_url():
-#     url = '109.255.108.201'
-#     conn, cursor = init_conn()
-#     photos_dir = 'photos'
-#     queue = []
-#     status = False
-#     ready_to_download = False
-
-#     completion = []
-#     for folder in os.listdir(photos_dir):
-#         folder_path = os.path.join(photos_dir, folder)
-#         queue.append(folder)
-    
-    
-#     if request.method == 'POST':
-#         if 'connect' in request.form:
-#             try:
-#                 print(console_log(f'Connecting to {url}', 'info'))
-#                 r = requests.get('http//' +url, timeout=5)
-#                 if r.status == 200:
-#                     print(console_log('server_url is online!', 'info'))     
-                    
-#                 else:
-#                     print(console_log('server_url is offline!', 'info'))
-#             except Exception as e:
-#                 print(console_log(f'Error when connecting to server_url, {str(e)}', 'info'))
-
-#         elif 'upload' in request.form:
-#             #uploading
-#             if not queue:
-#                 flash('There are is nothing in queue!')
-#                 return redirect('/server_url')
-#             #zip and upload each folder individually
-#             for folder in queue:
-#                 os.system(f'zip -r {folder}.zip {folder}')
-#                 with open(f'{folder}.zip', 'rb') as f:
-#                     files = {"file": f}
-#                     resp = requests.post(f'{url}/upload/', files=files)
-#                     time.sleep(1)
-#                     completion.append(resp.status_code, folder)
-#                     return render_template('server_url.html', completion=completion, queue=queue)
-
-#         elif 'download' in request.form:
-#             check = requests.get('http://'+ url + '/check')
-#             ready_to_download = check.text
-#             if ready_to_download == 'nothing':
-#                 conn.close()
-#                 return render_template('server_url.html', ready_to_download=False)
-
-
-
-
+@app.route('/status', methods=['GET'])
+def status():
+    """Health check endpoint"""
+    try:
+        # Check if essential directories exist
+        directories = ['photos', 'zips', 'backups', 'models']
+        for dir_name in directories:
+            os.makedirs(dir_name, exist_ok=True)
+        
+        return jsonify({
+            "status": "healthy",
+            "directories": directories,
+            "ready_downloads_count": len(ready_downloads)
+        }), 200
+    except Exception as e:
+        return jsonify({"status": "error", "error": str(e)}), 500
 
 
 

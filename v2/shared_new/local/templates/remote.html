@@ -3,205 +3,666 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Remote / Upload Dashboard</title>
+  <title>Remote Dashboard</title>
   <style>
-    :root{--bg:#0f172a;--panel:#0b1220;--muted:#94a3b8;--th:#1e293b;--info:#60a5fa;--success:#4ade80;--error:#f87171;--border:#334155;--accent:#1e293b}
-    html,body{height:100%;margin:0;background:var(--bg);color:#fff;font-family:system-ui,Segoe UI,Roboto,Arial}
-    .wrap{max-width:1100px;margin:20px auto;padding:18px;background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.00));border-radius:10px}
-    h1{margin:0 0 6px;font-size:1.6rem}
-    h2{margin:18px 0 8px;font-size:1.05rem;color:var(--muted)}
-    .row{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
-    button,a.btn{margin:6px 0;padding:8px 14px;border-radius:8px;border:0;background:var(--accent);color:#fff;cursor:pointer;text-decoration:none;display:inline-block}
-    button[disabled]{opacity:.5;cursor:not-allowed}
-    .card{background:rgba(255,255,255,0.02);padding:12px;border-radius:8px;border:1px solid rgba(255,255,255,0.02)}
-    .status-inline{display:inline-block;padding:6px 10px;border-radius:999px;font-weight:600}
-    .info{color:var(--info)}.success{color:var(--success)}.error{color:var(--error)}.muted{color:var(--muted)}.small{font-size:0.85rem}
-    table{width:100%;border-collapse:collapse;margin-top:10px}
-    th,td{border:1px solid var(--border);padding:8px;text-align:left;vertical-align:middle}
-    th{background:var(--th)}
-    tbody tr:nth-child(even){background:rgba(255,255,255,0.01)}
-    .debug{white-space:pre-wrap;word-break:break-word;background:rgba(0,0,0,0.2);padding:8px;border-radius:6px;margin-top:8px;color:var(--muted);font-size:0.85rem;max-height:160px;overflow:auto}
-    .tiny{font-size:0.8rem;color:var(--muted)}.btn-small{padding:6px 10px;font-size:0.9rem;border-radius:6px}
-    @media (max-width:700px){.row{flex-direction:column;align-items:flex-start}th,td{font-size:0.95rem}}
+    :root {
+      --bg: #0f172a;
+      --card: #1e293b;
+      --card-dark: #0b1220;
+      --primary: #3b82f6;
+      --primary-dark: #1d4ed8;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --muted: #94a3b8;
+      --text: #f1f5f9;
+      --border: #334155;
+      --radius: 12px;
+      --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+      background: var(--bg); color: var(--text);
+      line-height: 1.5; padding: 20px; min-height: 100vh;
+    }
+
+    .container { max-width: 1400px; margin: 0 auto; }
+
+    .header { display:flex; justify-content:space-between; align-items:center; margin-bottom:30px; padding-bottom:20px; border-bottom:1px solid var(--border); }
+    .header h1 { font-size:28px; font-weight:600; display:flex; align-items:center; gap:10px; }
+    .header h1::before { content: "🌐"; font-size:24px; }
+
+    .status-badge { display:inline-flex; align-items:center; gap:8px; padding:8px 16px; border-radius:20px; font-weight:500; font-size:14px; background:var(--card); border:1px solid var(--border); }
+    .status-badge.online { background: rgba(16,185,129,0.06); color: var(--success); border-color: rgba(16,185,129,0.24); }
+    .status-badge.offline { background: rgba(239,68,68,0.06); color: var(--danger); border-color: rgba(239,68,68,0.24); }
+
+    .status-dot { width:8px; height:8px; border-radius:50%; display:inline-block; }
+    .status-dot.online { background: var(--success); }
+    .status-dot.offline { background: var(--danger); animation: pulse 2s infinite; }
+    @keyframes pulse { 0%,100%{opacity:1;} 50%{opacity:0.5;} }
+
+    .dashboard-grid { display:grid; grid-template-columns: repeat(auto-fit, minmax(350px,1fr)); gap:24px; margin-bottom:30px; }
+    .card { background:var(--card); border-radius:var(--radius); padding:24px; border:1px solid var(--border); box-shadow:var(--shadow); }
+    .card-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; }
+    .card-title { font-size:18px; font-weight:600; display:flex; align-items:center; gap:8px; }
+    .card-title::before { font-size:20px; }
+    .upload::before { content:"📤"; } .download::before { content:"📥"; } .queue::before { content:"📊"; }
+
+    .btn { padding:10px 20px; border-radius:8px; border:none; font-weight:500; font-size:14px; cursor:pointer; transition:all .2s ease; display:inline-flex; align-items:center; gap:6px; }
+    .btn-primary { background:var(--primary); color:white; } .btn-primary:hover { background:var(--primary-dark); transform:translateY(-1px); }
+    .btn-secondary { background:var(--card-dark); color:var(--text); border:1px solid var(--border); } .btn-secondary:hover { background: rgba(255,255,255,0.04); }
+    .btn:disabled { opacity:0.5; cursor:not-allowed; transform:none !important; }
+    .btn-sm { padding:6px 12px; font-size:13px; }
+
+    .table-container { overflow-x:auto; border-radius:8px; border:1px solid var(--border); }
+    table { width:100%; border-collapse:collapse; min-width:400px; }
+    th { background:var(--card-dark); padding:12px 16px; text-align:left; font-weight:500; font-size:14px; color:var(--muted); border-bottom:1px solid var(--border); }
+    td { padding:16px; border-bottom:1px solid var(--border); vertical-align:middle; }
+    tr:last-child td { border-bottom:none; } tr:hover { background: rgba(255,255,255,0.02); }
+
+    .empty-state { text-align:center; padding:40px 20px; color:var(--muted); font-style:italic; }
+    .badge { display:inline-block; padding:4px 10px; border-radius:20px; font-size:12px; font-weight:500; }
+    .badge-success { background: rgba(16,185,129,0.1); color:var(--success); }
+    .badge-warning { background: rgba(245,158,11,0.1); color:var(--warning); }
+    .badge-danger { background: rgba(239,68,68,0.1); color:var(--danger); }
+    .badge-info { background: rgba(59,130,246,0.1); color:var(--primary); }
+
+    .file-info { display:flex; align-items:center; gap:12px; }
+    .file-icon { width:32px; height:32px; background:var(--primary); border-radius:6px; display:flex; align-items:center; justify-content:center; font-size:16px; }
+    .file-details { flex:1; }
+    .file-name { font-weight:500; margin-bottom:2px; }
+    .file-meta { font-size:12px; color:var(--muted); }
+    .progress-bar { height:4px; background:var(--border); border-radius:2px; overflow:hidden; margin-top:8px; }
+    .progress-fill { height:100%; background:var(--primary); border-radius:2px; transition:width .3s ease; }
+    .actions { display:flex; gap:8px; flex-wrap:wrap; }
+    .toast { position:fixed; bottom:20px; right:20px; background:var(--card); border:1px solid var(--border); border-radius:8px; padding:16px; max-width:400px; box-shadow:var(--shadow); transform:translateY(100px); opacity:0; transition:all .3s ease; z-index:1000; }
+    .toast.show { transform:translateY(0); opacity:1; } .toast-success { border-left:4px solid var(--success); } .toast-error { border-left:4px solid var(--danger); } .toast-info { border-left:4px solid var(--primary); }
+    .toast-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; }
+    .toast-title { font-weight:500; display:flex; align-items:center; gap:8px; }
+    .toast-close { background:none; border:none; color:var(--muted); font-size:20px; cursor:pointer; padding:0; width:24px; height:24px; }
+
+    .debug-panel { margin-top:40px; }
+    .debug-toggle { background:var(--card-dark); border:1px solid var(--border); color:var(--muted); padding:8px 16px; border-radius:8px; cursor:pointer; font-size:13px; }
+    .debug-content { margin-top:16px; background:var(--card-dark); border:1px solid var(--border); border-radius:8px; padding:16px; max-height:300px; overflow-y:auto; font-family:monospace; font-size:12px; color:var(--muted); display:none; }
+    .debug-content.show { display:block; } .debug-entry { margin-bottom:8px; padding-bottom:8px; border-bottom:1px solid rgba(255,255,255,0.05); }
+    .debug-time { color:var(--primary); } .debug-message { margin-left:10px; }
+
+    @media (max-width:768px) {
+      .dashboard-grid { grid-template-columns:1fr; }
+      .header { flex-direction:column; gap:16px; align-items:flex-start; }
+      .actions { flex-direction:column; } .btn { width:100%; justify-content:center; }
+    }
   </style>
 </head>
 <body>
-<div class="wrap">
-  <h1>Remote / Upload Dashboard</h1>
+  <div class="container">
+    <div class="header">
+      <h1>Remote Dashboard</h1>
+      <div class="status-badge" id="serverStatus">
+        <span class="status-dot"></span>
+        <span class="status-text">Checking...</span>
+      </div>
+    </div>
 
-  <h2>Server Status</h2>
-  <div class="row">
-    <div id="server-status" class="status-inline info">Checking...</div>
-    <div id="server-debug" class="tiny muted" aria-live="polite">server debug output will appear here</div>
+    <div class="dashboard-grid">
+      <!-- Upload Queue Card -->
+      <div class="card">
+        <div class="card-header">
+          <h2 class="card-title queue">Upload Queue</h2>
+          <div class="actions">
+            <button class="btn btn-secondary btn-sm" id="refreshQueue">↻ Refresh</button>
+            <button class="btn btn-primary" id="uploadAll">📤 Upload All</button>
+          </div>
+        </div>
+        <div class="table-container">
+          <table id="queueTable">
+            <thead>
+              <tr><th>ID</th><th>Name</th><th>Status</th></tr>
+            </thead>
+            <tbody>
+              <tr><td colspan="3" class="empty-state">Loading queue...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Ready Downloads Card -->
+      <div class="card">
+        <div class="card-header">
+          <h2 class="card-title download">Ready Downloads</h2>
+          <div class="actions">
+            <button class="btn btn-secondary btn-sm" id="refreshDownloads">↻ Check</button>
+            <button class="btn btn-primary" id="fetchAll">⏬ Fetch All</button>
+          </div>
+        </div>
+        <div class="table-container">
+          <table id="downloadsTable">
+            <thead>
+              <tr><th>File</th><th>Status</th><th>Actions</th></tr>
+            </thead>
+            <tbody>
+              <tr><td colspan="3" class="empty-state">No downloads ready</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Downloaded Files Card -->
+      <div class="card">
+        <div class="card-header">
+          <h2 class="card-title download">Downloaded Files</h2>
+          <button class="btn btn-secondary btn-sm" id="refreshDownloaded">↻ Refresh</button>
+        </div>
+        <div class="table-container">
+          <table id="downloadedTable">
+            <thead>
+              <tr><th>File</th><th>Status</th><th>Actions</th></tr>
+            </thead>
+            <tbody>
+              <tr><td colspan="3" class="empty-state">No files downloaded yet</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Debug Panel -->
+    <div class="debug-panel">
+      <button class="debug-toggle" id="toggleDebug">📋 Toggle Debug Log</button>
+      <div class="debug-content" id="debugLog"></div>
+    </div>
   </div>
-  <div id="server-debug-full" class="debug">Raw server responses shown here for debugging.</div>
 
-  <h2>Upload Queue</h2>
-  <div class="row">
-    <button id="upload-btn">Upload All Folders</button>
-    <div class="tiny muted">Calls <code>/upload_queue</code> on this server which will POST to the remote server.</div>
-  </div>
-  <div class="card" role="region" aria-label="Upload queue">
-    <table id="queue-table" aria-live="polite">
-      <thead><tr><th>ID / Folder</th><th>Name</th><th>Status</th></tr></thead>
-      <tbody><tr><td colspan="3" class="muted">Loading queue...</td></tr></tbody>
-    </table>
-  </div>
+  <!-- Toast Notification -->
+  <div class="toast" id="toast"></div>
 
-  <h2>Ready Downloads (remote)</h2>
-  <div class="row">
-    <button id="download-check-btn">Check Ready Files</button>
-    <button id="server-download-btn">Ask Server to Fetch All</button>
-    <div class="tiny muted">Step 1: server fetch via <code>/download/&lt;id&gt;</code>. Step 2: user download via <code>/fetch_download/&lt;id&gt;</code>.</div>
-  </div>
-  <div class="card" role="region" aria-label="Ready downloads">
-    <table id="download-table" aria-live="polite">
-      <thead><tr><th>ID</th><th>File</th><th>Result / Action</th></tr></thead>
-      <tbody><tr><td colspan="3" class="muted">No data yet.</td></tr></tbody>
-    </table>
-  </div>
-</div>
+  <script>
+    class Dashboard {
+      constructor() {
+        this.serverStatus = document.getElementById('serverStatus');
+        this.queueTable = document.getElementById('queueTable');
+        this.downloadsTable = document.getElementById('downloadsTable');
+        this.downloadedTable = document.getElementById('downloadedTable');
+        this.debugLog = document.getElementById('debugLog');
+        this.toast = document.getElementById('toast');
 
-<script>
-/* utilities */
-function setStatus(text, cls, debugShort=''){
-  const s = document.getElementById('server-status'); s.textContent = text; s.className = 'status-inline ' + (cls||'');
-  const dbgShort = document.getElementById('server-debug'); dbgShort.textContent = debugShort || '';
-}
-function appendDebug(text){ const el = document.getElementById('server-debug-full'); const now = new Date().toISOString(); el.textContent = now + ' — ' + text + '\n\n' + el.textContent; }
+        // Track downloading files
+        this.downloadingFiles = new Map();
+        this.downloadedFiles = new Set(); // Track downloaded files
+        
+        this.init();
+      }
 
-/* check /connect */
-async function checkServer(){
-  try{
-    const resp = await fetch('/connect');
-    let data = null; try { data = await resp.json(); } catch(e){ data = null; }
-    if (data && data.status === 'ONLINE') setStatus('ONLINE','success','connect OK');
-    else if (resp.ok) setStatus('ONLINE','success','connect OK');
-    else setStatus('OFFLINE','error', 'connect HTTP not OK');
-  } catch(err){ setStatus('OFFLINE','error', String(err)); appendDebug('checkServer error: '+String(err)); }
-}
-checkServer(); setInterval(checkServer, 3000);
+      init() {
+        this.bindEvents();
+        this.checkServerStatus();
+        this.loadQueue();
+        this.checkDownloads();
+        this.loadDownloadedFiles();
 
-/* load queue */
-async function loadQueue(){
-  const tbody = document.querySelector('#queue-table tbody'); tbody.innerHTML = '<tr><td colspan="3" class="muted">Loading queue...</td></tr>';
-  try{
-    const resp = await fetch('/get_queue'); const data = await resp.json(); tbody.innerHTML = '';
-    if (!data || data.queue === undefined){ tbody.innerHTML = '<tr><td colspan="3">Unexpected response from /get_queue</td></tr>'; appendDebug('get_queue returned: '+JSON.stringify(data,null,2)); return; }
-    if (data.queue === 'empty' || (Array.isArray(data.queue) && data.queue.length === 0)){
-      tbody.innerHTML = '<tr><td colspan="3" class="muted">Queue is empty</td></tr>'; return;
-    }
-    if (Array.isArray(data.queue)){
-      data.queue.forEach(item => {
-        const tr = document.createElement('tr');
-        const id = document.createElement('td'); id.textContent = item.id || '';
-        const name = document.createElement('td'); name.textContent = item.name || '';
-        const status = document.createElement('td'); status.textContent = 'Pending'; status.className = 'info';
-        tr.appendChild(id); tr.appendChild(name); tr.appendChild(status); tbody.appendChild(tr);
-      });
-      return;
-    }
-    tbody.innerHTML = '<tr><td colspan="3" class="muted">No queue items</td></tr>';
-  } catch(err){ tbody.innerHTML = '<tr><td colspan="3">Failed to load queue</td></tr>'; appendDebug('loadQueue error: '+String(err)); }
-}
-loadQueue(); setInterval(loadQueue, 5000);
+        // Periodic updates
+        setInterval(() => this.checkServerStatus(), 30000);
+        setInterval(() => this.loadQueue(), 10000);
+        setInterval(() => this.checkDownloads(), 15000);
+      }
 
-/* upload queue */
-document.getElementById('upload-btn').addEventListener('click', async ()=>{
-  const btn = document.getElementById('upload-btn'); btn.disabled = true; const old = btn.textContent; btn.textContent = 'Uploading...';
-  try{
-    const resp = await fetch('/upload_queue', { method: 'POST' }); const data = await resp.json();
-    const qbody = document.querySelector('#queue-table tbody'); qbody.innerHTML = '';
-    if (data && Array.isArray(data.failed) && data.failed.length > 0){
-      data.failed.forEach(it=>{ const tr=document.createElement('tr'); const td1=document.createElement('td'); td1.textContent=it.id||''; const td2=document.createElement('td'); td2.textContent=it.name||''; const td3=document.createElement('td'); td3.textContent='Failed'; td3.className='error'; tr.appendChild(td1);tr.appendChild(td2);tr.appendChild(td3); qbody.appendChild(tr); });
-    } else { qbody.innerHTML = '<tr><td colspan="3" class="success">All uploads completed</td></tr>'; }
-  } catch(err){ alert('Upload failed; see console.'); appendDebug('upload_queue error: '+String(err)); }
-  finally{ btn.disabled = false; btn.textContent = old; }
-});
+      bindEvents() {
+        document.getElementById('refreshQueue').addEventListener('click', () => this.loadQueue());
+        document.getElementById('uploadAll').addEventListener('click', () => this.uploadQueue());
+        document.getElementById('refreshDownloads').addEventListener('click', () => this.checkDownloads());
+        document.getElementById('fetchAll').addEventListener('click', () => this.fetchAllDownloads());
+        document.getElementById('refreshDownloaded').addEventListener('click', () => this.loadDownloadedFiles());
+        document.getElementById('toggleDebug').addEventListener('click', () => {
+          this.debugLog.classList.toggle('show');
+        });
+      }
 
-/* check ready downloads (/check) */
-async function checkReadyDownloads(){
-  const tbody = document.querySelector('#download-table tbody'); tbody.innerHTML = '<tr><td colspan="3" class="muted">Checking...</td></tr>';
-  try{
-    const resp = await fetch('/check', { method: 'POST' }); const text = await resp.text(); appendDebug('/check returned: '+text);
-    let parsed = null; try{ parsed = JSON.parse(text); }catch(e){ parsed = null; }
-    let list = null;
-    if (Array.isArray(parsed)) list = parsed;
-    else if (parsed && typeof parsed === 'object'){
-      if ('ready_downloads' in parsed) list = parsed.ready_downloads;
-      else { const vals = Object.values(parsed).flat(); if (Array.isArray(vals) && vals.length) list = vals; }
-    } else if (typeof text === 'string' && text.trim()){ const lines = text.split(/\r?\n/).map(s=>s.trim()).filter(Boolean); if (lines.length) list = lines; }
-    if (!list || !Array.isArray(list) || list.length === 0){ tbody.innerHTML = '<tr><td colspan="3" class="muted">No downloads ready.</td></tr>'; return; }
-    populateDownloadRows(list, tbody);
-  } catch(err){ tbody.innerHTML = '<tr><td colspan="3" class="error">Failed to check downloads</td></tr>'; appendDebug('checkReadyDownloads error: '+String(err)); }
-}
-
-function populateDownloadRows(list, tbody){ tbody.innerHTML = ''; if (!Array.isArray(list)||list.length===0){ tbody.innerHTML = '<tr><td colspan="3" class="muted">No downloads ready.</td></tr>'; return; }
-  list.forEach(rawItem=>{
-    let name=''; let id='';
-    if (typeof rawItem === 'string'){ name = rawItem; id = (rawItem.split('.')[0] || rawItem).slice(0,80); }
-    else if (rawItem && typeof rawItem === 'object'){ if (rawItem.name) name = String(rawItem.name); else if (rawItem.filename) name = String(rawItem.filename); else try{ name = JSON.stringify(rawItem); }catch(e){ name = String(rawItem);} if (rawItem.id !== undefined) id = String(rawItem.id); else if (rawItem.artifact_id !== undefined) id = String(rawItem.artifact_id); else id = (name.split('.')[0]||name).slice(0,80); }
-    else { name = String(rawItem); id = (name.split('.')[0]||name).slice(0,80); }
-
-    const tr = document.createElement('tr'); tr.dataset.downloadId = id;
-    const td1 = document.createElement('td'); td1.textContent = id;
-    const td2 = document.createElement('td'); const span = document.createElement('span'); span.className='info'; span.textContent=name; const hint = document.createElement('div'); hint.className='small muted'; hint.textContent='Ready on remote'; td2.appendChild(span); td2.appendChild(hint);
-    const td3 = document.createElement('td'); const status = document.createElement('span'); status.className='muted'; status.textContent='Queued';
-    const fetchBtn = document.createElement('button'); fetchBtn.className='btn-small'; fetchBtn.textContent='Fetch to Server'; fetchBtn.title = `Ask server to fetch artefact ${id}`;
-
-    fetchBtn.addEventListener('click', async ()=>{
-      fetchBtn.disabled=true; const oldText = fetchBtn.textContent; fetchBtn.textContent='Fetching...'; setRowStatus(tr,'Fetching...','info');
-      try{
-        const result = await fetchSingleDownload(id);
-        if (result && typeof result === 'object' && Object.keys(result).length){
-          setRowStatus(tr,'Ready','success');
-          // replace fetch button with real download link
-          const link = document.createElement('a');
-          link.href = '/fetch_download/' + encodeURIComponent(id);
-          link.textContent = 'Download';
-          link.className = 'btn btn-small';
-          link.style.marginLeft = '8px';
-          fetchBtn.remove();
-          td3.appendChild(link);
-        } else if (typeof result === 'string'){
-          setRowStatus(tr, result.slice(0,200), 'success');
-        } else {
-          setRowStatus(tr, 'Unknown server response', 'error');
+      async checkServerStatus() {
+        try {
+          const t0 = performance.now();
+          const resp = await fetch('/connect', { cache: 'no-cache' });
+          const latency = Math.round(performance.now() - t0);
+          
+          if (resp.ok) {
+            const data = await resp.json();
+            if (data.status === "ONLINE") {
+              this.updateStatus('online', `Connected — ${latency}ms`);
+              this.log(`Server online (${latency}ms)`, 'info');
+            } else {
+              this.updateStatus('offline', data.error || 'Offline');
+              this.log('Server offline', 'error');
+            }
+          } else {
+            this.updateStatus('offline', `Connection error: ${resp.status}`);
+            this.log(`Connection error: ${resp.status}`, 'error');
+          }
+        } catch (err) {
+          this.updateStatus('offline', 'Connection failed');
+          this.log(`Connection failed: ${err.message}`, 'error');
         }
-      } catch(err){ setRowStatus(tr, String(err), 'error'); appendDebug('fetchSingleDownload error: '+String(err)); }
-      finally{ if (fetchBtn.isConnected){ fetchBtn.disabled=false; fetchBtn.textContent=oldText; } }
-    });
+      }
 
-    td3.appendChild(status); td3.appendChild(document.createTextNode(' ')); td3.appendChild(fetchBtn);
-    tr.appendChild(td1); tr.appendChild(td2); tr.appendChild(td3); tbody.appendChild(tr);
-  });
-}
-function setRowStatus(tr,text,cls){ const td3 = tr.children[2]; if (!td3) return; const statusSpan = td3.querySelector('span'); if (statusSpan){ statusSpan.textContent=text; statusSpan.className = (cls==='success')?'success':(cls==='error'?'error':'info'); } }
+      updateStatus(status, message) {
+        const badge = this.serverStatus;
+        const dot = badge.querySelector('.status-dot');
+        const text = badge.querySelector('.status-text');
 
-async function fetchSingleDownload(id){ const safeId = encodeURIComponent(String(id)); const resp = await fetch('/download/' + safeId); const text = await resp.text(); appendDebug(`/download/${safeId} returned: ${text}`); try{ return JSON.parse(text); }catch(e){ return text; } }
+        badge.className = `status-badge ${status}`;
+        dot.className = `status-dot ${status}`;
+        text.textContent = message;
+      }
 
-/* bulk fetch: step through each and convert to Download links */
-document.getElementById('server-download-btn').addEventListener('click', async ()=>{
-  const tbody = document.querySelector('#download-table tbody'); const rows = Array.from(tbody.querySelectorAll('tr')).filter(r=>r.dataset&&r.dataset.downloadId);
-  if (!rows.length){ appendDebug('server-download: no rows to fetch'); return; }
-  const btn = document.getElementById('server-download-btn'); btn.disabled = true; const old = btn.textContent; btn.textContent='Fetching...';
-  for (const tr of rows){ const id = tr.dataset.downloadId; setRowStatus(tr,'Fetching (bulk)...','info'); try{
-      const result = await fetchSingleDownload(id);
-      if (result && typeof result === 'object' && Object.keys(result).length){
-        setRowStatus(tr,'Ready','success');
-        const td3 = tr.children[2];
-        const oldBtn = td3.querySelector('button'); if (oldBtn) oldBtn.remove();
-        const link = document.createElement('a'); link.href = '/fetch_download/' + encodeURIComponent(id); link.textContent = 'Download'; link.className = 'btn btn-small'; td3.appendChild(link);
-      } else if (typeof result === 'string'){ setRowStatus(tr, result.slice(0,200), 'success'); }
-      else { setRowStatus(tr,'Unknown server response','error'); }
-    } catch(err){ setRowStatus(tr,'Failed: '+String(err),'error'); appendDebug('server-download bulk error for '+id+': '+String(err)); }
-    await new Promise(r=>setTimeout(r,350)); }
-  btn.disabled=false; btn.textContent=old;
-});
+      async loadQueue() {
+        try {
+          const resp = await fetch('/get_queue', { cache: 'no-cache' });
+          const data = await resp.json();
+          
+          let queue = [];
+          if (data.queue === "empty" || !data.queue) {
+            queue = [];
+          } else if (Array.isArray(data.queue)) {
+            queue = data.queue;
+          }
+          
+          this.renderQueue(queue);
+        } catch (err) {
+          this.log(`Failed to load queue: ${err.message}`, 'error');
+          this.renderQueue([]);
+        }
+      }
 
-/* bind check button and initial load */
-document.getElementById('download-check-btn').addEventListener('click', checkReadyDownloads);
-checkReadyDownloads();
-</script>
+      renderQueue(queue) {
+        const tbody = this.queueTable.querySelector('tbody');
+
+        if (!queue || queue.length === 0) {
+          tbody.innerHTML = `
+            <tr>
+              <td colspan="3" class="empty-state">No files in queue</td>
+            </tr>
+          `;
+          return;
+        }
+
+        tbody.innerHTML = queue.map(item => {
+          const id = item.id || item;
+          const name = item.name || item;
+
+          return `
+            <tr>
+              <td>${id}</td>
+              <td>
+                <div class="file-info">
+                  <div class="file-icon">📁</div>
+                  <div class="file-details">
+                    <div class="file-name">${name}</div>
+                    <div class="file-meta">ID: ${id}</div>
+                  </div>
+                </div>
+              </td>
+              <td><span class="badge badge-info">Pending</span></td>
+            </tr>
+          `;
+        }).join('');
+      }
+
+      async uploadQueue() {
+        const button = document.getElementById('uploadAll');
+        const originalText = button.innerHTML;
+        button.disabled = true;
+        button.innerHTML = '<span>⏳</span> Uploading...';
+
+        try {
+          const resp = await fetch('/upload_queue', { method: 'POST' });
+          const data = await resp.json();
+
+          if (data.completed && data.completed.length > 0) {
+            this.showToast(`Uploaded ${data.completed.length} files`, 'success');
+          }
+          if (data.failed && data.failed.length > 0) {
+            this.showToast(`${data.failed.length} uploads failed`, 'error');
+          }
+
+          this.loadQueue();
+          this.log(`Upload result: ${JSON.stringify(data)}`);
+        } catch (err) {
+          this.showToast('Upload failed', 'error');
+          this.log(`Upload error: ${err.message}`, 'error');
+        } finally {
+          button.disabled = false;
+          button.innerHTML = originalText;
+        }
+      }
+
+      async checkDownloads() {
+        try {
+          const resp = await fetch('/check', { method: 'POST', cache: 'no-cache' });
+          const data = await resp.json();
+          
+          let downloads = [];
+          if (data.ready_downloads && Array.isArray(data.ready_downloads)) {
+            downloads = data.ready_downloads;
+          } else if (data.ready_downloads === null) {
+            downloads = [];
+          } else if (data.error) {
+            throw new Error(data.error);
+          }
+          
+          this.renderDownloads(downloads);
+        } catch (err) {
+          this.log(`Failed to check downloads: ${err.message}`, 'error');
+          this.renderDownloads([]);
+        }
+      }
+
+      renderDownloads(downloads) {
+        const tbody = this.downloadsTable.querySelector('tbody');
+
+        // Filter out files that are already downloaded or being downloaded
+        const filteredDownloads = downloads.filter(id => {
+          return !this.downloadedFiles.has(id.toString()) && !this.downloadingFiles.has(id.toString());
+        });
+
+        if (!filteredDownloads || filteredDownloads.length === 0) {
+          tbody.innerHTML = `
+            <tr>
+              <td colspan="3" class="empty-state">No downloads ready</td>
+            </tr>
+          `;
+          return;
+        }
+
+        tbody.innerHTML = filteredDownloads.map(id => {
+          return `
+            <tr data-id="${id}">
+              <td>
+                <div class="file-info">
+                  <div class="file-icon">📦</div>
+                  <div class="file-details">
+                    <div class="file-name">${id}</div>
+                    <div class="file-meta">ID: ${id}</div>
+                  </div>
+                </div>
+              </td>
+              <td><span class="badge badge-warning">Ready on remote</span></td>
+              <td>
+                <div class="actions">
+                  <button class="btn btn-primary btn-sm fetch-btn" data-id="${id}">
+                    ⏬ Download from Remote
+                  </button>
+                </div>
+              </td>
+            </tr>
+          `;
+        }).join('');
+
+        // Attach event listeners
+        tbody.querySelectorAll('.fetch-btn').forEach(btn => {
+          btn.addEventListener('click', (e) => {
+            const id = e.currentTarget.dataset.id;
+            this.initiateDownload(id);
+          });
+        });
+      }
+
+      async initiateDownload(id) {
+        const row = document.querySelector(`tr[data-id="${id}"]`);
+        if (!row) return;
+
+        const button = row.querySelector('.fetch-btn');
+        const statusCell = row.querySelector('td:nth-child(2)');
+
+        if (button) {
+          button.disabled = true;
+          button.innerHTML = '<span>⏳</span> Downloading...';
+        }
+
+        if (statusCell) {
+          statusCell.innerHTML = '<span class="badge badge-info">Downloading...</span>';
+        }
+
+        // Mark as downloading
+        this.downloadingFiles.set(id, { row });
+
+        try {
+          // Step 1: Call /download/<id> to fetch from remote server and save locally
+          // Note: This is /download/22 (not /download/22.zip)
+          const resp = await fetch(`/download/${encodeURIComponent(id)}`);
+          
+          if (!resp.ok) {
+            let errorMsg = `HTTP ${resp.status}`;
+            try {
+              const errorData = await resp.json();
+              errorMsg = errorData.error || errorMsg;
+            } catch (e) {
+              // Not JSON
+            }
+            throw new Error(errorMsg);
+          }
+
+          const data = await resp.json();
+          
+          // Check if we got an error in the JSON response
+          if (data.error) {
+            throw new Error(data.error);
+          }
+
+          // Check if the download was successful
+          const downloadData = data[id] || data;
+          if (downloadData) {
+            // Update with file name if available
+            const fileNameCell = row.querySelector('.file-name');
+            if (fileNameCell && downloadData.name) {
+              fileNameCell.textContent = downloadData.name;
+            }
+            
+            // Update status to show file is now available for download
+            if (statusCell) {
+              statusCell.innerHTML = '<span class="badge badge-success">Ready to download</span>';
+            }
+            
+            if (button) {
+              button.disabled = false;
+              button.innerHTML = '⬇️ Download File';
+              // Changed to use fetch_download endpoint
+              button.onclick = () => this.downloadLocalFile(id);
+            }
+            
+            this.showToast(`Downloaded ${downloadData.name || id} from remote`, 'success');
+            this.log(`Downloaded ${id} from remote: ${JSON.stringify(downloadData)}`);
+            
+            // Mark as downloaded
+            this.downloadedFiles.add(id.toString());
+            
+            // Remove from downloading files map
+            this.downloadingFiles.delete(id);
+            
+            // Refresh downloaded files list
+            this.loadDownloadedFiles();
+          } else {
+            throw new Error('No download data received');
+          }
+        } catch (err) {
+          this.showToast(`Failed to download ${id}: ${err.message}`, 'error');
+          this.log(`Download error for ${id}: ${err.message}`, 'error');
+          
+          // Reset button and status
+          if (statusCell) {
+            statusCell.innerHTML = '<span class="badge badge-danger">Failed</span>';
+          }
+          if (button) {
+            button.disabled = false;
+            button.innerHTML = '⏬ Retry Download';
+            button.onclick = () => this.initiateDownload(id);
+          }
+          
+          // Remove from downloading files map
+          this.downloadingFiles.delete(id);
+        }
+      }
+
+      async downloadLocalFile(id) {
+        try {
+          // Open /fetch_download/<id> in a new tab to trigger file download
+          // Note: This is /fetch_download/22 (not /fetch_download/22.zip)
+          const downloadUrl = `/fetch_download/${encodeURIComponent(id)}`;
+          window.open(downloadUrl, '_blank');
+          
+          const row = document.querySelector(`tr[data-id="${id}"]`);
+          if (row) {
+            const button = row.querySelector('.fetch-btn');
+            if (button) {
+              button.disabled = true;
+              button.innerHTML = '<span>✅</span> Downloading...';
+            }
+          }
+          
+          this.showToast(`Starting download for ${id}`, 'info');
+          this.log(`Triggered local download for ${id} at ${downloadUrl}`);
+        } catch (err) {
+          this.showToast(`Failed to start download: ${err.message}`, 'error');
+          this.log(`Local download error for ${id}: ${err.message}`, 'error');
+        }
+      }
+
+      async fetchAllDownloads() {
+        const rows = Array.from(this.downloadsTable.querySelectorAll('tbody tr[data-id]'));
+        const button = document.getElementById('fetchAll');
+        const originalText = button.innerHTML;
+
+        button.disabled = true;
+        button.innerHTML = '<span>⏳</span> Downloading all...';
+
+        for (const row of rows) {
+          const id = row.dataset.id;
+          if (!this.downloadingFiles.has(id) && !this.downloadedFiles.has(id)) {
+            await this.initiateDownload(id);
+            // Wait a bit between downloads to avoid overwhelming the server
+            await new Promise(r => setTimeout(r, 1000));
+          }
+        }
+
+        button.disabled = false;
+        button.innerHTML = originalText;
+      }
+
+      async loadDownloadedFiles() {
+        try {
+          // Use the /list_downloads endpoint to get actual downloaded files
+          const resp = await fetch('/list_downloads', { cache: 'no-cache' });
+          if (resp.ok) {
+            const files = await resp.json();
+            this.renderDownloadedFiles(files);
+            
+            // Update downloadedFiles set
+            files.forEach(file => {
+              this.downloadedFiles.add(file.id.toString());
+            });
+          } else {
+            // Fallback to empty list
+            this.renderDownloadedFiles([]);
+          }
+        } catch (err) {
+          this.log(`Error loading downloaded files: ${err.message}`, 'error');
+          this.renderDownloadedFiles([]);
+        }
+      }
+
+      renderDownloadedFiles(files) {
+        const tbody = this.downloadedTable.querySelector('tbody');
+
+        if (!files || files.length === 0) {
+          tbody.innerHTML = `
+            <tr>
+              <td colspan="3" class="empty-state">No files downloaded yet</td>
+            </tr>
+          `;
+          return;
+        }
+
+        tbody.innerHTML = files.map(file => {
+          const id = file.id || file;
+          const name = file.name || `${id}.zip`;
+          const size = file.size ? this.formatBytes(file.size) : 'Unknown';
+
+          return `
+            <tr data-id="${id}">
+              <td>
+                <div class="file-info">
+                  <div class="file-icon">📄</div>
+                  <div class="file-details">
+                    <div class="file-name">${name}</div>
+                    <div class="file-meta">ID: ${id} • ${size}</div>
+                  </div>
+                </div>
+              </td>
+              <td><span class="badge badge-success">Downloaded</span></td>
+              <td>
+                <div class="actions">
+                  <button class="btn btn-primary btn-sm download-btn" data-id="${id}">
+                    ⬇️ Download Again
+                  </button>
+                </div>
+              </td>
+            </tr>
+          `;
+        }).join('');
+
+        // Attach event listeners
+        tbody.querySelectorAll('.download-btn').forEach(btn => {
+          btn.addEventListener('click', (e) => {
+            const id = e.currentTarget.dataset.id;
+            window.open(`/fetch_download/${encodeURIComponent(id)}`, '_blank');
+          });
+        });
+      }
+
+      formatBytes(bytes, decimals = 2) {
+        if (bytes === 0) return '0 Bytes';
+        const k = 1024;
+        const dm = decimals < 0 ? 0 : decimals;
+        const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
+        const i = Math.floor(Math.log(bytes) / Math.log(k));
+        return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
+      }
+
+      log(message, type = 'info') {
+        const time = new Date().toLocaleTimeString();
+        const entry = document.createElement('div');
+        entry.className = 'debug-entry';
+        entry.innerHTML = `
+          <span class="debug-time">[${time}]</span>
+          <span class="debug-message">${message}</span>
+        `;
+        this.debugLog.prepend(entry);
+
+        const entries = this.debugLog.querySelectorAll('.debug-entry');
+        if (entries.length > 200) entries[entries.length - 1].remove();
+      }
+
+      showToast(message, type = 'info') {
+        const icons = { success: '✅', error: '❌', info: 'ℹ️' };
+        this.toast.innerHTML = `
+          <div class="toast-header">
+            <div class="toast-title"><span>${icons[type] || icons.info}</span><span>${type.charAt(0).toUpperCase() + type.slice(1)}</span></div>
+            <button class="toast-close">&times;</button>
+          </div>
+          <div class="toast-body">${message}</div>
+        `;
+        this.toast.className = `toast toast-${type}`;
+        this.toast.classList.add('show');
+
+        this.toast.querySelector('.toast-close').addEventListener('click', () => {
+          this.toast.classList.remove('show');
+        });
+
+        setTimeout(() => { this.toast.classList.remove('show'); }, 5000);
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => new Dashboard());
+  </script>
 </body>
 </html>

@@ -1,4 +1,4 @@
-from flask import Flask, request, session, Response, jsonify, send_from_directory, render_template
+from flask import Flask, request, session, Response, jsonify, send_from_directory, render_template, after_this_request
 import time
 import os
 import requests
@@ -10,7 +10,7 @@ app = Flask(__name__)
 
 @app.route('/')
 def browse():
-    return """<h1>HI</h1>"""
+    return """<h1>OK</h1>"""
 
 @app.route('/status')
 def status():
@@ -26,16 +26,27 @@ def upload_file():
 
 
 
+
 @app.route('/downloads/<int:model_id>')
 def download(model_id):
     filename = f'{model_id}.zip'
     directory = 'downloads'
-    print(os.path.join(directory, filename))
-    if os.path.exists(os.path.join(directory, filename)):
+    file_path = os.path.join(directory, filename)
+
+    if os.path.exists(file_path):
+
+        @after_this_request
+        def remove_file(response):
+            try:
+                os.remove(file_path)
+                print(f"Deleted file: {file_path}")
+            except Exception as e:
+                print(f"Error deleting file: {e}")
+            return response
+
         return send_from_directory(directory, filename, as_attachment=True)
     else:
         return "nonexistent", 400
-
 
 
 
