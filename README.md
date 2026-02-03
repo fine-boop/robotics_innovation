@@ -8,7 +8,7 @@ For the 3D scanning, we will be using a single camera and capturing the artefact
 The photos will be sent to a more capable server which will use a third-party software (and a process called photogrammetry) to convert those images into a single 3D model.  
 This will then be sent back to the Pi.
 
-![diagram](/v1-finished/diagram.png)
+![diagram](diagram.png)
 
 ---
 

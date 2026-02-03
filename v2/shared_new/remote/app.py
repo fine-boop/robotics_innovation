@@ -3,6 +3,9 @@ import time
 import os
 import requests
 
+# Import photogrammetry processor
+from photogrammetry_processor_module import process_photogrammetry
+
 app = Flask(__name__)
 
 
@@ -62,10 +65,8 @@ def ready_downloads():
 
 
 def proccess_file(file):
-    #simulate proccessing will be coded later
-    os.system(f'cp uploads/{file} downloads/{file}')
-    os.system(f'unzip -o uploads/{file} -d uploads')
-    os.system(f'rm uploads/{file}')
+    # Run photogrammetry processing
+    process_photogrammetry(file)
     
     
 

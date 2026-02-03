@@ -1,0 +1,5 @@
+#Include the admin email, password, then the server url in serperate lines, eg
+#Please replace these with your own values
+admin@local
+password
+109.255.108.201

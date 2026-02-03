@@ -16,13 +16,17 @@ import json
 import subprocess
 import requests
 import shutil
-# from rotate20 import rotate_20_degrees
+# from scripts.rotate20 import rotate_20_degrees
 import re
+
 
 init(autoreset=True)
 app = Flask(__name__)
 app.secret_key = secrets.token_hex(32)
 
+
+
+ready_downloads = []
 
 
 # Camera management and streaming/capture endpoints
@@ -47,8 +51,18 @@ PIENV_PYTHON = "/home/pi/pienv/bin/python"
 SCRIPT_PATH = "weight_subproc.py"   # path to the script above
 
 
-ready_downloads = []
-server_url = 'http://109.255.108.201'
+if not os.path.exists('config.txt'):
+    print('Please include a a config.txt file!')
+    exit()
+
+with open("config.txt", "r") as file:
+    line = file.readline()
+    while line and not line.lstrip().startswith("#"):
+        line = file.readline()
+    admin_email = file.readline().strip()
+    admin_password = file.readline().strip()
+    server_url = file.readline().strip()
+
 
 
 
@@ -155,9 +169,6 @@ def get_average_weight_subproc(samples=10, dt_pin=5, sck_pin=6, reference_unit=1
     except ValueError:
         print("Unexpected output from weight subprocess:", output)
         return None
-
-
-
 
 
 
@@ -1145,4 +1156,4 @@ print('SERVER' + server_url)
 if __name__ == '__main__':
     print(console_log('Starting server_url', 'info'))
     init_db()
-    app.run(debug=False)
+    app.run('0.0.0.0', debug=False)
